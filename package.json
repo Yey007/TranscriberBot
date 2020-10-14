@@ -1,0 +1,23 @@
+{
+  "name": "betterdebatesbot",
+  "version": "1.0.0",
+  "description": "Better debates for discord.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yey007",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/opus": "^0.3.2",
+    "@types/node": "^14.11.5",
+    "discord.js": "^12.3.1",
+    "dotenv": "^8.2.0",
+    "ffmpeg-static": "^4.2.7",
+    "ibm-watson": "^5.7.1",
+    "inversify": "^5.0.1",
+    "reflect-metadata": "^0.1.13",
+    "typescript": "^4.0.3",
+    "ws": "^7.3.1"
+  }
+}
