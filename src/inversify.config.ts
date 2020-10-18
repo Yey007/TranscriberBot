@@ -10,6 +10,8 @@ import { CommandMapper } from "./services/commandmapper";
 import { Transcriber } from "./services/transcriber";
 import SpeechToText from "ibm-watson/speech-to-text/v1"
 import { IamAuthenticator } from 'ibm-watson/auth';
+import { TranscriptionSender } from "./services/transcriptionsender";
+import { ConsentGetter } from "./services/consentgetter";
 
 require('dotenv').config()
 
@@ -30,6 +32,8 @@ container.bind<SpeechToText>(TYPES.SpeechToText).toConstantValue(new SpeechToTex
 container.bind<CommandMapper>(TYPES.CommandMapper).to(CommandMapper).inSingletonScope();
 container.bind<CommandExecutor>(TYPES.CommandExecutor).to(CommandExecutor).inSingletonScope();
 container.bind<Transcriber>(TYPES.Transcriber).to(Transcriber).inSingletonScope();
+container.bind<TranscriptionSender>(TYPES.TranscriptionSender).to(TranscriptionSender).inSingletonScope();
+container.bind<ConsentGetter>(TYPES.ConsentGetter).to(ConsentGetter).inSingletonScope();
 
 container.bind<ChannelJoiner>(TYPES.ChannelJoiner).to(ChannelJoiner).inSingletonScope();
 container.bind<HelpSender>(TYPES.HelpSender).to(HelpSender).inSingletonScope();

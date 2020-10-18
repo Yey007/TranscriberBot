@@ -15,7 +15,7 @@ export class CommandExecutor {
     }
 
     public executecommand(message: Message) {
-        if (message.content.startsWith("!")) 
+        if (message.content.startsWith("!") && message.channel.type !== "dm") 
         {
             message.content = message.content.slice(1, message.content.length)
             let args = message.content.split(" ")

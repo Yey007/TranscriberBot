@@ -1,19 +1,28 @@
-import { Message, VoiceConnection } from "discord.js";
+import { GuildMember, Message, UserResolvable, VoiceConnection } from "discord.js";
 import { inject, injectable } from "inversify";
+import { measureMemory } from "vm";
 import { TYPES } from "../../types";
+import { ConsentGetter } from "../consentgetter";
 import { Transcriber } from "../transcriber";
+import { TranscriptionSender } from "../transcriptionsender";
 import { BotCommand } from "./botcommand";
 
 @injectable()
 export class ChannelJoiner extends BotCommand {
 
     private transcriber: Transcriber
+    private sender: TranscriptionSender
+    private consent: ConsentGetter
 
     public constructor(
-        @inject(TYPES.Transcriber) transcriber) 
+        @inject(TYPES.Transcriber) transcriber: Transcriber,
+        @inject(TYPES.TranscriptionSender) sender: TranscriptionSender,
+        @inject(TYPES.ConsentGetter) consent: ConsentGetter) 
     {
         super()
         this.transcriber = transcriber
+        this.sender = sender
+        this.consent = consent
     }
 
     public async execute(message: Message, args: string[]): Promise<void> {
@@ -28,22 +37,25 @@ export class ChannelJoiner extends BotCommand {
                 message.reply("Problem sending/recieving audio.")
             });
 
-            //TODO: Handle disconnects properly
-            //TODO: Handle hesitation markers
-            //TODO: Proper embeds for nicer messages?
-            //TODO: Maybe capitalize first word, add periods at end?
-            vc.on("speaking", async (user, speaking) => {
-                if(speaking.bitfield === 1) {
+            let consented: string[] = []
 
-                    let stream = vc.receiver.createStream(user, {mode: "pcm", end: "silence"})
-                    this.transcriber.transcribe(stream, function (words: string, err: any) {
-                        if(err === null) {
-                            message.channel.send(`[${user.username}] ` + words)
-                        } else {
-                            message.reply("Problem transcribing audio.")
-                        }
-                    })
-                    
+            this.consent.getconsent(vc.channel.members.values(), member => {
+                consented.push(member.user.id) // This is considered thread safe because there is one thread, and that scares me.
+            })
+
+            vc.on("speaking", async (user, speaking) => {
+                if (speaking.bitfield === 1) {
+                    if (consented.includes(user.id)) {
+                        let stream = vc.receiver.createStream(user, { mode: "pcm", end: "silence" })
+                        let s = this.sender
+                        this.transcriber.transcribe(stream, function (words: string, err: any) {
+                            if (err === null) {
+                                s.send(user, message.channel, words)
+                            } else {
+                                message.reply("Problem transcribing audio.")
+                            }
+                        })
+                    }
                 }
             })
         }

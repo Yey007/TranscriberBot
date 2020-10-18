@@ -13,6 +13,8 @@ export const TYPES = {
     CommandExecutor: Symbol("CommandExecutor"),
     CommandMapper: Symbol("CommandMapper"),
     Transcriber: Symbol("Transcriber"),
+    TranscriptionSender: Symbol("TranscriptionSender"),
+    ConsentGetter: Symbol("ConsentGetter"),
 
     ChannelJoiner: Symbol("ChannelJoiner"),
     HelpSender: Symbol("HelpSender")
