@@ -11,11 +11,13 @@ export const TYPES = {
     SpeechToText: Symbol("SpeechToText"),
 
     CommandExecutor: Symbol("CommandExecutor"),
-    CommandMapper: Symbol("CommandMapper"),
     Transcriber: Symbol("Transcriber"),
     TranscriptionSender: Symbol("TranscriptionSender"),
     ConsentGetter: Symbol("ConsentGetter"),
+    StandardEmbedMaker: Symbol("StandardEmbedMaker"),
+    CommandMapper: Symbol("CommandMapper"),
 
     ChannelJoiner: Symbol("ChannelJoiner"),
-    HelpSender: Symbol("HelpSender")
+    HelpSender: Symbol("HelpSender"),
+    ChannelLeaver: Symbol("ChannelLeaver"),
 };

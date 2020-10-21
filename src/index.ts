@@ -1,5 +1,5 @@
-import {Bot} from "./bot"
-import container from "./inversify.config"
+import { container } from "./inversify.config"
+import { Bot } from "./bot"
 import { TYPES } from "./types"
 
 const bot: Bot = container.get<Bot>(TYPES.Bot)

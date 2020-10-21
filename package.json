@@ -4,7 +4,7 @@
   "description": "Better debates for discord.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./ts-built/index.js"
   },
   "author": "Yey007",
   "license": "ISC",
@@ -17,7 +17,6 @@
     "ibm-watson": "^5.7.1",
     "inversify": "^5.0.1",
     "reflect-metadata": "^0.1.13",
-    "typescript": "^4.0.3",
-    "ws": "^7.3.1"
+    "typescript": "^4.0.3"
   }
 }

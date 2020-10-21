@@ -1,21 +1,24 @@
 import "reflect-metadata";
-import {Container} from "inversify";
-import {TYPES} from "./types";
-import {Bot} from "./bot";
-import {Client} from "discord.js";
+import { Container } from "inversify";
+import { TYPES } from "./types";
+import { Bot } from "./bot";
+import { Client } from "discord.js";
 import { CommandExecutor } from "./services/commandexecutor";
 import { ChannelJoiner } from "./services/commands/join";
 import { HelpSender } from "./services/commands/help";
-import { CommandMapper } from "./services/commandmapper";
 import { Transcriber } from "./services/transcriber";
 import SpeechToText from "ibm-watson/speech-to-text/v1"
 import { IamAuthenticator } from 'ibm-watson/auth';
 import { TranscriptionSender } from "./services/transcriptionsender";
 import { ConsentGetter } from "./services/consentgetter";
+import { StandardEmbedMaker } from "./services/standardembedmaker";
+import { ChannelLeaver } from "./services/commands/leave";
+import env from "dotenv"
+import { CommandMapper } from "./services/commandmapper";
 
-require('dotenv').config()
+env.config()
 
-let container = new Container();
+export let container = new Container();
 
 container.bind<Bot>(TYPES.Bot).to(Bot).inSingletonScope();
 
@@ -29,13 +32,14 @@ container.bind<SpeechToText>(TYPES.SpeechToText).toConstantValue(new SpeechToTex
     version: "" //this doesn't seem to matter?
 }));
 
-container.bind<CommandMapper>(TYPES.CommandMapper).to(CommandMapper).inSingletonScope();
 container.bind<CommandExecutor>(TYPES.CommandExecutor).to(CommandExecutor).inSingletonScope();
 container.bind<Transcriber>(TYPES.Transcriber).to(Transcriber).inSingletonScope();
 container.bind<TranscriptionSender>(TYPES.TranscriptionSender).to(TranscriptionSender).inSingletonScope();
 container.bind<ConsentGetter>(TYPES.ConsentGetter).to(ConsentGetter).inSingletonScope();
+container.bind<StandardEmbedMaker>(TYPES.StandardEmbedMaker).to(StandardEmbedMaker).inSingletonScope();
 
 container.bind<ChannelJoiner>(TYPES.ChannelJoiner).to(ChannelJoiner).inSingletonScope();
 container.bind<HelpSender>(TYPES.HelpSender).to(HelpSender).inSingletonScope();
+container.bind<ChannelLeaver>(TYPES.ChannelLeaver).to(ChannelLeaver).inSingletonScope();
 
-export default container
+container.bind<CommandMapper>(TYPES.CommandMapper).to(CommandMapper).inSingletonScope();

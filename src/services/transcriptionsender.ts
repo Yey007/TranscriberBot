@@ -1,33 +1,43 @@
-import { DMChannel, NewsChannel, TextChannel, User } from "discord.js";
-import { injectable } from "inversify";
+import { DMChannel, MessageEmbed, NewsChannel, TextChannel, User } from "discord.js";
+import { inject, injectable } from "inversify";
+import { TYPES } from "../types";
+import { StandardEmbedMaker } from "./standardembedmaker";
 
 @injectable()
 export class TranscriptionSender {
 
-    public async send(user: User, transcriptChannel: TextChannel | DMChannel | NewsChannel, transcript: string): Promise<void> {
-        let message = `[${user.username}] ` + this.format(transcript)
-        transcriptChannel.send(message)
+    private maker: StandardEmbedMaker
+
+    public constructor(
+        @inject(TYPES.StandardEmbedMaker) maker: StandardEmbedMaker) 
+    {
+        this.maker = maker
     }
 
-    private format(transcript: string) {
-        let ret = transcript
+
+    public async send(user: User, transcriptChannel: TextChannel | DMChannel | NewsChannel, transcript: string): Promise<void> {
+        transcriptChannel.send(this.format(user, transcript))
+    }
+
+    private format(user: User, transcript: string): MessageEmbed {
+        let formatted = transcript
 
         //Trim
-        ret = ret.trim()
+        formatted = formatted.trim()
 
         //Upcase first letter
-        let firstChar = ret[0]
-        ret = ret.substr(1, ret.length)
-        ret = firstChar.toUpperCase() + ret
+        let firstChar = formatted[0]
+        formatted = formatted.substr(1, formatted.length)
+        formatted = firstChar.toUpperCase() + formatted
 
         //Replace hesitation markers
-        ret = ret.replace("%HESITATION", "...")
+        formatted = formatted.replace("%HESITATION", "...")
 
-        //Add period but make sure it's not weird if we already added a hesitation marker or something
-        if(ret[ret.length - 1] !== ".") {
-            ret = ret + "."
-        }
+        let embed = this.maker.makeInfo()
+        embed.title = ""
+        embed.setAuthor(user.username, user.avatarURL())
 
-        return ret
+        embed.description = formatted
+        return embed
     }
 }
