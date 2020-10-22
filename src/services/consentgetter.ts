@@ -29,7 +29,9 @@ export class ConsentGetter {
             }).then(collected => {
                 noconsent = true
                 dm.send("No consent.")
-            }).catch
+            }).catch(() => {
+                
+            })
         }
     }
 }

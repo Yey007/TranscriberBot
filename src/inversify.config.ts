@@ -15,6 +15,7 @@ import { StandardEmbedMaker } from "./services/standardembedmaker";
 import { ChannelLeaver } from "./services/commands/leave";
 import env from "dotenv"
 import { CommandMapper } from "./services/commandmapper";
+import { TranscriptionManager } from "./services/transcriptionmanager";
 
 env.config()
 
@@ -37,9 +38,9 @@ container.bind<Transcriber>(TYPES.Transcriber).to(Transcriber).inSingletonScope(
 container.bind<TranscriptionSender>(TYPES.TranscriptionSender).to(TranscriptionSender).inSingletonScope();
 container.bind<ConsentGetter>(TYPES.ConsentGetter).to(ConsentGetter).inSingletonScope();
 container.bind<StandardEmbedMaker>(TYPES.StandardEmbedMaker).to(StandardEmbedMaker).inSingletonScope();
+container.bind<CommandMapper>(TYPES.CommandMapper).to(CommandMapper).inSingletonScope();
+container.bind<TranscriptionManager>(TYPES.TranscriptionManager).to(TranscriptionManager).inSingletonScope();
 
 container.bind<ChannelJoiner>(TYPES.ChannelJoiner).to(ChannelJoiner).inSingletonScope();
 container.bind<HelpSender>(TYPES.HelpSender).to(HelpSender).inSingletonScope();
 container.bind<ChannelLeaver>(TYPES.ChannelLeaver).to(ChannelLeaver).inSingletonScope();
-
-container.bind<CommandMapper>(TYPES.CommandMapper).to(CommandMapper).inSingletonScope();
