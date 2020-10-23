@@ -14,7 +14,7 @@ export class Transcriber {
         this.stt = stt
     }
 
-    public transcribe(stream: Readable, callback: Function): void {
+    public transcribe(stream: Readable, callback: (words: string, err: any) => void): void {
 
         const params = {
             //sending raw pcm, watson claims to accept opus but couldn't get it to work, possibly because of container

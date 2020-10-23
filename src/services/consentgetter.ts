@@ -1,63 +1,63 @@
 import { User } from "discord.js";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../types";
-import { ConsentRepository, ConsentState } from "./consentrepository";
+import { ConsentRepository as PermissionRepository, ConsentState as PermissionState } from "./consentrepository";
 
 @injectable()
-export class ConsentGetter {
+export class PermissionGetter {
 
-    private repo: ConsentRepository
+    private repo: PermissionRepository
 
     public constructor(
-        @inject(TYPES.ConsentRepository) repo: ConsentRepository) 
+        @inject(TYPES.ConsentRepository) repo: PermissionRepository) 
     {
         this.repo = repo
     }
 
-    public async getconsent(user: User, onResult: (accepted: boolean) => void) {
+    public async getPermission(user: User, onResult: (accepted: boolean) => void) {
         switch (this.repo.get(user.id)) {
-            case ConsentState.Consent:
+            case PermissionState.Consent:
                 onResult(true)
                 break;
-            case ConsentState.NoConsent:
+            case PermissionState.NoConsent:
                 onResult(false)
                 break;
-            case ConsentState.Unknown:
+            case PermissionState.Unknown:
                 if (user.bot) {
                     onResult(false)
                     break;
                 }
 
                 // Assume no consent for now so that we don't ask again
-                this.repo.set(user.id, ConsentState.NoConsent)
+                this.repo.set(user.id, PermissionState.NoConsent)
 
                 let dm = await user.createDM()
                 let noconsent = false
                 dm.send("Hey! I'm currently transcribing audio from the voice channel you're in, but before I can transcribe yours," +
-                    " I need your permission. Type `!consent` to accept and `!noconsent` to refuse")
+                    " I need your permission. Type `!accept` to accept and `!refuse` to refuse")
 
-                dm.awaitMessages(response => response.content === "!consent", {
+                dm.awaitMessages(response => response.content === "!accept", {
                     max: 1,
                     time: 30000,
                     errors: ['time']
                 }).then(collected => {
-                    this.repo.set(user.id, ConsentState.Consent)
-                    dm.send("Consent preference set.")
+                    this.repo.set(user.id, PermissionState.Consent)
+                    dm.send("Permission preference set.")
                     onResult(true)
                 }).catch(() => {
                     if (!noconsent) {
-                        dm.send("Assumed no consent after 30 seconds.")
+                        dm.send("Assumed no permission after 30 seconds.")
                         onResult(false)
                     }
                 })
 
-                dm.awaitMessages(response => response.content === "!noconsent", {
+                dm.awaitMessages(response => response.content === "!refuse", {
                     max: 1,
                     time: 30000,
                     errors: ['time']
                 }).then(collected => {
                     noconsent = true
-                    dm.send("No consent.")
+                    dm.send("Refused.")
                     onResult(false)
                 }).catch(() => {
 

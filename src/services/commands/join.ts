@@ -1,9 +1,20 @@
 import { Message, VoiceConnection } from "discord.js";
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
+import { TYPES } from "../../types";
+import { StandardEmbedMaker } from "../standardembedmaker";
 import { BotCommand } from "./botcommand";
 
 @injectable()
 export class ChannelJoiner extends BotCommand {
+
+    private embedMaker: StandardEmbedMaker
+
+    public constructor(
+        @inject(TYPES.StandardEmbedMaker) embedMaker: StandardEmbedMaker) 
+    {
+        super()
+        this.embedMaker = embedMaker
+    }
 
     public async execute(message: Message, args: string[]): Promise<void> {
         if(message.member.voice.channel) 
@@ -14,7 +25,10 @@ export class ChannelJoiner extends BotCommand {
             let dispatcher = vc.play(process.cwd() + "/resources/dummy.mp3", { volume: 0 })
 
             dispatcher.on('error', (error) => {
-                message.reply("Problem sending/recieving audio.")
+                let embed = this.embedMaker.makeError()
+                embed.title = "Transcription Error"
+                embed.description = "There was a problem recieving audio from this channel. If this keeps happening, please contact the author."
+                message.channel.send(embed)
             });
 
         }

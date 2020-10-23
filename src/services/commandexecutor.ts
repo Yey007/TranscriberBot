@@ -18,7 +18,7 @@ export class CommandExecutor {
         this.mapper = mapper
     }
 
-    public executecommand(message: Message) {
+    public executeCommand(message: Message) {
         if (message.content.startsWith("!") && message.channel.type !== "dm") 
         {
             message.content = message.content.slice(1, message.content.length)

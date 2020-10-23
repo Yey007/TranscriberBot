@@ -1,6 +1,6 @@
 import { GuildMember, PartialGuildMember, TextChannel, VoiceConnection } from "discord.js";
 import { inject, injectable } from "inversify";
-import { ConsentGetter } from "./consentgetter";
+import { PermissionGetter } from "./consentgetter";
 import { Transcriber } from "./transcriber";
 import { TranscriptionSender } from "./transcriptionsender";
 import { TYPES } from "../types";
@@ -9,12 +9,12 @@ import { TYPES } from "../types";
 export class TranscriptionManager {
     private transcriber: Transcriber
     private sender: TranscriptionSender
-    private consent: ConsentGetter
+    private consent: PermissionGetter
 
     public constructor(
         @inject(TYPES.Transcriber) transcriber: Transcriber,
         @inject(TYPES.TranscriptionSender) sender: TranscriptionSender,
-        @inject(TYPES.ConsentGetter) consent: ConsentGetter) {
+        @inject(TYPES.ConsentGetter) consent: PermissionGetter) {
         this.transcriber = transcriber
         this.sender = sender
         this.consent = consent
@@ -22,7 +22,7 @@ export class TranscriptionManager {
 
     public async speaking(vc: VoiceConnection, member: GuildMember | PartialGuildMember): Promise<void> {
 
-        this.consent.getconsent(member.user, (accepted) => {
+        this.consent.getPermission(member.user, (accepted) => {
             if(accepted) {
                 let stream = vc.receiver.createStream(member.user, { mode: "pcm", end: "silence" })
                 let s = this.sender
