@@ -16,6 +16,7 @@ import { ChannelLeaver } from "./services/commands/leave";
 import env from "dotenv"
 import { CommandMapper } from "./services/commandmapper";
 import { TranscriptionManager } from "./services/transcriptionmanager";
+import { ConsentRepository } from "./services/consentrepository";
 
 env.config()
 
@@ -40,6 +41,7 @@ container.bind<ConsentGetter>(TYPES.ConsentGetter).to(ConsentGetter).inSingleton
 container.bind<StandardEmbedMaker>(TYPES.StandardEmbedMaker).to(StandardEmbedMaker).inSingletonScope();
 container.bind<CommandMapper>(TYPES.CommandMapper).to(CommandMapper).inSingletonScope();
 container.bind<TranscriptionManager>(TYPES.TranscriptionManager).to(TranscriptionManager).inSingletonScope();
+container.bind<ConsentRepository>(TYPES.ConsentRepository).to(ConsentRepository).inSingletonScope();
 
 container.bind<ChannelJoiner>(TYPES.ChannelJoiner).to(ChannelJoiner).inSingletonScope();
 container.bind<HelpSender>(TYPES.HelpSender).to(HelpSender).inSingletonScope();

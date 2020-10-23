@@ -17,6 +17,7 @@ export const TYPES = {
     StandardEmbedMaker: Symbol("StandardEmbedMaker"),
     CommandMapper: Symbol("CommandMapper"),
     TranscriptionManager: Symbol("TranscriptionManager"),
+    ConsentRepository: Symbol("ConsentRepository"),
 
     ChannelJoiner: Symbol("ChannelJoiner"),
     HelpSender: Symbol("HelpSender"),
