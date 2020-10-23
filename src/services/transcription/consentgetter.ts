@@ -1,15 +1,15 @@
 import { User } from "discord.js";
 import { inject, injectable } from "inversify";
-import { TYPES } from "../types";
-import { ConsentRepository as PermissionRepository, ConsentState as PermissionState } from "./consentrepository";
+import { TYPES } from "../../types";
+import { AbstractPermissionRepository, PermissionState } from "../repositories/permission/abstractpermissionrepository";
 
 @injectable()
 export class PermissionGetter {
 
-    private repo: PermissionRepository
+    private repo: AbstractPermissionRepository
 
     public constructor(
-        @inject(TYPES.ConsentRepository) repo: PermissionRepository) 
+        @inject(TYPES.PermissionRepository) repo: AbstractPermissionRepository) 
     {
         this.repo = repo
     }

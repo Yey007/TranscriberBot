@@ -3,7 +3,7 @@ import { inject, injectable } from "inversify";
 import { PermissionGetter } from "./consentgetter";
 import { Transcriber } from "./transcriber";
 import { TranscriptionSender } from "./transcriptionsender";
-import { TYPES } from "../types";
+import { TYPES } from "../../types";
 
 @injectable()
 export class TranscriptionManager {

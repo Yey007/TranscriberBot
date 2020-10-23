@@ -1,7 +1,7 @@
 import { Message, VoiceConnection } from "discord.js";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
-import { StandardEmbedMaker } from "../standardembedmaker";
+import { StandardEmbedMaker } from "../misc/standardembedmaker";
 import { BotCommand } from "./botcommand";
 
 @injectable()

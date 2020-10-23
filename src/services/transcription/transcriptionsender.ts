@@ -1,7 +1,7 @@
 import { DMChannel, MessageEmbed, NewsChannel, TextChannel, User } from "discord.js";
 import { inject, injectable } from "inversify";
-import { TYPES } from "../types";
-import { StandardEmbedMaker } from "./standardembedmaker";
+import { TYPES } from "../../types";
+import { StandardEmbedMaker } from "../misc/standardembedmaker";
 
 @injectable()
 export class TranscriptionSender {

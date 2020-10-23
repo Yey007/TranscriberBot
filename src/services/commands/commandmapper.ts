@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
-import { container } from "../inversify.config";
-import { TYPES } from "../types";
-import { BotCommand } from "./commands/botcommand";
-import { HelpSender } from "./commands/help";
-import { ChannelJoiner } from "./commands/join";
-import { ChannelLeaver } from "./commands/leave";
+import { container } from "../../inversify.config";
+import { TYPES } from "../../types";
+import { BotCommand } from "../commands/botcommand";
+import { HelpSender } from "../commands/help";
+import { ChannelJoiner } from "../commands/join";
+import { ChannelLeaver } from "../commands/leave";
 
 @injectable()
 export class CommandMapper {

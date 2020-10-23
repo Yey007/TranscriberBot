@@ -3,20 +3,21 @@ import { Container } from "inversify";
 import { TYPES } from "./types";
 import { Bot } from "./bot";
 import { Client } from "discord.js";
-import { CommandExecutor } from "./services/commandexecutor";
+import { CommandExecutor } from "./services/commands/commandexecutor";
 import { ChannelJoiner } from "./services/commands/join";
 import { HelpSender } from "./services/commands/help";
-import { Transcriber } from "./services/transcriber";
+import { Transcriber } from "./services/transcription/transcriber";
 import SpeechToText from "ibm-watson/speech-to-text/v1"
 import { IamAuthenticator } from 'ibm-watson/auth';
-import { TranscriptionSender } from "./services/transcriptionsender";
-import { PermissionGetter } from "./services/consentgetter";
-import { StandardEmbedMaker } from "./services/standardembedmaker";
+import { TranscriptionSender } from "./services/transcription/transcriptionsender";
+import { PermissionGetter } from "./services/transcription/consentgetter";
+import { StandardEmbedMaker } from "./services/misc/standardembedmaker";
 import { ChannelLeaver } from "./services/commands/leave";
 import env from "dotenv"
-import { CommandMapper } from "./services/commandmapper";
-import { TranscriptionManager } from "./services/transcriptionmanager";
-import { ConsentRepository } from "./services/consentrepository";
+import { CommandMapper } from "./services/commands/commandmapper";
+import { TranscriptionManager } from "./services/transcription/transcriptionmanager";
+import { AbstractPermissionRepository } from "./services/repositories/permission/abstractpermissionrepository";
+import { MockPermissionRepository } from "./services/repositories/permission/mockpermissionrepository";
 
 env.config()
 
@@ -41,7 +42,7 @@ container.bind<PermissionGetter>(TYPES.ConsentGetter).to(PermissionGetter).inSin
 container.bind<StandardEmbedMaker>(TYPES.StandardEmbedMaker).to(StandardEmbedMaker).inSingletonScope();
 container.bind<CommandMapper>(TYPES.CommandMapper).to(CommandMapper).inSingletonScope();
 container.bind<TranscriptionManager>(TYPES.TranscriptionManager).to(TranscriptionManager).inSingletonScope();
-container.bind<ConsentRepository>(TYPES.ConsentRepository).to(ConsentRepository).inSingletonScope();
+container.bind<AbstractPermissionRepository>(TYPES.PermissionRepository).to(MockPermissionRepository).inSingletonScope();
 
 container.bind<ChannelJoiner>(TYPES.ChannelJoiner).to(ChannelJoiner).inSingletonScope();
 container.bind<HelpSender>(TYPES.HelpSender).to(HelpSender).inSingletonScope();

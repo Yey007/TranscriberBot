@@ -1,7 +1,7 @@
 import { createReadStream, fstat } from "fs";
 import { inject, injectable } from "inversify";
 import { Readable } from "stream";
-import { TYPES } from "../types";
+import { TYPES } from "../../types";
 
 @injectable()
 export class Transcriber {

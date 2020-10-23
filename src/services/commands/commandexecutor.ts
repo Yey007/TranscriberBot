@@ -1,8 +1,8 @@
 import { Message } from "discord.js"
 import { inject, injectable } from "inversify"
-import { TYPES } from "../types"
+import { TYPES } from "../../types"
 import { CommandMapper } from "./commandmapper"
-import { StandardEmbedMaker } from "./standardembedmaker"
+import { StandardEmbedMaker } from "../misc/standardembedmaker"
 
 @injectable()
 export class CommandExecutor {

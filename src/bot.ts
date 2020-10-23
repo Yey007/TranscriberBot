@@ -1,8 +1,8 @@
 import { Client } from "discord.js";
-import { CommandExecutor } from "./services/commandexecutor";
-import {inject, injectable} from "inversify";
-import {TYPES} from "./types";
-import { TranscriptionManager } from "./services/transcriptionmanager";
+import { CommandExecutor } from "./services/commands/commandexecutor";
+import { inject, injectable } from "inversify";
+import { TYPES } from "./types";
+import { TranscriptionManager } from "./services/transcription/transcriptionmanager";
 
 @injectable()
 export class Bot {
