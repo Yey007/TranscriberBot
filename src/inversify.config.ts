@@ -18,6 +18,7 @@ import { CommandMapper } from "./services/commands/commandmapper";
 import { TranscriptionManager } from "./services/transcription/transcriptionmanager";
 import { AbstractPermissionRepository } from "./services/repositories/permission/abstractpermissionrepository";
 import { MockPermissionRepository } from "./services/repositories/permission/mockpermissionrepository";
+import { DbPermissionRepository } from "./services/repositories/permission/dbpermissionrepository";
 
 env.config()
 
@@ -42,7 +43,7 @@ container.bind<PermissionGetter>(TYPES.ConsentGetter).to(PermissionGetter).inSin
 container.bind<StandardEmbedMaker>(TYPES.StandardEmbedMaker).to(StandardEmbedMaker).inSingletonScope();
 container.bind<CommandMapper>(TYPES.CommandMapper).to(CommandMapper).inSingletonScope();
 container.bind<TranscriptionManager>(TYPES.TranscriptionManager).to(TranscriptionManager).inSingletonScope();
-container.bind<AbstractPermissionRepository>(TYPES.PermissionRepository).to(MockPermissionRepository).inSingletonScope();
+container.bind<AbstractPermissionRepository>(TYPES.PermissionRepository).to(DbPermissionRepository).inSingletonScope();
 
 container.bind<ChannelJoiner>(TYPES.ChannelJoiner).to(ChannelJoiner).inSingletonScope();
 container.bind<HelpSender>(TYPES.HelpSender).to(HelpSender).inSingletonScope();

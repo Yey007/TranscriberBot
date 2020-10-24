@@ -1,3 +1,5 @@
 .env
 ts-built
 node_modules
+.vscode/
+resources

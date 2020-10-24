@@ -12,12 +12,12 @@ export class MockPermissionRepository extends AbstractPermissionRepository {
         this.consentMap = new Map()
     }
 
-    public get(userid: string): PermissionState {
+    public get(userid: string, onResult: (state: PermissionState) => void): void {
         let state = this.consentMap.get(userid)
         if (state === undefined) {
-            return PermissionState.Unknown
+            onResult(PermissionState.Unknown)
         }
-        return state
+        onResult(state)
     }
 
     public set(userid: string, state: PermissionState) {

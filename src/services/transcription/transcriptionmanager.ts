@@ -32,7 +32,7 @@ export class TranscriptionManager {
                     if (err === null) {
                         s.send(member.user, channel, words)
                     } else {
-                        channel.send("Problem transcribing audio")
+                        channel.send("Problem transcribing audio. This usually doesn't happen, but it's nothing to worry about.")
                     }
                 })
             }
