@@ -1,4 +1,4 @@
-import { DMChannel, MessageEmbed, NewsChannel, TextChannel, User } from "discord.js";
+import { DMChannel, GuildMember, MessageEmbed, NewsChannel, PartialGuildMember, TextChannel, User } from "discord.js";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
 import { StandardEmbedMaker } from "../misc/standardembedmaker";
@@ -15,11 +15,11 @@ export class TranscriptionSender {
     }
 
 
-    public async send(user: User, transcriptChannel: TextChannel | DMChannel | NewsChannel, transcript: string): Promise<void> {
-        transcriptChannel.send(this.format(user, transcript))
+    public async send(member: GuildMember | PartialGuildMember, transcriptChannel: TextChannel | DMChannel | NewsChannel, transcript: string): Promise<void> {
+        transcriptChannel.send(this.format(member, transcript))
     }
 
-    private format(user: User, transcript: string): MessageEmbed {
+    private format(member: GuildMember | PartialGuildMember, transcript: string): MessageEmbed {
         let formatted = transcript
 
         //Trim
@@ -31,11 +31,12 @@ export class TranscriptionSender {
         formatted = firstChar.toUpperCase() + formatted
 
         //Replace hesitation markers
-        formatted = formatted.replace("%HESITATION", "...")
+        formatted = formatted.replace(/%HESITATION/g, "...")
 
         let embed = this.maker.makeInfo()
         embed.title = ""
-        embed.setAuthor(user.username, user.avatarURL())
+        embed.setAuthor(member.user.username, member.user.avatarURL())
+        embed.setColor(member.displayHexColor)
 
         embed.description = formatted
         return embed

@@ -1,7 +1,8 @@
 import { User } from "discord.js";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
-import { AbstractPermissionRepository, PermissionState } from "../repositories/permission/abstractpermissionrepository";
+import { AbstractPermissionRepository } from "../repositories/permission/abstractpermissionrepository";
+import { RecordingPermissionState } from "../repositories/permission/permissionstate";
 
 @injectable()
 export class PermissionGetter {
@@ -17,20 +18,20 @@ export class PermissionGetter {
     public async getPermission(user: User, onResult: (accepted: boolean) => void) {
         this.repo.get(user.id, async (state) => {
             switch (state) {
-                case PermissionState.Consent:
+                case RecordingPermissionState.Consent:
                     onResult(true)
                     break;
-                case PermissionState.NoConsent:
+                case RecordingPermissionState.NoConsent:
                     onResult(false)
                     break;
-                case PermissionState.Unknown:
+                case RecordingPermissionState.Unknown:
                     if (user.bot) {
                         onResult(false)
                         break;
                     }
     
                     // Assume no consent for now so that we don't ask again
-                    this.repo.set(user.id, PermissionState.NoConsent)
+                    this.repo.set(user.id, RecordingPermissionState.NoConsent)
     
                     let dm = await user.createDM()
                     let noconsent = false
@@ -42,7 +43,7 @@ export class PermissionGetter {
                         time: 30000,
                         errors: ['time']
                     }).then(collected => {
-                        this.repo.set(user.id, PermissionState.Consent)
+                        this.repo.set(user.id, RecordingPermissionState.Consent)
                         dm.send("Permission preference set.")
                         onResult(true)
                     }).catch(() => {

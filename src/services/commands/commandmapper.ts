@@ -5,6 +5,7 @@ import { BotCommand } from "../commands/botcommand";
 import { HelpSender } from "../commands/help";
 import { ChannelJoiner } from "../commands/join";
 import { ChannelLeaver } from "../commands/leave";
+import { SetTranscriptChannel } from "./settranscriptchannel";
 
 @injectable()
 export class CommandMapper {
@@ -15,6 +16,7 @@ export class CommandMapper {
         this.m = new Map()
         this.m.set("join", container.get<ChannelJoiner>(TYPES.ChannelJoiner))
         this.m.set("leave", container.get<ChannelLeaver>(TYPES.ChannelLeaver))
+        this.m.set("set-transcript-chan", container.get<SetTranscriptChannel>(TYPES.SetTranscriptChannel))
     }
 
     public map(command: string): BotCommand {

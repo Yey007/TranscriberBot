@@ -36,10 +36,15 @@ export class Bot {
     private registerEvents() {
         this.client.on("message", (message) => this.executor.executeCommand(message))
         this.client.on("guildMemberSpeaking", async (member, speaking) => {
-            let channelMembers = member.voice.channel.members
-            if(speaking.bitfield === 1 && channelMembers.get(member.guild.member(this.client.user).id) !== undefined) {
-                let vc = await member.voice.channel.join()
-                this.transcriptionManager.speaking(vc, member)
+            // A lot of stuff can go wrong here, but none of it is fatal or important
+            try {
+                let channelMembers = member.voice.channel.members
+                if(speaking.bitfield === 1 && channelMembers.get(member.guild.member(this.client.user).id) !== undefined) {
+                    let vc = await member.voice.channel.join()
+                    this.transcriptionManager.speaking(vc, member)
+                }
+            } catch (ignored) {
+                
             }
         })
     }
