@@ -22,7 +22,6 @@ export class Commands extends BotCommand {
     public async execute(message: Message, args: string[]): Promise<void> {
         let e = this.embed.makeInfo()
         e.title = "Commands"
-        e.description = ""
         this.mapper.commands().forEach(([name, command]) => {
             e.description += `\`${name}\` - ${command.help()}\n`
         });

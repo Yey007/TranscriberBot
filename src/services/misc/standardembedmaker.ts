@@ -10,6 +10,7 @@ export class StandardEmbedMaker {
         let embed = new MessageEmbed()
         embed.title = "Info"
         embed.color = 0x469fe0
+        embed.description = ""
         return embed
     }
 
@@ -17,6 +18,7 @@ export class StandardEmbedMaker {
         let embed = new MessageEmbed()
         embed.title = "Success"
         embed.color = 0x55ab46
+        embed.description = ""
         return embed
     }
 
@@ -24,6 +26,7 @@ export class StandardEmbedMaker {
         let embed = new MessageEmbed()
         embed.title = "Error"
         embed.color = 0x9e3f3f
+        embed.description = ""
         return embed
     }
 
@@ -31,6 +34,7 @@ export class StandardEmbedMaker {
         let embed = new MessageEmbed()
         embed.title = "Warning"
         embed.color = 0xdeb900
+        embed.description = ""
         return embed
     }
 }

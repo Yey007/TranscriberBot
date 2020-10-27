@@ -27,29 +27,30 @@ export class TranscriptionManager {
     public async speaking(vc: VoiceConnection, member: GuildMember | PartialGuildMember): Promise<void> {
 
         this.consent.getPermission(member.user, (accepted) => {
-            if(accepted) {
-                let stream = vc.receiver.createStream(member.user, { mode: "pcm", end: "silence" })
-                let s = this.sender
-                let repo = this.settingsRepo
-                this.transcriber.transcribe(stream, function (words: string, err: any) {
+            if (!accepted)
+                return
+            let stream = vc.receiver.createStream(member.user, { mode: "pcm", end: "silence" })
+            let s = this.sender
+            let repo = this.settingsRepo
+            this.transcriber.transcribe(stream, function (words: string, err: any) {
 
-                    repo.get(member.guild.id, (settings) => {
+                repo.get(member.guild.id, (settings) => {
 
-                        if(settings !== undefined && settings.transcriptionChannelId !== undefined) {
-                            let channel = member.guild.channels.cache.get(settings.transcriptionChannelId) as TextChannel
-                            if (err === null) {
-                                s.send(member, channel, words)
-                            } else {
-                                channel.send("Problem transcribing audio. This usually doesn't happen, but it's nothing to worry about.")
-                            }
+                    if (settings !== undefined && settings.transcriptionChannelId !== undefined) {
+                        let channel = member.guild.channels.cache.get(settings.transcriptionChannelId) as TextChannel
+                        if (err === null) {
+                            s.send(member, channel, words)
                         } else {
-                            // Channel undefined logic here
+                            channel.send("Problem transcribing audio. This usually doesn't happen, but it's nothing to worry about.")
                         }
-
-                    })
+                    } else {
+                        // Channel undefined logic here
+                    }
 
                 })
-            }
+
+            })
+
         })
     }
 }
