@@ -27,4 +27,5 @@ export const TYPES = {
     HelpSender: Symbol("HelpSender"),
     ChannelLeaver: Symbol("ChannelLeaver"),
     SetTranscriptChannel: Symbol("SetTranscriptChannel"),
+    Commands: Symbol("Commands"),
 };

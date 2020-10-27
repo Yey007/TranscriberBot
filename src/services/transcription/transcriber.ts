@@ -1,4 +1,3 @@
-import { createReadStream, fstat } from "fs";
 import { inject, injectable } from "inversify";
 import { Readable } from "stream";
 import { TYPES } from "../../types";

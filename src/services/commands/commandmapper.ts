@@ -5,6 +5,7 @@ import { BotCommand } from "../commands/botcommand";
 import { HelpSender } from "../commands/help";
 import { ChannelJoiner } from "../commands/join";
 import { ChannelLeaver } from "../commands/leave";
+import { Commands } from "./commands";
 import { SetTranscriptChannel } from "./settranscriptchannel";
 
 @injectable()
@@ -25,10 +26,16 @@ export class CommandMapper {
         if(command === "help") {
             return container.get<HelpSender>(TYPES.HelpSender)
         }
+        if(command === "commands") {
+            return container.get<Commands>(TYPES.Commands)
+        }
         return this.m.get(command)
     }
 
-    public commands(): IterableIterator<BotCommand> {
-        return this.m.values()
+    public commands(): [string, BotCommand][] {
+        let arr = Array.from(this.m.entries())
+        arr.push(["help", container.get<HelpSender>(TYPES.HelpSender)])
+        arr.push(["commands", container.get<Commands>(TYPES.Commands)])
+        return arr
     }
 }

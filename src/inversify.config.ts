@@ -22,6 +22,7 @@ import { Database } from "sqlite3";
 import { AbstractGuildSettingsRepository } from "./services/repositories/guildsettings/abstractguildsettingsrepository";
 import { DbGuildSettingsRespoitory } from "./services/repositories/guildsettings/dbguildsettingsrepository";
 import { SetTranscriptChannel } from "./services/commands/settranscriptchannel";
+import { Commands } from "./services/commands/commands";
 
 env.config()
 
@@ -57,3 +58,4 @@ container.bind<ChannelJoiner>(TYPES.ChannelJoiner).to(ChannelJoiner).inSingleton
 container.bind<HelpSender>(TYPES.HelpSender).to(HelpSender).inSingletonScope();
 container.bind<ChannelLeaver>(TYPES.ChannelLeaver).to(ChannelLeaver).inSingletonScope();
 container.bind<SetTranscriptChannel>(TYPES.SetTranscriptChannel).to(SetTranscriptChannel).inSingletonScope();
+container.bind<Commands>(TYPES.Commands).to(Commands).inSingletonScope();
