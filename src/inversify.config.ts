@@ -20,9 +20,11 @@ import { AbstractPermissionRepository } from "./services/repositories/permission
 import { DbPermissionRepository } from "./services/repositories/permission/dbpermissionrepository";
 import { Database } from "sqlite3";
 import { AbstractGuildSettingsRepository } from "./services/repositories/guildsettings/abstractguildsettingsrepository";
-import { DbGuildSettingsRespoitory } from "./services/repositories/guildsettings/dbguildsettingsrepository";
+import { DbGuildSettingsRespository } from "./services/repositories/guildsettings/dbguildsettingsrepository";
 import { SetTranscriptChannel } from "./services/commands/settranscriptchannel";
 import { Commands } from "./services/commands/commands";
+import { TranscriptionChannelGetter } from "./services/transcription/transcriptionchannelgetter";
+import { SetRecordingPermission } from "./services/commands/setrecordingpermission";
 
 env.config()
 
@@ -39,7 +41,6 @@ container.bind<SpeechToText>(TYPES.SpeechToText).toConstantValue(new SpeechToTex
     version: "" //this doesn't seem to matter?
 }));
 
-container.bind<Database>(TYPES.Database).toConstantValue(new Database("resources/bot.db"))
 
 container.bind<CommandExecutor>(TYPES.CommandExecutor).to(CommandExecutor).inSingletonScope();
 container.bind<CommandMapper>(TYPES.CommandMapper).to(CommandMapper).inSingletonScope();
@@ -47,15 +48,17 @@ container.bind<CommandMapper>(TYPES.CommandMapper).to(CommandMapper).inSingleton
 container.bind<Transcriber>(TYPES.Transcriber).to(Transcriber).inSingletonScope();
 container.bind<TranscriptionSender>(TYPES.TranscriptionSender).to(TranscriptionSender).inSingletonScope();
 container.bind<TranscriptionManager>(TYPES.TranscriptionManager).to(TranscriptionManager).inSingletonScope();
-
+container.bind<PermissionGetter>(TYPES.PermissionGetter).to(PermissionGetter).inSingletonScope();
+container.bind<TranscriptionChannelGetter>(TYPES.TranscriptionChannelGetter).to(TranscriptionChannelGetter).inSingletonScope();
 container.bind<StandardEmbedMaker>(TYPES.StandardEmbedMaker).to(StandardEmbedMaker).inSingletonScope();
 
-container.bind<PermissionGetter>(TYPES.PermissionGetter).to(PermissionGetter).inSingletonScope();
+container.bind<Database>(TYPES.Database).toConstantValue(new Database("resources/bot.db"))
 container.bind<AbstractPermissionRepository>(TYPES.PermissionRepository).to(DbPermissionRepository).inSingletonScope();
-container.bind<AbstractGuildSettingsRepository>(TYPES.GuildSettingsRepository).to(DbGuildSettingsRespoitory).inSingletonScope();
+container.bind<AbstractGuildSettingsRepository>(TYPES.GuildSettingsRepository).to(DbGuildSettingsRespository).inSingletonScope();
 
 container.bind<ChannelJoiner>(TYPES.ChannelJoiner).to(ChannelJoiner).inSingletonScope();
 container.bind<HelpSender>(TYPES.HelpSender).to(HelpSender).inSingletonScope();
 container.bind<ChannelLeaver>(TYPES.ChannelLeaver).to(ChannelLeaver).inSingletonScope();
 container.bind<SetTranscriptChannel>(TYPES.SetTranscriptChannel).to(SetTranscriptChannel).inSingletonScope();
+container.bind<SetRecordingPermission>(TYPES.SetRecordingPermission).to(SetRecordingPermission).inSingletonScope();
 container.bind<Commands>(TYPES.Commands).to(Commands).inSingletonScope();

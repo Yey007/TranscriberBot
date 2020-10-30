@@ -7,31 +7,31 @@ import { RecordingPermissionState } from "../repositories/permission/permissions
 @injectable()
 export class PermissionGetter {
 
-    private repo: AbstractPermissionRepository
+    private permissionRepo: AbstractPermissionRepository
 
     public constructor(
-        @inject(TYPES.PermissionRepository) repo: AbstractPermissionRepository) 
+        @inject(TYPES.PermissionRepository) permissionRepo: AbstractPermissionRepository) 
     {
-        this.repo = repo
+        this.permissionRepo = permissionRepo
     }
 
     public async getPermission(user: User, onResult: (accepted: boolean) => void) {
-        this.repo.get(user.id, async (state) => {
+        this.permissionRepo.get(user.id, async (state) => {
+            if (user.bot) {
+                onResult(false)
+                return
+            }
             switch (state) {
                 case RecordingPermissionState.Consent:
                     onResult(true)
-                    break;
+                    break
                 case RecordingPermissionState.NoConsent:
                     onResult(false)
-                    break;
+                    break
                 case RecordingPermissionState.Unknown:
-                    if (user.bot) {
-                        onResult(false)
-                        break;
-                    }
     
                     // Assume no consent for now so that we don't ask again
-                    this.repo.set(user.id, RecordingPermissionState.NoConsent)
+                    this.permissionRepo.set(user.id, RecordingPermissionState.NoConsent)
     
                     let dm = await user.createDM()
                     let noconsent = false
@@ -43,7 +43,7 @@ export class PermissionGetter {
                         time: 30000,
                         errors: ['time']
                     }).then(collected => {
-                        this.repo.set(user.id, RecordingPermissionState.Consent)
+                        this.permissionRepo.set(user.id, RecordingPermissionState.Consent)
                         dm.send("Permission preference set.")
                         onResult(true)
                     }).catch(() => {

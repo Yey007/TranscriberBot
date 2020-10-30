@@ -10,6 +10,8 @@ export class HelpSender extends BotCommand {
 
     private embedMaker: StandardEmbedMaker
     private mapper: CommandMapper
+    private _help = "gives help about a command"
+    private _args: [string, string][] = [["command", "the command to give help about"]]
 
     public constructor(
         @inject(TYPES.StandardEmbedMaker) embedMaker: StandardEmbedMaker,
@@ -25,8 +27,22 @@ export class HelpSender extends BotCommand {
         if(cmd !== undefined) {
             let embed = this.embedMaker.makeInfo()
             embed.title = "Help"
-            embed.description = `${args[1][0].toUpperCase() + args[1].slice(1, args[1].length)} ${cmd.help()}`
+            embed.description = `\`${args[1]}\` ${cmd.help}`
+
+            let usage = "`" + args[1]
+            let argumentString = ""
+            for(let [argName, argDesc] of cmd.args) {
+                usage += ` ${argName}`
+                argumentString += `\`${argName}\` - ${argDesc}\n`
+            }
+            usage += "`"
+
+            embed.addField("Usage", usage)
+            if(argumentString !== "") {
+                embed.addField("Arguments", argumentString)
+            }
             message.channel.send(embed)
+
         } else {
             let embed = this.embedMaker.makeWarning()
             embed.title = "Command not found"
@@ -35,9 +51,12 @@ export class HelpSender extends BotCommand {
         }
     }
     
-    public help(): string {
-        return "gives help about a command"
+    public get help(): string {
+        return this._help
     }
 
+    public get args(): [string, string][] {
+        return this._args
+    }
     
 }

@@ -8,6 +8,8 @@ import { BotCommand } from "./botcommand";
 export class ChannelJoiner extends BotCommand {
 
     private embedMaker: StandardEmbedMaker
+    private _help = "joins a voice channel"
+    private _args: [string, string][] = []
 
     public constructor(
         @inject(TYPES.StandardEmbedMaker) embedMaker: StandardEmbedMaker) 
@@ -34,8 +36,12 @@ export class ChannelJoiner extends BotCommand {
         }
     }
 
-    public help(): string {
-        return "joins a voice channel"
+    public get help(): string {
+        return this._help
+    }
+
+    public get args(): [string, string][] {
+        return this._args
     }
     
 }

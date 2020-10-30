@@ -8,18 +8,18 @@ export const TYPES = {
     WatsonURL: Symbol("WatsonURL"),
     SpeechToText: Symbol("SpeechToText"),
 
-    Database: Symbol("Database"),
-
     CommandExecutor: Symbol("CommandExecutor"),
     CommandMapper: Symbol("CommandMapper"),
 
     Transcriber: Symbol("Transcriber"),
     TranscriptionSender: Symbol("TranscriptionSender"),
     TranscriptionManager: Symbol("TranscriptionManager"),
+    PermissionGetter: Symbol("PermissionGetter"),
+    TranscriptionChannelGetter: Symbol("TranscriptionChannelGetter"),
 
     StandardEmbedMaker: Symbol("StandardEmbedMaker"),
 
-    PermissionGetter: Symbol("PermissionGetter"),
+    Database: Symbol("Database"),
     PermissionRepository: Symbol("PermissionRepository"),
     GuildSettingsRepository: Symbol("GuildSettingsRepository"),
 
@@ -27,5 +27,6 @@ export const TYPES = {
     HelpSender: Symbol("HelpSender"),
     ChannelLeaver: Symbol("ChannelLeaver"),
     SetTranscriptChannel: Symbol("SetTranscriptChannel"),
+    SetRecordingPermission: Symbol("SetRecordingPermission"),
     Commands: Symbol("Commands"),
 };

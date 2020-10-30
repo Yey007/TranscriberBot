@@ -5,7 +5,7 @@ import { AbstractGuildSettingsRepository } from "./abstractguildsettingsreposito
 import { GuildSettings } from "./guildsettings";
 
 @injectable()
-export class DbGuildSettingsRespoitory extends AbstractGuildSettingsRepository {
+export class DbGuildSettingsRespository extends AbstractGuildSettingsRepository {
 
     private db: Database
 
@@ -19,7 +19,7 @@ export class DbGuildSettingsRespoitory extends AbstractGuildSettingsRepository {
     public get(guildid: string, onResult: (settings: GuildSettings) => void): void {
         this.db.get("SELECT transcriptChannelId FROM guild_preferences WHERE id=?", guildid, (err, row) => {
             if(row === undefined) {
-                onResult(undefined)
+                onResult({transcriptionChannelId: undefined})
                 return
             }
             onResult({transcriptionChannelId: row.transcriptChannelId})
@@ -27,6 +27,7 @@ export class DbGuildSettingsRespoitory extends AbstractGuildSettingsRepository {
     }
     
     public set(guildid: string, settings: GuildSettings): void {
+        console.log(settings)
         this.db.serialize(() => {   
             var stmt = this.db.prepare("INSERT OR REPLACE INTO guild_preferences(id, transcriptChannelId) VALUES(?, ?)")
             stmt.run(guildid, settings.transcriptionChannelId)

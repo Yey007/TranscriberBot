@@ -6,6 +6,7 @@ import { HelpSender } from "../commands/help";
 import { ChannelJoiner } from "../commands/join";
 import { ChannelLeaver } from "../commands/leave";
 import { Commands } from "./commands";
+import { SetRecordingPermission } from "./setrecordingpermission";
 import { SetTranscriptChannel } from "./settranscriptchannel";
 
 @injectable()
@@ -18,10 +19,10 @@ export class CommandMapper {
         this.m.set("join", container.get<ChannelJoiner>(TYPES.ChannelJoiner))
         this.m.set("leave", container.get<ChannelLeaver>(TYPES.ChannelLeaver))
         this.m.set("set-transcript-chan", container.get<SetTranscriptChannel>(TYPES.SetTranscriptChannel))
+        this.m.set("set-rec-perm", container.get<SetRecordingPermission>(TYPES.SetRecordingPermission))
     }
 
     public map(command: string): BotCommand {
-
         //Special case for help command to avoid circular dependency
         if(command === "help") {
             return container.get<HelpSender>(TYPES.HelpSender)

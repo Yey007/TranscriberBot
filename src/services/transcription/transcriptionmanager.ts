@@ -4,51 +4,55 @@ import { PermissionGetter } from "./permissiongetter";
 import { Transcriber } from "./transcriber";
 import { TranscriptionSender } from "./transcriptionsender";
 import { TYPES } from "../../types";
-import { DbGuildSettingsRespoitory } from "../repositories/guildsettings/dbguildsettingsrepository";
+import { StandardEmbedMaker } from "../misc/standardembedmaker";
+import { TranscriptionChannelGetter } from "./transcriptionchannelgetter";
 
+//TODO: Per voice channel transcriptions
 @injectable()
 export class TranscriptionManager {
+
     private transcriber: Transcriber
-    private sender: TranscriptionSender
-    private consent: PermissionGetter
-    private settingsRepo: DbGuildSettingsRespoitory
+    private transcriptionSender: TranscriptionSender
+    private permissiongetter: PermissionGetter
+    private transcriptionChannelGetter: TranscriptionChannelGetter
+    private embedMaker: StandardEmbedMaker
 
     public constructor(
         @inject(TYPES.Transcriber) transcriber: Transcriber,
         @inject(TYPES.TranscriptionSender) sender: TranscriptionSender,
         @inject(TYPES.PermissionGetter) consent: PermissionGetter,
-        @inject(TYPES.GuildSettingsRepository) settingsRepo: DbGuildSettingsRespoitory) {
+        @inject(TYPES.TranscriptionChannelGetter) channelGetter: TranscriptionChannelGetter,
+        @inject(TYPES.StandardEmbedMaker) embed: StandardEmbedMaker)        
+    {
         this.transcriber = transcriber
-        this.sender = sender
-        this.consent = consent
-        this.settingsRepo = settingsRepo
+        this.transcriptionSender = sender
+        this.permissiongetter = consent
+        this.transcriptionChannelGetter = channelGetter
+        this.embedMaker = embed
     }
 
-    public async speaking(vc: VoiceConnection, member: GuildMember | PartialGuildMember): Promise<void> {
-
-        this.consent.getPermission(member.user, (accepted) => {
+    public speaking(vc: VoiceConnection, member: GuildMember | PartialGuildMember): void {
+        this.permissiongetter.getPermission(member.user, (accepted) => {
             if (!accepted)
                 return
             let stream = vc.receiver.createStream(member.user, { mode: "pcm", end: "silence" })
-            let s = this.sender
-            let repo = this.settingsRepo
-            this.transcriber.transcribe(stream, function (words: string, err: any) {
+            let s = this.transcriptionSender
+            let embed = this.embedMaker
 
-                repo.get(member.guild.id, (settings) => {
+            this.transcriptionChannelGetter.get(member.guild, (channel) => {
+                if (channel !== undefined) {
 
-                    if (settings !== undefined && settings.transcriptionChannelId !== undefined) {
-                        let channel = member.guild.channels.cache.get(settings.transcriptionChannelId) as TextChannel
-                        if (err === null) {
+                    this.transcriber.transcribe(stream, function (words: string, err: any) {
+                        if (err === undefined) {
                             s.send(member, channel, words)
                         } else {
-                            channel.send("Problem transcribing audio. This usually doesn't happen, but it's nothing to worry about.")
+                            let e = embed.makeWarning()
+                            e.description = "Problem transcribing audio. This usually doesn't happen, but it's nothing to worry about."
+                            channel.send(e)
                         }
-                    } else {
-                        // Channel undefined logic here
-                    }
+                    })
 
-                })
-
+                }
             })
 
         })

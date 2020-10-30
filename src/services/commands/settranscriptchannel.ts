@@ -1,16 +1,18 @@
 import { Message } from "discord.js";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
-import { DbGuildSettingsRespoitory } from "../repositories/guildsettings/dbguildsettingsrepository";
+import { AbstractGuildSettingsRepository } from "../repositories/guildsettings/abstractguildsettingsrepository";
 import { BotCommand } from "./botcommand";
 
 @injectable()
 export class SetTranscriptChannel extends BotCommand {
 
-    private repo: DbGuildSettingsRespoitory
+    private repo: AbstractGuildSettingsRepository
+    private _help = "sets the transcription channel for a discord server as the current channel"
+    private _args: [string, string][] = []
 
     public constructor(
-        @inject(TYPES.GuildSettingsRepository) repo: DbGuildSettingsRespoitory) 
+        @inject(TYPES.GuildSettingsRepository) repo: AbstractGuildSettingsRepository) 
     {
         super()
         this.repo = repo
@@ -27,8 +29,13 @@ export class SetTranscriptChannel extends BotCommand {
             }
         })
     }
-    public help(): string {
-        return "sets a channel as the transcript channel"
+    
+    public get help(): string {
+        return this._help
+    }
+
+    public get args(): [string, string][] {
+        return this._args
     }
 
 }

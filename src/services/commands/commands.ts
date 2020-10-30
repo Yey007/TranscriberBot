@@ -9,6 +9,8 @@ export class Commands extends BotCommand {
 
     private mapper: CommandMapper
     private embed: StandardEmbedMaker
+    private _help = "returns a list of commands"
+    private _args: [string, string][] = []
 
     public constructor(
         @inject(TYPES.CommandMapper) mapper: CommandMapper,
@@ -23,12 +25,17 @@ export class Commands extends BotCommand {
         let e = this.embed.makeInfo()
         e.title = "Commands"
         this.mapper.commands().forEach(([name, command]) => {
-            e.description += `\`${name}\` - ${command.help()}\n`
+            e.description += `\`${name}\` - ${command.help}\n`
         });
         message.channel.send(e)
     }
-    public help(): string {
-        return "returns a list of commands"
+
+    public get help(): string {
+        return this._help
+    }
+
+    public get args(): [string, string][] {
+        return this._args
     }
     
 }

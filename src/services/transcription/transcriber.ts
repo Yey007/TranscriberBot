@@ -13,7 +13,7 @@ export class Transcriber {
         this.stt = stt
     }
 
-    public transcribe(stream: Readable, callback: (words: string, err: any) => void): void {
+    public transcribe(stream: Readable, onTranscription: (words: string, err: any) => void): void {
 
         const params = {
             //sending raw pcm, watson claims to accept opus but couldn't get it to work, possibly because of container
@@ -25,10 +25,10 @@ export class Transcriber {
         stream.pipe(recognizeStream)
 
         recognizeStream.on('data', function (data) {
-            callback(data.toString("utf-8"), null)
+            onTranscription(data.toString("utf-8"), undefined)
         });
         recognizeStream.on('error', function (err) {
-            callback("", err)
+            onTranscription("", err)
         });
     }
 }
