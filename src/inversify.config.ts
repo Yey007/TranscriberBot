@@ -26,6 +26,7 @@ import { TranscriptionChannelGetter } from "./services/transcription/transcripti
 import { SetRecordingPermission } from "./services/commands/setrecordingpermission";
 import sqlite3 from "sqlite3"
 import { Database, open } from "sqlite"
+import sp from "synchronized-promise"
 
 env.config()
 
@@ -53,7 +54,10 @@ container.bind<PermissionGetter>(TYPES.PermissionGetter).to(PermissionGetter).in
 container.bind<TranscriptionChannelGetter>(TYPES.TranscriptionChannelGetter).to(TranscriptionChannelGetter).inSingletonScope();
 container.bind<StandardEmbedMaker>(TYPES.StandardEmbedMaker).to(StandardEmbedMaker).inSingletonScope();
 
-container.bind<Database<sqlite3.Database, sqlite3.Statement>>(TYPES.Database).toConstantValue(new Database({ filename: '/resources/bot.db', driver: sqlite3.cached.Database}))
+//This is pain, but it's the only way.
+let syncOpen = sp(open)
+let db = syncOpen({filename: 'resources/bot.db', driver: sqlite3.cached.Database})
+container.bind<Database<sqlite3.Database, sqlite3.Statement>>(TYPES.Database).toConstantValue(db)
 container.bind<AbstractPermissionRepository>(TYPES.PermissionRepository).to(DbPermissionRepository).inSingletonScope();
 container.bind<AbstractGuildSettingsRepository>(TYPES.GuildSettingsRepository).to(DbGuildSettingsRespository).inSingletonScope();
 
