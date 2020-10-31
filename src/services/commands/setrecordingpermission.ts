@@ -22,10 +22,10 @@ export class SetRecordingPermission extends BotCommand {
 
     public async execute(message: Message, args: string[]): Promise<void> {
         if(args[1] === "accept") {
-            this.repo.set(message.member.user.id, {recPermState: RecordingPermissionState.Consent})
+            this.repo.set(message.member.user.id, {permission: RecordingPermissionState.Consent})
             return
         } else if(args[1] === "deny") {
-            this.repo.set(message.member.user.id, {recPermState: RecordingPermissionState.NoConsent})
+            this.repo.set(message.member.user.id, {permission: RecordingPermissionState.NoConsent})
             return
         }
         message.channel.send("Invalid setting. Acceptable arguments are `accept` and `deny`.")

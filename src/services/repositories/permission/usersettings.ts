@@ -1,5 +1,5 @@
 export interface UserSettings {
-   recPermState: RecordingPermissionState 
+   permission?: RecordingPermissionState 
 }
 
 export enum RecordingPermissionState {

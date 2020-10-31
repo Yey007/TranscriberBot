@@ -1,8 +1,9 @@
 import { inject, injectable } from "inversify";
 import { AbstractPermissionRepository } from "./abstractpermissionrepository";
 import { Database } from "sqlite"
-import { RecordingPermissionState, UserSettings } from "./usersettings";
+import { UserSettings } from "./usersettings";
 import { TYPES } from "../../../types";
+import SQL from "sql-template-strings";
 
 @injectable()
 export class DbPermissionRepository extends AbstractPermissionRepository {
@@ -16,15 +17,15 @@ export class DbPermissionRepository extends AbstractPermissionRepository {
         this.db = db
     }
 
-    //FIXME: Usesome sort of update statement to prvenet dataraces
-    //FIXME: handle undefined res
     public async get(userid: string): Promise<UserSettings> {
         let res = await this.db.get("SELECT * FROM user_preferences WHERE id=?", userid)
-        let settings: UserSettings = { recPermState: res.permission }
-        return settings
+        return res as UserSettings
     }
     public async set(userid: string, settings: UserSettings): Promise<void> {
-        this.db.run("INSERT OR REPLACE INTO user_preferences(id, permission) VALUES(?, ?)", 
-            userid, settings.recPermState)
+        this.db.run(SQL`INSERT INTO user_preferences(id, permission) 
+                        VALUES(${userid}, ${settings.permission})
+                        ON CONFLICT(id) DO UPDATE SET 
+                        permission = IfNull(${settings.permission}, permission) 
+                        WHERE id = ${userid};`)
     }
 }

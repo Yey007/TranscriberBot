@@ -17,9 +17,8 @@ export class DbGuildSettingsRespository extends AbstractGuildSettingsRepository 
         this.db = db
     }
 
-    //FIXME: Usesome sort of update statement to prvenet dataraces
     public async get(guildid: string): Promise<GuildSettings> {
-        let res = await this.db.get("SELECT * FROM guild_preferences WHERE id=?", guildid)
+        let res = await this.db.get(SQL`SELECT * FROM guild_preferences WHERE id=${guildid}`)
         return res as GuildSettings //As long as GuildSettings represents the data in the database, this should be fine.
     }
     public async set(guildid: string, settings: GuildSettings): Promise<void> {

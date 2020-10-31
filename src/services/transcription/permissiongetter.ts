@@ -20,15 +20,15 @@ export class PermissionGetter {
         if (user.bot) {
             return RecordingPermissionState.NoConsent
         }
-        switch (settings.recPermState) {
+        switch (settings.permission) {
             case RecordingPermissionState.Consent:
             case RecordingPermissionState.NoConsent:
-                return settings.recPermState
+                return settings.permission
             case RecordingPermissionState.Unknown:
 
                 // Assume no consent for now so that we don't ask again
                 // There is a low chance that this will cause a datarace
-                settings.recPermState = RecordingPermissionState.NoConsent
+                settings.permission = RecordingPermissionState.NoConsent
                 this.permissionRepo.set(user.id, settings)
 
                 let dm = await user.createDM()
@@ -42,7 +42,7 @@ export class PermissionGetter {
                     errors: ['time']
                 }).then(async collected => {
                     settings = await this.permissionRepo.get(user.id)
-                    settings.recPermState = RecordingPermissionState.Consent
+                    settings.permission = RecordingPermissionState.Consent
                     this.permissionRepo.set(user.id, settings)
                     dm.send("Permission preference set.")
                     return RecordingPermissionState.Consent
