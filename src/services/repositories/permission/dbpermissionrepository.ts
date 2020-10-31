@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { AbstractPermissionRepository } from "./abstractpermissionrepository";
-import { Database } from "sqlite3"
-import { RecordingPermissionState } from "./permissionstate";
+import { Database } from "sqlite"
+import { RecordingPermissionState, UserSettings } from "./usersettings";
 import { TYPES } from "../../../types";
 
 @injectable()
@@ -16,34 +16,15 @@ export class DbPermissionRepository extends AbstractPermissionRepository {
         this.db = db
     }
 
-    public get(userid: string, onResult: (state: RecordingPermissionState) => void): void {
-
-        this.db.get("SELECT permission FROM user_preferences WHERE id=?", userid, (err, row) => {
-            if (row === undefined) {
-                onResult(RecordingPermissionState.Unknown)
-                return
-            }
-            switch (row.permission) {
-                case 1:
-                    onResult(RecordingPermissionState.Consent)
-                    break
-                case 2:
-                    onResult(RecordingPermissionState.NoConsent)
-                    break
-                default:
-                    onResult(RecordingPermissionState.Unknown)
-                    break
-            }
-        })
-
+    //FIXME: Usesome sort of update statement to prvenet dataraces
+    //FIXME: handle undefined res
+    public async get(userid: string): Promise<UserSettings> {
+        let res = await this.db.get("SELECT * FROM user_preferences WHERE id=?", userid)
+        let settings: UserSettings = { recPermState: res.permission }
+        return settings
     }
-
-    public set(userid: string, state: RecordingPermissionState): void {       
-        this.db.serialize(() => {   
-            var stmt = this.db.prepare("INSERT OR REPLACE INTO user_preferences(id, permission) VALUES(?, ?)")
-            stmt.run(userid, state)
-            stmt.finalize()
-        })
+    public async set(userid: string, settings: UserSettings): Promise<void> {
+        this.db.run("INSERT OR REPLACE INTO user_preferences(id, permission) VALUES(?, ?)", 
+            userid, settings.recPermState)
     }
-
 }

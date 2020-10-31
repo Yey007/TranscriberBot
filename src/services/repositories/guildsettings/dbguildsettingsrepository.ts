@@ -1,5 +1,6 @@
 import { inject, injectable } from "inversify";
-import { Database } from "sqlite3";
+import SQL from "sql-template-strings";
+import { Database } from "sqlite";
 import { TYPES } from "../../../types";
 import { AbstractGuildSettingsRepository } from "./abstractguildsettingsrepository";
 import { GuildSettings } from "./guildsettings";
@@ -16,23 +17,16 @@ export class DbGuildSettingsRespository extends AbstractGuildSettingsRepository 
         this.db = db
     }
 
-    public get(guildid: string, onResult: (settings: GuildSettings) => void): void {
-        this.db.get("SELECT transcriptChannelId FROM guild_preferences WHERE id=?", guildid, (err, row) => {
-            if(row === undefined) {
-                onResult({transcriptionChannelId: undefined})
-                return
-            }
-            onResult({transcriptionChannelId: row.transcriptChannelId})
-        })
+    //FIXME: Usesome sort of update statement to prvenet dataraces
+    public async get(guildid: string): Promise<GuildSettings> {
+        let res = await this.db.get("SELECT * FROM guild_preferences WHERE id=?", guildid)
+        return res as GuildSettings //As long as GuildSettings represents the data in the database, this should be fine.
     }
-    
-    public set(guildid: string, settings: GuildSettings): void {
-        console.log(settings)
-        this.db.serialize(() => {   
-            var stmt = this.db.prepare("INSERT OR REPLACE INTO guild_preferences(id, transcriptChannelId) VALUES(?, ?)")
-            stmt.run(guildid, settings.transcriptionChannelId)
-            stmt.finalize()
-        })
+    public async set(guildid: string, settings: GuildSettings): Promise<void> {
+        this.db.run(SQL`INSERT INTO guild_preferences(id, transcriptChannelId) 
+                    VALUES(${guildid}, ${settings.transcriptChannelId}) 
+                    ON CONFLICT(id) DO UPDATE SET 
+                    transcriptChannelId = IfNull(${settings.transcriptChannelId}, transcriptChannelId) 
+                    WHERE id = ${guildid};`)
     }
-
 }

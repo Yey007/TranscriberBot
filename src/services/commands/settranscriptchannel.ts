@@ -19,15 +19,7 @@ export class SetTranscriptChannel extends BotCommand {
     }
 
     public async execute(message: Message, args: string[]): Promise<void> {
-        // Yes, this could be better. No, I'm not gonna fix it now.
-        this.repo.get(message.guild.id, (settings) => {
-            if(settings !== undefined) {
-                settings.transcriptionChannelId = message.channel.id
-                this.repo.set(message.guild.id, settings)
-            } else {
-                this.repo.set(message.guild.id, {transcriptionChannelId: message.channel.id})
-            }
-        })
+        this.repo.set(message.guild.id, {transcriptChannelId: message.channel.id})
     }
     
     public get help(): string {

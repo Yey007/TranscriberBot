@@ -6,6 +6,7 @@ import { TranscriptionSender } from "./transcriptionsender";
 import { TYPES } from "../../types";
 import { StandardEmbedMaker } from "../misc/standardembedmaker";
 import { TranscriptionChannelGetter } from "./transcriptionchannelgetter";
+import { RecordingPermissionState } from "../repositories/permission/usersettings";
 
 //TODO: Per voice channel transcriptions
 @injectable()
@@ -31,30 +32,27 @@ export class TranscriptionManager {
         this.embedMaker = embed
     }
 
-    public speaking(vc: VoiceConnection, member: GuildMember | PartialGuildMember): void {
-        this.permissiongetter.getPermission(member.user, (accepted) => {
-            if (!accepted)
-                return
-            let stream = vc.receiver.createStream(member.user, { mode: "pcm", end: "silence" })
-            let s = this.transcriptionSender
-            let embed = this.embedMaker
+    public async speaking(vc: VoiceConnection, member: GuildMember | PartialGuildMember): Promise<void> {
+        let state = await this.permissiongetter.getPermission(member.user)
+        if (state === RecordingPermissionState.NoConsent || state === RecordingPermissionState.Unknown)
+            return
+        let stream = vc.receiver.createStream(member.user, { mode: "pcm", end: "silence" })
+        let s = this.transcriptionSender
+        let embed = this.embedMaker
 
-            this.transcriptionChannelGetter.get(member.guild, (channel) => {
-                if (channel !== undefined) {
+        let channel = await this.transcriptionChannelGetter.get(member.guild)
+        if (channel !== undefined) {
 
-                    this.transcriber.transcribe(stream, function (words: string, err: any) {
-                        if (err === undefined) {
-                            s.send(member, channel, words)
-                        } else {
-                            let e = embed.makeWarning()
-                            e.description = "Problem transcribing audio. This usually doesn't happen, but it's nothing to worry about."
-                            channel.send(e)
-                        }
-                    })
-
+            this.transcriber.transcribe(stream, function (words: string, err: any) {
+                if (err === undefined) {
+                    s.send(member, channel, vc.channel.name, words)
+                } else {
+                    let e = embed.makeWarning()
+                    e.description = "Problem transcribing audio. This usually doesn't happen, but it's nothing to worry about."
+                    channel.send(e)
                 }
             })
 
-        })
+        }
     }
 }

@@ -9,17 +9,18 @@ export class TranscriptionSender {
     private maker: StandardEmbedMaker
 
     public constructor(
-        @inject(TYPES.StandardEmbedMaker) maker: StandardEmbedMaker) 
-    {
+        @inject(TYPES.StandardEmbedMaker) maker: StandardEmbedMaker) {
         this.maker = maker
     }
 
 
-    public async send(member: GuildMember | PartialGuildMember, transcriptChannel: TextChannel | DMChannel | NewsChannel, transcript: string): Promise<void> {
-        transcriptChannel.send(this.format(member, transcript))
+    public async send(member: GuildMember | PartialGuildMember, transcriptChannel: TextChannel,
+        voiceChannelName: string, transcript: string): Promise<void> {
+
+        transcriptChannel.send(this.format(member, voiceChannelName, transcript))
     }
 
-    private format(member: GuildMember | PartialGuildMember, transcript: string): MessageEmbed {
+    private format(member: GuildMember | PartialGuildMember, voiceChannelName: string, transcript: string): MessageEmbed {
         let formatted = transcript
 
         //Trim
@@ -39,6 +40,8 @@ export class TranscriptionSender {
         embed.setColor(member.displayHexColor)
 
         embed.description = formatted
+        embed.setFooter(voiceChannelName)
+        
         return embed
     }
 }

@@ -2,7 +2,7 @@ import { Message } from "discord.js"
 import { inject, injectable } from "inversify"
 import { TYPES } from "../../types"
 import { AbstractPermissionRepository } from "../repositories/permission/abstractpermissionrepository"
-import { RecordingPermissionState } from "../repositories/permission/permissionstate"
+import { RecordingPermissionState } from "../repositories/permission/usersettings"
 import { BotCommand } from "./botcommand"
 
 @injectable()
@@ -22,10 +22,10 @@ export class SetRecordingPermission extends BotCommand {
 
     public async execute(message: Message, args: string[]): Promise<void> {
         if(args[1] === "accept") {
-            this.repo.set(message.member.user.id, RecordingPermissionState.Consent)
+            this.repo.set(message.member.user.id, {recPermState: RecordingPermissionState.Consent})
             return
         } else if(args[1] === "deny") {
-            this.repo.set(message.member.user.id, RecordingPermissionState.NoConsent)
+            this.repo.set(message.member.user.id, {recPermState: RecordingPermissionState.NoConsent})
             return
         }
         message.channel.send("Invalid setting. Acceptable arguments are `accept` and `deny`.")

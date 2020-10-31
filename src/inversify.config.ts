@@ -18,13 +18,14 @@ import { CommandMapper } from "./services/commands/commandmapper";
 import { TranscriptionManager } from "./services/transcription/transcriptionmanager";
 import { AbstractPermissionRepository } from "./services/repositories/permission/abstractpermissionrepository";
 import { DbPermissionRepository } from "./services/repositories/permission/dbpermissionrepository";
-import { Database } from "sqlite3";
 import { AbstractGuildSettingsRepository } from "./services/repositories/guildsettings/abstractguildsettingsrepository";
 import { DbGuildSettingsRespository } from "./services/repositories/guildsettings/dbguildsettingsrepository";
 import { SetTranscriptChannel } from "./services/commands/settranscriptchannel";
 import { Commands } from "./services/commands/commands";
 import { TranscriptionChannelGetter } from "./services/transcription/transcriptionchannelgetter";
 import { SetRecordingPermission } from "./services/commands/setrecordingpermission";
+import sqlite3 from "sqlite3"
+import { Database, open } from "sqlite"
 
 env.config()
 
@@ -52,7 +53,7 @@ container.bind<PermissionGetter>(TYPES.PermissionGetter).to(PermissionGetter).in
 container.bind<TranscriptionChannelGetter>(TYPES.TranscriptionChannelGetter).to(TranscriptionChannelGetter).inSingletonScope();
 container.bind<StandardEmbedMaker>(TYPES.StandardEmbedMaker).to(StandardEmbedMaker).inSingletonScope();
 
-container.bind<Database>(TYPES.Database).toConstantValue(new Database("resources/bot.db"))
+container.bind<Database<sqlite3.Database, sqlite3.Statement>>(TYPES.Database).toConstantValue(new Database({ filename: '/resources/bot.db', driver: sqlite3.cached.Database}))
 container.bind<AbstractPermissionRepository>(TYPES.PermissionRepository).to(DbPermissionRepository).inSingletonScope();
 container.bind<AbstractGuildSettingsRepository>(TYPES.GuildSettingsRepository).to(DbGuildSettingsRespository).inSingletonScope();
 

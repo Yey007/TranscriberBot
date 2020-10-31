@@ -15,20 +15,18 @@ export class TranscriptionChannelGetter {
         this.guildSettingsRepo = guildSettingsRepo
     }
 
-    public get(guild: Guild, onResult: (channel: TextChannel) => void): void
+    public async get(guild: Guild): Promise<TextChannel>
     {
-        this.guildSettingsRepo.get(guild.id, function(settings: GuildSettings) {
-            if(settings.transcriptionChannelId !== undefined) {
-                let chan = guild.channels.cache.get(settings.transcriptionChannelId) as TextChannel
-                if(chan !== null) {
-                    onResult(chan)
-                    return
-                }
+        let settings = await this.guildSettingsRepo.get(guild.id)
+        if (settings.transcriptChannelId !== undefined) {
+            let chan = guild.channels.cache.get(settings.transcriptChannelId) as TextChannel
+            if (chan !== null) {
+                return chan
             }
+        }
 
-            // This may not exist, but this function can't deal with it at that point.
-            let chan = guild.channels.cache.find(channel => channel.type === 'text' && channel.permissionsFor(guild.me).has('SEND_MESSAGES'))
-            onResult(chan as TextChannel)
-        })
+        // This may not exist, but this function can't deal with it at that point.
+        let chan = guild.channels.cache.find(channel => channel.type === 'text' && channel.permissionsFor(guild.me).has('SEND_MESSAGES'))
+        return chan as TextChannel
     }
 }

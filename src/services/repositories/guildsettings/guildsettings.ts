@@ -1,3 +1,3 @@
 export interface GuildSettings {
-    transcriptionChannelId: string
+    transcriptChannelId?: string
 }

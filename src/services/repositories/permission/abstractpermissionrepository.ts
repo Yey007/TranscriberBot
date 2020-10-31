@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
-import { RecordingPermissionState } from "./permissionstate";
+import { UserSettings } from "./usersettings";
 
 @injectable()
 export abstract class AbstractPermissionRepository {
 
-    public abstract get(userid: string, onResult: (state: RecordingPermissionState) => void): void
+    public abstract get(userid: string): Promise<UserSettings>
 
-    public abstract set(userid: string, state: RecordingPermissionState): void
+    public abstract set(userid: string, state: UserSettings): Promise<void>
 }
