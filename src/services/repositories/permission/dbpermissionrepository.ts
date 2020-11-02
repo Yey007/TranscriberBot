@@ -18,11 +18,11 @@ export class DbPermissionRepository extends AbstractPermissionRepository {
     }
 
     public async get(userid: string): Promise<UserSettings> {
-        let res = await this.db.get("SELECT * FROM user_preferences WHERE id=?", userid)
+        let res = await this.db.get(SQL`SELECT * FROM user_settings WHERE id=${userid}`)
         return res as UserSettings
     }
     public async set(userid: string, settings: UserSettings): Promise<void> {
-        this.db.run(SQL`INSERT INTO user_preferences(id, permission) 
+        this.db.run(SQL`INSERT INTO user_settings(id, permission) 
                         VALUES(${userid}, ${settings.permission})
                         ON CONFLICT(id) DO UPDATE SET 
                         permission = IfNull(${settings.permission}, permission) 

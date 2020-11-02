@@ -27,6 +27,7 @@ import { SetRecordingPermission } from "./services/commands/setrecordingpermissi
 import sqlite3 from "sqlite3"
 import { Database, open } from "sqlite"
 import sp from "synchronized-promise"
+import { SetPrefix } from "./services/commands/setprefix";
 
 env.config()
 
@@ -67,3 +68,4 @@ container.bind<ChannelLeaver>(TYPES.ChannelLeaver).to(ChannelLeaver).inSingleton
 container.bind<SetTranscriptChannel>(TYPES.SetTranscriptChannel).to(SetTranscriptChannel).inSingletonScope();
 container.bind<SetRecordingPermission>(TYPES.SetRecordingPermission).to(SetRecordingPermission).inSingletonScope();
 container.bind<Commands>(TYPES.Commands).to(Commands).inSingletonScope();
+container.bind<SetPrefix>(TYPES.SetPrefix).to(SetPrefix).inSingletonScope();

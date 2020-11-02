@@ -6,6 +6,7 @@ import { HelpSender } from "../commands/help";
 import { ChannelJoiner } from "../commands/join";
 import { ChannelLeaver } from "../commands/leave";
 import { Commands } from "./commands";
+import { SetPrefix } from "./setprefix";
 import { SetRecordingPermission } from "./setrecordingpermission";
 import { SetTranscriptChannel } from "./settranscriptchannel";
 
@@ -20,6 +21,7 @@ export class CommandMapper {
         this.m.set("leave", container.get<ChannelLeaver>(TYPES.ChannelLeaver))
         this.m.set("set-transcript-chan", container.get<SetTranscriptChannel>(TYPES.SetTranscriptChannel))
         this.m.set("set-rec-perm", container.get<SetRecordingPermission>(TYPES.SetRecordingPermission))
+        this.m.set("set-prefix", container.get<SetPrefix>(TYPES.SetPrefix))
     }
 
     public map(command: string): BotCommand {

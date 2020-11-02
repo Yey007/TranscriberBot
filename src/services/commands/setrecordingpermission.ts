@@ -11,7 +11,8 @@ export class SetRecordingPermission extends BotCommand {
     private repo: AbstractPermissionRepository
     private _help = "sets the recording permission for the user executing the command"
     private _args: [string, string][] = [
-        ["permission", "Whether the bot is allowed to record this user. Possible values are `accept` or `deny`"]]
+        ["permission", "Whether the bot is allowed to record this user. Possible values are `accept` or `deny`"]
+    ]
 
     public constructor(
         @inject(TYPES.PermissionRepository) repo: AbstractPermissionRepository) 

@@ -3,33 +3,45 @@ import { inject, injectable } from "inversify"
 import { TYPES } from "../../types"
 import { CommandMapper } from "./commandmapper"
 import { StandardEmbedMaker } from "../misc/standardembedmaker"
+import { AbstractGuildSettingsRepository } from "../repositories/guildsettings/abstractguildsettingsrepository"
 
 @injectable()
 export class CommandExecutor {
 
     private maker: StandardEmbedMaker
     private mapper: CommandMapper
+    private repo: AbstractGuildSettingsRepository
 
     public constructor(
         @inject(TYPES.StandardEmbedMaker) maker: StandardEmbedMaker,
-        @inject(TYPES.CommandMapper) mapper: CommandMapper) 
+        @inject(TYPES.CommandMapper) mapper: CommandMapper,
+        @inject(TYPES.GuildSettingsRepository) repo: AbstractGuildSettingsRepository ) 
     {
         this.maker = maker
         this.mapper = mapper
+        this.repo = repo
     }
 
-    public executeCommand(message: Message) {
-        if (message.content.startsWith("!") && message.channel.type !== "dm") 
+    public async executeCommand(message: Message) {
+        let settings = await this.repo.get(message.guild.id)
+        if (message.content.startsWith(settings.prefix) && message.channel.type !== "dm") 
         {
-            message.content = message.content.slice(1, message.content.length)
-            let args = message.content.split(" ")
+            let trimmed = message.content.slice(settings.prefix.length, message.content.length)
+            let args = trimmed.split(" ")
             let cmd = this.mapper.map(args[0])
             if(cmd !== undefined) {
+                if(args.length < cmd.args.length + 1) {
+                    let embed = this.maker.makeWarning()
+                    embed.title = "Invalid Arguments"
+                    embed.description = `That command requires ${cmd.args.length + 1} arguments but you provided ${args.length}.`
+                    message.channel.send(embed)
+                    return
+                }
                 cmd.execute(message, args)
             } else {
                 let embed = this.maker.makeWarning()
                 embed.title = "Command not found"
-                embed.description = `The command "${args[1]}" does not exist.`
+                embed.description = `The command "${args[0]}" does not exist.`
                 message.channel.send(embed)
             }
         }

@@ -29,4 +29,5 @@ export const TYPES = {
     SetTranscriptChannel: Symbol("SetTranscriptChannel"),
     SetRecordingPermission: Symbol("SetRecordingPermission"),
     Commands: Symbol("Commands"),
+    SetPrefix: Symbol("SetPrefix")
 };
