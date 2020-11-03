@@ -33,6 +33,9 @@ export class SetPrefix extends BotCommand {
             return
         }
         this.repo.set(message.guild.id, {prefix: args[1]})
+        let embed = this.maker.makeSuccess()
+        embed.description = `Prefix set to \`${args[1]}\``
+        message.channel.send(embed)
     }
     public get help(): string {
         return this._help

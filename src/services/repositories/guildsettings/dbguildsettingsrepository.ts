@@ -19,16 +19,20 @@ export class DbGuildSettingsRespository extends AbstractGuildSettingsRepository 
 
     public async get(guildid: string): Promise<GuildSettings> {
         let res = await this.db.get(SQL`SELECT * FROM guild_settings WHERE id=${guildid}`)
+        if(res === undefined) {
+            return {}
+        }
         return res as GuildSettings //As long as GuildSettings represents the data in the database, this should be fine.
     }
     public async set(guildid: string, settings: GuildSettings): Promise<void> {
-        console.log(guildid)
-        console.log(settings)
+
+        if(guildid == undefined)
+            return
         this.db.run(SQL`INSERT INTO guild_settings(id, transcriptChannelId, prefix) 
                     VALUES(${guildid}, ${settings.transcriptChannelId}, ${settings.prefix}) 
                     ON CONFLICT(id) DO UPDATE SET
                     transcriptChannelId = IfNull(${settings.transcriptChannelId}, transcriptChannelId),
                     prefix = IfNull(${settings.prefix}, prefix)
-                    WHERE id = ${guildid};`)
+                    WHERE id = ${guildid}`)
     }
 }
