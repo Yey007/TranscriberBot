@@ -2,7 +2,6 @@ import { Guild, TextChannel } from "discord.js";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
 import { AbstractGuildSettingsRepository } from "../repositories/guildsettings/abstractguildsettingsrepository";
-import { GuildSettings } from "../repositories/guildsettings/guildsettings";
 
 @injectable()
 export class TranscriptionChannelGetter {
@@ -15,13 +14,17 @@ export class TranscriptionChannelGetter {
         this.guildSettingsRepo = guildSettingsRepo
     }
 
-    public async get(guild: Guild): Promise<TextChannel>
+    public async get(guild: Guild, vcId: string): Promise<TextChannel>
     {
         let settings = await this.guildSettingsRepo.get(guild.id)
-        if (settings.transcriptChannelId !== undefined) {
-            let chan = guild.channels.cache.get(settings.transcriptChannelId) as TextChannel
-            if (chan !== null) {
-                return chan
+
+        if (settings.transcriptChannels !== undefined) {
+            let tcId = settings.transcriptChannels.get(vcId)
+            if(tcId !== undefined) {
+                let chan = guild.channels.cache.get(tcId) as TextChannel
+                if (chan !== null) {
+                    return chan
+                }
             }
         }
 

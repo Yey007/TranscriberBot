@@ -24,8 +24,6 @@ export class CommandExecutor {
 
     public async executeCommand(message: Message) {
         let settings = await this.repo.get(message.guild.id)
-        if(settings.prefix === undefined)
-            settings.prefix = "!"
         if (message.content.startsWith(settings.prefix) && message.channel.type !== "dm") 
         {
             let trimmed = message.content.slice(settings.prefix.length, message.content.length)

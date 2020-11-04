@@ -18,21 +18,43 @@ export class DbGuildSettingsRespository extends AbstractGuildSettingsRepository 
     }
 
     public async get(guildid: string): Promise<GuildSettings> {
-        let res = await this.db.get(SQL`SELECT * FROM guild_settings WHERE id=${guildid}`)
-        if(res === undefined) {
-            return {}
-        }
-        return res as GuildSettings //As long as GuildSettings represents the data in the database, this should be fine.
+        let res: GuildSettings = {}
+        res.transcriptChannels = new Map<string, string>()
+        let first = true
+        await this.db.each(
+            SQL`SELECT * FROM guild_settings 
+            JOIN transcription_channels ON id = guildid
+            WHERE id=${guildid};`, function (err, row) {
+            if(err === undefined || err === null) {
+                if (first) {
+                    if(row.prefix === null) {
+                        res.prefix = "!"
+                    } else {
+                        res.prefix = row.prefix
+                    }
+                    first = false
+                }
+                res.transcriptChannels.set(row.voiceChannelId, row.transcriptChannelId)
+            }
+        })
+        return res
     }
     public async set(guildid: string, settings: GuildSettings): Promise<void> {
 
-        if(guildid == undefined)
+        //TODO: Update query to handle multiple transcription channels
+        if(guildid === undefined)
             return
-        this.db.run(SQL`INSERT INTO guild_settings(id, transcriptChannelId, prefix) 
-                    VALUES(${guildid}, ${settings.transcriptChannelId}, ${settings.prefix}) 
+        await this.db.run(SQL`INSERT INTO guild_settings(id, prefix) 
+                    VALUES(${guildid}, ${settings.prefix}) 
                     ON CONFLICT(id) DO UPDATE SET
-                    transcriptChannelId = IfNull(${settings.transcriptChannelId}, transcriptChannelId),
                     prefix = IfNull(${settings.prefix}, prefix)
                     WHERE id = ${guildid}`)
+        await this.db.run(SQL`BEGIN TRANSACTION;`)
+        for(let [vcId, tcId] of settings.transcriptChannels) {
+            await this.db.run(SQL`INSERT OR REPLACE INTO 
+                            transcription_channels(voiceChannelId, guildId, transcriptChannelId)
+                            VALUES (${vcId}, ${guildid},${tcId})`)
+        }
+        await this.db.run(SQL`COMMIT;`)
     }
 }

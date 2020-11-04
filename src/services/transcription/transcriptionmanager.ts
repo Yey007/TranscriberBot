@@ -40,7 +40,7 @@ export class TranscriptionManager {
         let s = this.transcriptionSender
         let embed = this.embedMaker
 
-        let channel = await this.transcriptionChannelGetter.get(member.guild)
+        let channel = await this.transcriptionChannelGetter.get(member.guild, vc.channel.id)
         if (channel !== undefined) {
 
             this.transcriber.transcribe(stream, function (words: string, err: any) {

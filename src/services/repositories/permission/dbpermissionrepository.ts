@@ -19,6 +19,9 @@ export class DbPermissionRepository extends AbstractPermissionRepository {
 
     public async get(userid: string): Promise<UserSettings> {
         let res = await this.db.get(SQL`SELECT * FROM user_settings WHERE id=${userid}`)
+        if(res === undefined) {
+            return {}
+        }
         return res as UserSettings
     }
     public async set(userid: string, settings: UserSettings): Promise<void> {
