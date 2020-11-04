@@ -5,7 +5,7 @@ import { StandardEmbedMaker } from "../misc/standardembedmaker";
 import { BotCommand } from "./botcommand";
 import { CommandMapper } from "./commandmapper";
 
-export class Commands extends BotCommand {
+export class Help extends BotCommand {
 
     private mapper: CommandMapper
     private embed: StandardEmbedMaker

@@ -2,10 +2,10 @@ import { injectable } from "inversify";
 import { container } from "../../inversify.config";
 import { TYPES } from "../../types";
 import { BotCommand } from "../commands/botcommand";
-import { HelpSender } from "../commands/help";
+import { About } from "../commands/help";
 import { ChannelJoiner } from "../commands/join";
 import { ChannelLeaver } from "../commands/leave";
-import { Commands } from "./commands";
+import { Help } from "./commands";
 import { SetPrefix } from "./setprefix";
 import { SetRecordingPermission } from "./setrecordingpermission";
 import { SetTranscriptChannel } from "./settranscriptchannel";
@@ -26,19 +26,19 @@ export class CommandMapper {
 
     public map(command: string): BotCommand {
         //Special case for help command to avoid circular dependency
-        if(command === "help") {
-            return container.get<HelpSender>(TYPES.HelpSender)
+        if(command === "about") {
+            return container.get<About>(TYPES.About)
         }
-        if(command === "commands") {
-            return container.get<Commands>(TYPES.Commands)
+        if(command === "help") {
+            return container.get<Help>(TYPES.Help)
         }
         return this.m.get(command)
     }
 
     public commands(): [string, BotCommand][] {
         let arr = Array.from(this.m.entries())
-        arr.push(["help", container.get<HelpSender>(TYPES.HelpSender)])
-        arr.push(["commands", container.get<Commands>(TYPES.Commands)])
+        arr.push(["about", container.get<About>(TYPES.About)])
+        arr.push(["help", container.get<Help>(TYPES.Help)])
         return arr
     }
 }

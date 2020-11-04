@@ -24,10 +24,10 @@ export const TYPES = {
     GuildSettingsRepository: Symbol("GuildSettingsRepository"),
 
     ChannelJoiner: Symbol("ChannelJoiner"),
-    HelpSender: Symbol("HelpSender"),
+    About: Symbol("About"),
     ChannelLeaver: Symbol("ChannelLeaver"),
     SetTranscriptChannel: Symbol("SetTranscriptChannel"),
     SetRecordingPermission: Symbol("SetRecordingPermission"),
-    Commands: Symbol("Commands"),
+    Help: Symbol("Help"),
     SetPrefix: Symbol("SetPrefix")
 };

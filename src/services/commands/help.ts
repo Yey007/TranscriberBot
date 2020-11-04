@@ -6,7 +6,7 @@ import { StandardEmbedMaker } from "../misc/standardembedmaker";
 import { BotCommand } from "./botcommand";
 
 @injectable()
-export class HelpSender extends BotCommand {
+export class About extends BotCommand {
 
     private embedMaker: StandardEmbedMaker
     private mapper: CommandMapper

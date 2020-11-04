@@ -5,7 +5,7 @@ import { Bot } from "./bot";
 import { Client } from "discord.js";
 import { CommandExecutor } from "./services/commands/commandexecutor";
 import { ChannelJoiner } from "./services/commands/join";
-import { HelpSender } from "./services/commands/help";
+import { About } from "./services/commands/help";
 import { Transcriber } from "./services/transcription/transcriber";
 import SpeechToText from "ibm-watson/speech-to-text/v1"
 import { IamAuthenticator } from 'ibm-watson/auth';
@@ -21,7 +21,7 @@ import { DbPermissionRepository } from "./services/repositories/permission/dbper
 import { AbstractGuildSettingsRepository } from "./services/repositories/guildsettings/abstractguildsettingsrepository";
 import { DbGuildSettingsRespository } from "./services/repositories/guildsettings/dbguildsettingsrepository";
 import { SetTranscriptChannel } from "./services/commands/settranscriptchannel";
-import { Commands } from "./services/commands/commands";
+import { Help } from "./services/commands/commands";
 import { TranscriptionChannelGetter } from "./services/transcription/transcriptionchannelgetter";
 import { SetRecordingPermission } from "./services/commands/setrecordingpermission";
 import sqlite3 from "sqlite3"
@@ -63,9 +63,9 @@ container.bind<AbstractPermissionRepository>(TYPES.PermissionRepository).to(DbPe
 container.bind<AbstractGuildSettingsRepository>(TYPES.GuildSettingsRepository).to(DbGuildSettingsRespository).inSingletonScope();
 
 container.bind<ChannelJoiner>(TYPES.ChannelJoiner).to(ChannelJoiner).inSingletonScope();
-container.bind<HelpSender>(TYPES.HelpSender).to(HelpSender).inSingletonScope();
+container.bind<About>(TYPES.About).to(About).inSingletonScope();
 container.bind<ChannelLeaver>(TYPES.ChannelLeaver).to(ChannelLeaver).inSingletonScope();
 container.bind<SetTranscriptChannel>(TYPES.SetTranscriptChannel).to(SetTranscriptChannel).inSingletonScope();
 container.bind<SetRecordingPermission>(TYPES.SetRecordingPermission).to(SetRecordingPermission).inSingletonScope();
-container.bind<Commands>(TYPES.Commands).to(Commands).inSingletonScope();
+container.bind<Help>(TYPES.Help).to(Help).inSingletonScope();
 container.bind<SetPrefix>(TYPES.SetPrefix).to(SetPrefix).inSingletonScope();
