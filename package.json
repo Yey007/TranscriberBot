@@ -4,7 +4,9 @@
   "description": "Better debates for discord.",
   "main": "index.js",
   "scripts": {
-    "start": "node --trace-warnings ./ts-built/index.js"
+    "start": "node ./ts-built/index.js",
+    "debug": "node --trace-warnings ./ts-built/index.js",
+    "docker": "./scripts/dockerbuild.bat"
   },
   "author": "Yey007",
   "license": "ISC",
