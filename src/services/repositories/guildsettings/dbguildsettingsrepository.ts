@@ -18,8 +18,8 @@ export class DbGuildSettingsRespository extends AbstractGuildSettingsRepository 
     }
 
     public async get(guildid: string): Promise<GuildSettings> {
-        let res: GuildSettings = {}
-        res.transcriptChannels = new Map<string, string>()
+        let settings: GuildSettings = {}
+        settings.transcriptChannels = new Map<string, string>()
         let first = true
         await this.db.each(
             SQL`SELECT * FROM guild_settings 
@@ -27,17 +27,16 @@ export class DbGuildSettingsRespository extends AbstractGuildSettingsRepository 
             WHERE id=${guildid};`, function (err, row) {
             if(err === undefined || err === null) {
                 if (first) {
-                    if(row.prefix === null) {
-                        res.prefix = "!"
-                    } else {
-                        res.prefix = row.prefix
-                    }
+                    settings.prefix = row.prefix
                     first = false
                 }
-                res.transcriptChannels.set(row.voiceChannelId, row.transcriptChannelId)
+                settings.transcriptChannels.set(row.voiceChannelId, row.transcriptChannelId)
             }
         })
-        return res
+        if(settings.prefix === undefined) {
+            settings.prefix = "!"
+        }
+        return settings
     }
     public async set(guildid: string, settings: GuildSettings): Promise<void> {
 
