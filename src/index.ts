@@ -6,5 +6,5 @@ const bot: Bot = container.get<Bot>(TYPES.Bot)
 bot.start().then(() => {
     console.log('Logged in!')
 }).catch((error) => {
-    console.log('Oh no! ', error)
+    console.log('Oh no!!! ', error)
 });

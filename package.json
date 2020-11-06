@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./ts-built/index.js",
     "debug": "node --trace-warnings ./ts-built/index.js",
-    "docker": "./scripts/dockerbuild.bat"
+    "docker": "./scripts/dockerbuildandpush.ps1"
   },
   "author": "Yey007",
   "license": "ISC",
