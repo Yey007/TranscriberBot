@@ -56,10 +56,12 @@ container.bind<PermissionGetter>(TYPES.PermissionGetter).to(PermissionGetter).in
 container.bind<TranscriptionChannelGetter>(TYPES.TranscriptionChannelGetter).to(TranscriptionChannelGetter).inSingletonScope();
 container.bind<StandardEmbedMaker>(TYPES.StandardEmbedMaker).to(StandardEmbedMaker).inSingletonScope();
 
-//We need to use a seperate address when running inside docker.
+// We need to use a seperate address when running inside docker AND we're using windows.
+// If we are using linux, an enviornment variable will be set and we will run with the 
 let host = 'localhost'
-if(process.env.CONTAINER === "true")
+if(process.env.CONTAINER === "true" && process.env.HOST_OS !== "linux") {
     host = 'host.docker.internal'
+}
 
 let conn = createConnection({
     host     : host,
