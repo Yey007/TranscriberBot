@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
+import { Connection, RowDataPacket } from "mysql2/promise";
 import SQL from "sql-template-strings";
-import { Database } from "sqlite";
 import { TYPES } from "../../../types";
 import { AbstractGuildSettingsRepository } from "./abstractguildsettingsrepository";
 import { GuildSettings } from "./guildsettings";
@@ -8,52 +8,54 @@ import { GuildSettings } from "./guildsettings";
 @injectable()
 export class DbGuildSettingsRespository extends AbstractGuildSettingsRepository {
 
-    private db: Database
+    private db: Connection
 
     public constructor(
-        @inject(TYPES.Database) db: Database) 
+        @inject(TYPES.Database) db: Connection) 
     {
         super()
         this.db = db
     }
 
+    //TODO: Convert to mysql
     public async get(guildid: string): Promise<GuildSettings> {
         let settings: GuildSettings = {}
         settings.transcriptChannels = new Map<string, string>()
-        let first = true
-        await this.db.each(
-            SQL`SELECT * FROM guild_settings 
-            JOIN transcription_channels ON id = guildid
-            WHERE id=${guildid};`, function (err, row) {
-            if(err === undefined || err === null) {
-                if (first) {
-                    settings.prefix = row.prefix
-                    first = false
-                }
-                settings.transcriptChannels.set(row.voiceChannelId, row.transcriptChannelId)
-            }
-        })
-        if(settings.prefix === undefined) {
-            settings.prefix = "!"
+
+        let [rows] = await this.db.query<RowDataPacket[]>(
+            SQL`SELECT IFNULL(prefix, DEFAULT(prefix)) AS prefix, voiceId, textId FROM guild_settings 
+            LEFT JOIN transcription_channels ON id = guildId
+            WHERE id=${guildid};`)
+
+        if(rows[0])
+            settings.prefix = rows[0].prefix
+
+        for (const row of rows) {
+            settings.transcriptChannels.set(row.voiceId, row.textId)
         }
+
         return settings
     }
     public async set(guildid: string, settings: GuildSettings): Promise<void> {
-
-        //TODO: Update query to handle multiple transcription channels
         if(guildid === undefined)
             return
-        await this.db.run(SQL`INSERT INTO guild_settings(id, prefix) 
-                    VALUES(${guildid}, ${settings.prefix}) 
-                    ON CONFLICT(id) DO UPDATE SET
-                    prefix = IfNull(${settings.prefix}, prefix)
-                    WHERE id = ${guildid}`)
-        await this.db.run(SQL`BEGIN TRANSACTION;`)
-        for(let [vcId, tcId] of settings.transcriptChannels) {
-            await this.db.run(SQL`INSERT OR REPLACE INTO 
-                            transcription_channels(voiceChannelId, guildId, transcriptChannelId)
-                            VALUES (${vcId}, ${guildid},${tcId})`)
+
+        console.log(settings)
+        await this.db.query(
+            SQL`INSERT INTO guild_settings(id, prefix) 
+            VALUES(${guildid}, IFNULL(${settings.prefix}, DEFAULT(prefix))) 
+            ON DUPLICATE KEY UPDATE
+            prefix = IFNULL(${settings.prefix}, DEFAULT(prefix))`)
+
+        if(settings.transcriptChannels) {
+            await this.db.beginTransaction()
+            for(let [vcId, tcId] of settings.transcriptChannels) {
+                await this.db.query(
+                    SQL`REPLACE INTO 
+                    transcription_channels(voiceId, textId, guildId)
+                    VALUES (${vcId}, ${tcId}, ${guildid})`)
+            }
+            await this.db.commit()
         }
-        await this.db.run(SQL`COMMIT;`)
     }
 }

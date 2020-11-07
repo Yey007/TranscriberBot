@@ -18,7 +18,6 @@ export class Bot {
         @inject(TYPES.CommandExecutor) commandExecutor: CommandExecutor,
         @inject(TYPES.TranscriptionManager) transcriptionManager: TranscriptionManager) 
     {
-
         this.client = client
         this.token = token
         this.executor = commandExecutor
@@ -34,7 +33,9 @@ export class Bot {
     }
 
     private registerEvents() {
-        this.client.on("message", (message) => this.executor.executeCommand(message))
+        this.client.on("message", (message) => {
+            this.executor.executeCommand(message)
+        })
         this.client.on("guildMemberSpeaking", (member, speaking) => {
             let channelMembers = member.voice.channel.members
             let botMember = member.guild.member(this.client.user)

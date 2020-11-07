@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node ./ts-built/index.js",
     "debug": "node --trace-warnings ./ts-built/index.js",
-    "docker": "./scripts/dockerbuildandpush.ps1"
+    "docker-build": "docker build ./ -t transcriberbot:latest && docker image prune -f",
+    "docker-run": "docker run --env-file bot.env transcriberbot:latest"
   },
   "author": "Yey007",
   "license": "ISC",
@@ -18,14 +19,10 @@
     "ffmpeg-static": "^4.2.7",
     "ibm-watson": "^5.7.1",
     "inversify": "^5.0.1",
+    "mysql2": "^2.2.5",
     "reflect-metadata": "^0.1.13",
     "sql-template-strings": "^2.2.2",
-    "sqlite": "^4.0.15",
-    "sqlite3": "^5.0.0",
-    "synchronized-promise": "^0.3.1",
     "typescript": "^4.0.5"
   },
-  "devDependencies": {
-    "@types/sqlite3": "^3.1.6"
-  }
+  "devDependencies": {}
 }

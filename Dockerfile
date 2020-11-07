@@ -2,6 +2,8 @@ FROM mhart/alpine-node:14
 
 ENV NODE_ENV=production
 
+ENV CONTAINER=true
+
 LABEL maintainer="yey007tech@gmail.com"
 
 ARG BUILD_DATE
@@ -13,8 +15,6 @@ WORKDIR /app
 COPY package*.json ./
 
 COPY tsconfig*.json ./
-
-COPY ./.env ./
 
 COPY ./src ./src
 

@@ -5,7 +5,7 @@ import { Bot } from "./bot";
 import { Client } from "discord.js";
 import { CommandExecutor } from "./services/commands/commandexecutor";
 import { ChannelJoiner } from "./services/commands/join";
-import { About } from "./services/commands/help";
+import { About } from "./services/commands/about";
 import { Transcriber } from "./services/transcription/transcriber";
 import SpeechToText from "ibm-watson/speech-to-text/v1"
 import { IamAuthenticator } from 'ibm-watson/auth';
@@ -13,7 +13,6 @@ import { TranscriptionSender } from "./services/transcription/transcriptionsende
 import { PermissionGetter } from "./services/transcription/permissiongetter";
 import { StandardEmbedMaker } from "./services/misc/standardembedmaker";
 import { ChannelLeaver } from "./services/commands/leave";
-import env from "dotenv"
 import { CommandMapper } from "./services/commands/commandmapper";
 import { TranscriptionManager } from "./services/transcription/transcriptionmanager";
 import { AbstractPermissionRepository } from "./services/repositories/permission/abstractpermissionrepository";
@@ -21,21 +20,24 @@ import { DbPermissionRepository } from "./services/repositories/permission/dbper
 import { AbstractGuildSettingsRepository } from "./services/repositories/guildsettings/abstractguildsettingsrepository";
 import { DbGuildSettingsRespository } from "./services/repositories/guildsettings/dbguildsettingsrepository";
 import { SetTranscriptChannel } from "./services/commands/settranscriptchannel";
-import { Help } from "./services/commands/commands";
+import { Help } from "./services/commands/help";
 import { TranscriptionChannelGetter } from "./services/transcription/transcriptionchannelgetter";
 import { SetRecordingPermission } from "./services/commands/setrecordingpermission";
-import sqlite3 from "sqlite3"
-import { Database, open } from "sqlite"
-import sp from "synchronized-promise"
 import { SetPrefix } from "./services/commands/setprefix";
+import { createConnection } from "mysql2"
+import { Connection } from "mysql2/promise"
+import env from "dotenv"
 
-env.config()
+//Load env file if we're not in a container. That file will be passed as an argument to docker if we're running docker.
+if(process.env.CONTAINER !== "true") {
+    env.config({path: "./bot.env"})
+}
 
 export let container = new Container();
 
 container.bind<Bot>(TYPES.Bot).to(Bot).inSingletonScope();
 container.bind<Client>(TYPES.Client).toConstantValue(new Client());
-container.bind<string>(TYPES.Token).toConstantValue(process.env.BETTER_DEBATES_TOKEN);
+container.bind<string>(TYPES.Token).toConstantValue(process.env.DISCORD_TOKEN);
 
 container.bind<string>(TYPES.WatsonAPIKey).toConstantValue(process.env.WATSON_SPEECH_API_KEY);
 container.bind<string>(TYPES.WatsonURL).toConstantValue(process.env.WATSON_SPEECH_URL);
@@ -43,7 +45,6 @@ container.bind<SpeechToText>(TYPES.SpeechToText).toConstantValue(new SpeechToTex
     authenticator: new IamAuthenticator({apikey: process.env.WATSON_SPEECH_API_KEY}),
     version: "" //this doesn't seem to matter?
 }));
-
 
 container.bind<CommandExecutor>(TYPES.CommandExecutor).to(CommandExecutor).inSingletonScope();
 container.bind<CommandMapper>(TYPES.CommandMapper).to(CommandMapper).inSingletonScope();
@@ -55,10 +56,19 @@ container.bind<PermissionGetter>(TYPES.PermissionGetter).to(PermissionGetter).in
 container.bind<TranscriptionChannelGetter>(TYPES.TranscriptionChannelGetter).to(TranscriptionChannelGetter).inSingletonScope();
 container.bind<StandardEmbedMaker>(TYPES.StandardEmbedMaker).to(StandardEmbedMaker).inSingletonScope();
 
-//This is pain, but it's the only way.
-let syncOpen = sp(open)
-let db = syncOpen({filename: 'resources/bot.db', driver: sqlite3.cached.Database})
-container.bind<Database<sqlite3.Database, sqlite3.Statement>>(TYPES.Database).toConstantValue(db)
+//We need to use a seperate address when running inside docker.
+let host = 'localhost'
+if(process.env.CONTAINER === "true")
+    host = 'host.docker.internal'
+
+let conn = createConnection({
+    host     : host,
+    user     : 'transcriberbot',
+    password : process.env.MYSQL_PASSWORD,
+    database : 'transcriberbot'
+});
+
+container.bind<Connection>(TYPES.Database).toConstantValue(conn.promise())
 container.bind<AbstractPermissionRepository>(TYPES.PermissionRepository).to(DbPermissionRepository).inSingletonScope();
 container.bind<AbstractGuildSettingsRepository>(TYPES.GuildSettingsRepository).to(DbGuildSettingsRespository).inSingletonScope();
 
