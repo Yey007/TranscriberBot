@@ -19,39 +19,58 @@ You're ready to go! Type `!help` to earn about other commands.
 # Running #
 
 ## Prerequisites ##
-* [NPM](https://www.npmjs.com/)
-* [Node.js](https://nodejs.org/en/)
-* [Typescript](https://www.typescriptlang.org/)
-    * Note: you can also install typescript with npm by running `npm install -g typescript`
+* [Docker](https://www.docker.com/)
 
-## Installing Dependencies ##
-1. Run `npm install`
+## Setting Up MySQL ##
+I will be assuming you have some knowledge of how to set up MySQL.
+1. Create a new database called `transcriberbot`
+2. Create a user called `transcriber` with any password you choose
+3. Grant all permission on `transcriberbot` to `transcriber`
+4. Run 
+```
+CREATE TABLE `user_settings` (`id` varchar(20) NOT NULL, `permission` int NOT NULL DEFAULT '0', PRIMARY KEY (`id`),
+CONSTRAINT `enum_permission` CHECK (((`permission` >= 0) and (`permission` <= 2)))) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+```
+5. Run 
+```
+CREATE TABLE `guild_settings` (`id` varchar(20) NOT NULL, `prefix` varchar(5) NOT NULL DEFAULT '!', PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+```
+6. Run 
+```
+CREATE TABLE `transcription_channels` (`voiceId` varchar(20) NOT NULL, `textId` varchar(20) NOT NULL,
+`guildId` varchar(20) NOT NULL, PRIMARY KEY (`voiceId`), KEY `guildId` (`guildId`),
+CONSTRAINT `transcription_channels_ibfk_1` FOREIGN KEY (`guildId`) REFERENCES `guild_settings` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+```
+7. Check back here in a while, this may become easier if I start running mysql in a docker contianer
 
-## Compiling ##
-1. Make sure you're in the root directory (should be called TranscriberBot)
-2. Run `tsc` in the command line
-3. Make sure a ts-built folder was created
+## Obtaining Secrets ##
+I can't go into details here, but you need to obtain these secrets. There are tons of tutorials for discord bots and IBM covers using Speech-To-Text pretty well.
+1. A Discord bot token
+2. An IBM Speech-To-Text API key
+3. An IBM Speech-To-Text URL
 
-## Creating Additional Files ##
-A few other files are required that I didn't provide because they shouldn't be hosted publicly
-1. Create a resources folder in root directory
-    1. Create a file called bot.db
-    2. Record an mp3 clip with just background noise (or anything really). This won't actually be
-    heard by any users, but is necessary because the Discord API requires a user to send audio data
-    before it can recieve any.
-2. Create a file called .env in the root directory
-    1. Obtain three pieces of information from various services this bot uses
-        1. Discord - A bot token (beginner YouTube tutorials will cover this)
-        2. IBM Watson - An API token for Watson Speech (this is a little complicated, so I can't cover it here)
-        3. IBM Watson - A Watson Speech URL (same here, can't cover it)
-    2. Put these in the .env file (replace placeholders like token with the token you obtained)
-        1. Set the discord token like this: `BETTER_DEBATES_TOKEN=token`
-        2. Set the API key like this: `WATSON_SPEECH_API_KEY=apikey`
-        3. Set the URL like this: `WATSON_SPEECH_URL=url`
+## Creating Neccessary Files ##
+1. In the directory you're going to run the contianer in, create a file called bot.env
+2. Make your file look like this: (replace placeholders with the value you obtained)
+```
+DISCORD_TOKEN=your_token
+WATSON_SPEECH_API_KEY=your_api_key
+WATSON_SPEECH_URL=your_url
+MYSQL_PASSWORD=the_password_you_set
+```
+3. If you're running the container on linux, add this line
+```
+HOST_OS=linux
+```
 
-## Starting ##
-1. Run `npm start` in the root directory
-2. The bot should be running!
+## Running ##
+### Windows ###
+Run `sudo docker run --env-file bot.env -d yey007/transcriberbot`
+### Linux ###
+Run `sudo docker run --env-file bot.env --net=host -d yey007/transcriberbot`
+
+You're good to go :)
 
 # Technologies Used #
 I learned a lot of new stuff while making this bot. Here is everything I used:
@@ -59,5 +78,5 @@ I learned a lot of new stuff while making this bot. Here is everything I used:
 2. Typescript
 3. Discord.js
 4. Watson Speech API wrapper
-5. SQLite
+5. MySQL
 6. Docker
