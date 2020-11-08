@@ -17,18 +17,19 @@ export class DbGuildSettingsRespository extends AbstractGuildSettingsRepository 
         this.db = db
     }
 
-    //TODO: Convert to mysql
     public async get(guildid: string): Promise<GuildSettings> {
         let settings: GuildSettings = {}
         settings.transcriptChannels = new Map<string, string>()
 
         let [rows] = await this.db.query<RowDataPacket[]>(
-            SQL`SELECT IFNULL(prefix, DEFAULT(prefix)) AS prefix, voiceId, textId FROM guild_settings 
+            SQL`SELECT prefix, voiceId, textId FROM guild_settings 
             LEFT JOIN transcription_channels ON id = guildId
-            WHERE id=${guildid};`)
+            WHERE id=${guildid}`)
 
         if(rows[0])
             settings.prefix = rows[0].prefix
+        else
+            settings.prefix = "!"
 
         for (const row of rows) {
             settings.transcriptChannels.set(row.voiceId, row.textId)
