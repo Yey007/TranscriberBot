@@ -33,7 +33,7 @@ export class TranscriptionSender {
 
         //Replace hesitation markers
         formatted = formatted.replace(/%HESITATION/g, "...")
-        formatted = formatted.replaceAll("*", "\\*")
+        formatted = formatted.replace(/\*/g, "\\*")
 
         let embed = this.maker.makeInfo()
         embed.title = ""
