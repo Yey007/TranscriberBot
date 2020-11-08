@@ -1,4 +1,4 @@
-import { DMChannel, GuildMember, MessageEmbed, NewsChannel, PartialGuildMember, TextChannel, User } from "discord.js";
+import { GuildMember, MessageEmbed, PartialGuildMember, TextChannel } from "discord.js";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
 import { StandardEmbedMaker } from "../misc/standardembedmaker";
@@ -33,6 +33,7 @@ export class TranscriptionSender {
 
         //Replace hesitation markers
         formatted = formatted.replace(/%HESITATION/g, "...")
+        formatted = formatted.replace("*", "\\*")
 
         let embed = this.maker.makeInfo()
         embed.title = ""

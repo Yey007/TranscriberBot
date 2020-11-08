@@ -20,6 +20,7 @@ export class PermissionGetter {
         if (user.bot) {
             return RecordingPermissionState.NoConsent
         }
+        
         switch (settings.permission) {
             case RecordingPermissionState.Consent:
             case RecordingPermissionState.NoConsent:
