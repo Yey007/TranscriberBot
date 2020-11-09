@@ -3,19 +3,20 @@ import { inject, injectable } from "inversify"
 import { TYPES } from "../../types"
 import { CommandMapper } from "./commandmapper"
 import { StandardEmbedMaker } from "../misc/standardembedmaker"
-import { AbstractGuildSettingsRepository } from "../repositories/guildsettings/abstractguildsettingsrepository"
+import { GuildSettings } from "../repositories/guildsettings/guildsettings"
+import { SettingsRepository } from "../repositories/settingsrepository"
 
 @injectable()
 export class CommandExecutor {
 
     private maker: StandardEmbedMaker
     private mapper: CommandMapper
-    private repo: AbstractGuildSettingsRepository
+    private repo: SettingsRepository<GuildSettings>
 
     public constructor(
         @inject(TYPES.StandardEmbedMaker) maker: StandardEmbedMaker,
         @inject(TYPES.CommandMapper) mapper: CommandMapper,
-        @inject(TYPES.GuildSettingsRepository) repo: AbstractGuildSettingsRepository ) 
+        @inject(TYPES.GuildSettingsRepository) repo: SettingsRepository<GuildSettings>) 
     {
         this.maker = maker
         this.mapper = mapper

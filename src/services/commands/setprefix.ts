@@ -2,13 +2,14 @@ import { Message } from "discord.js";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
 import { StandardEmbedMaker } from "../misc/standardembedmaker";
-import { AbstractGuildSettingsRepository } from "../repositories/guildsettings/abstractguildsettingsrepository";
+import { GuildSettings } from "../repositories/guildsettings/guildsettings";
+import { SettingsRepository } from "../repositories/settingsrepository";
 import { BotCommand } from "./botcommand";
 
 @injectable()
 export class SetPrefix extends BotCommand {
 
-    private repo: AbstractGuildSettingsRepository
+    private repo: SettingsRepository<GuildSettings>
     private maker: StandardEmbedMaker
 
     private _help = "sets this bot's prefix for this server"
@@ -17,7 +18,7 @@ export class SetPrefix extends BotCommand {
     ]
 
     public constructor(
-        @inject(TYPES.GuildSettingsRepository) repo: AbstractGuildSettingsRepository,
+        @inject(TYPES.GuildSettingsRepository) repo: SettingsRepository<GuildSettings>,
         @inject(TYPES.StandardEmbedMaker) maker: StandardEmbedMaker) 
     {
         super()
