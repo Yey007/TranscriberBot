@@ -2,14 +2,14 @@ import { Message } from "discord.js"
 import { inject, injectable } from "inversify"
 import { TYPES } from "../../types"
 import { StandardEmbedMaker } from "../misc/standardembedmaker"
-import { AbstractPermissionRepository } from "../repositories/permission/abstractpermissionrepository"
-import { RecordingPermissionState } from "../repositories/permission/usersettings"
+import { SettingsRepository } from "../repositories/settingsrepository"
+import { RecordingPermissionState, UserSettings } from "../repositories/usersettings/usersettings"
 import { BotCommand } from "./botcommand"
 
 @injectable()
 export class SetRecordingPermission extends BotCommand {
 
-    private repo: AbstractPermissionRepository
+    private repo: SettingsRepository<UserSettings>
     private maker: StandardEmbedMaker
     private _help = "sets the recording permission for the user executing the command"
     private _args: [string, string][] = [
@@ -17,7 +17,7 @@ export class SetRecordingPermission extends BotCommand {
     ]
 
     public constructor(
-        @inject(TYPES.PermissionRepository) repo: AbstractPermissionRepository,
+        @inject(TYPES.UserSettingsRepository) repo: SettingsRepository<UserSettings>,
         @inject(TYPES.StandardEmbedMaker) maker: StandardEmbedMaker) 
     {
         super()

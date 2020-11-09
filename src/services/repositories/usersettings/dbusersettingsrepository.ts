@@ -1,12 +1,12 @@
 import { inject, injectable } from "inversify";
-import { AbstractPermissionRepository } from "./abstractpermissionrepository";
 import { RecordingPermissionState, UserSettings } from "./usersettings";
 import { TYPES } from "../../../types";
 import SQL from "sql-template-strings";
 import { Connection, RowDataPacket } from "mysql2/promise";
+import { SettingsRepository } from "../settingsrepository";
 
 @injectable()
-export class DbPermissionRepository extends AbstractPermissionRepository {
+export class DbUserSettingsRepository extends SettingsRepository<UserSettings> {
 
     private db: Connection
 
@@ -17,15 +17,14 @@ export class DbPermissionRepository extends AbstractPermissionRepository {
         this.db = db
     }
 
-    //TODO: Convert to mysql
     public async get(userid: string): Promise<UserSettings> {
-        let settings: UserSettings = {}
-        let [rows] = await this.db.query<RowDataPacket[]>(SQL`SELECT permission FROM user_settings WHERE id=${userid} LIMIT 1;`)
+        let [rows] = await this.db.query<RowDataPacket[]>(
+            SQL`SELECT permission FROM user_settings 
+            WHERE id=${userid}`)
         if(rows[0]) 
-            settings.permission = rows[0].permission   
+            return {permission: rows[0].permission} 
         else
-            settings.permission = RecordingPermissionState.Unknown
-        return settings 
+            return {permission: RecordingPermissionState.Unknown}
     }
     public async set(userid: string, settings: UserSettings): Promise<void> {
         await this.db.query(

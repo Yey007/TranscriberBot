@@ -15,9 +15,7 @@ import { StandardEmbedMaker } from "./services/misc/standardembedmaker";
 import { ChannelLeaver } from "./services/commands/leave";
 import { CommandMapper } from "./services/commands/commandmapper";
 import { TranscriptionManager } from "./services/transcription/transcriptionmanager";
-import { AbstractPermissionRepository } from "./services/repositories/permission/abstractpermissionrepository";
-import { DbPermissionRepository } from "./services/repositories/permission/dbpermissionrepository";
-import { AbstractGuildSettingsRepository } from "./services/repositories/guildsettings/abstractguildsettingsrepository";
+import { DbUserSettingsRepository } from "./services/repositories/usersettings/dbusersettingsrepository";
 import { DbGuildSettingsRespository } from "./services/repositories/guildsettings/dbguildsettingsrepository";
 import { SetTranscriptChannel } from "./services/commands/settranscriptchannel";
 import { Help } from "./services/commands/help";
@@ -27,6 +25,10 @@ import { SetPrefix } from "./services/commands/setprefix";
 import { createConnection } from "mysql2"
 import { Connection } from "mysql2/promise"
 import env from "dotenv"
+import { SettingsRepository } from "./services/repositories/settingsrepository";
+import { UserSettings } from "./services/repositories/usersettings/usersettings";
+import { GuildSettings } from "./services/repositories/guildsettings/guildsettings";
+import { DbTranscriptChanRepository } from "./services/repositories/transcriptionchannels/dbtranscriptchanrepository";
 
 //Load env file if we're not in a container. That file will be passed as an argument to docker if we're running docker.
 if(process.env.CONTAINER !== "true") {
@@ -71,8 +73,9 @@ let conn = createConnection({
 });
 
 container.bind<Connection>(TYPES.Database).toConstantValue(conn.promise())
-container.bind<AbstractPermissionRepository>(TYPES.PermissionRepository).to(DbPermissionRepository).inSingletonScope();
-container.bind<AbstractGuildSettingsRepository>(TYPES.GuildSettingsRepository).to(DbGuildSettingsRespository).inSingletonScope();
+container.bind<SettingsRepository<UserSettings>>(TYPES.UserSettingsRepository).to(DbUserSettingsRepository).inSingletonScope();
+container.bind<SettingsRepository<GuildSettings>>(TYPES.GuildSettingsRepository).to(DbGuildSettingsRespository).inSingletonScope();
+container.bind<SettingsRepository<string>>(TYPES.TranscriptionChannelRespository).to(DbTranscriptChanRepository).inSingletonScope();
 
 container.bind<ChannelJoiner>(TYPES.ChannelJoiner).to(ChannelJoiner).inSingletonScope();
 container.bind<About>(TYPES.About).to(About).inSingletonScope();

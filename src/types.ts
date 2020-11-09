@@ -20,8 +20,9 @@ export const TYPES = {
     StandardEmbedMaker: Symbol("StandardEmbedMaker"),
 
     Database: Symbol("Database"),
-    PermissionRepository: Symbol("PermissionRepository"),
+    UserSettingsRepository: Symbol("PermissionRepository"),
     GuildSettingsRepository: Symbol("GuildSettingsRepository"),
+    TranscriptionChannelRespository: Symbol("TranscriptionChannelRepository"),
 
     ChannelJoiner: Symbol("ChannelJoiner"),
     About: Symbol("About"),

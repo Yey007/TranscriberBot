@@ -6,7 +6,7 @@ import { TranscriptionSender } from "./transcriptionsender";
 import { TYPES } from "../../types";
 import { StandardEmbedMaker } from "../misc/standardembedmaker";
 import { TranscriptionChannelGetter } from "./transcriptionchannelgetter";
-import { RecordingPermissionState } from "../repositories/permission/usersettings";
+import { RecordingPermissionState } from "../repositories/usersettings/usersettings";
 
 //TODO: Per voice channel transcriptions
 @injectable()

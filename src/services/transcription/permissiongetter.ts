@@ -1,18 +1,18 @@
 import { User } from "discord.js";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
-import { AbstractPermissionRepository } from "../repositories/permission/abstractpermissionrepository";
-import { RecordingPermissionState } from "../repositories/permission/usersettings";
+import { SettingsRepository } from "../repositories/settingsrepository";
+import { RecordingPermissionState, UserSettings } from "../repositories/usersettings/usersettings";
 
 @injectable()
 export class PermissionGetter {
 
-    private permissionRepo: AbstractPermissionRepository
+    private permissionRepo: SettingsRepository<UserSettings>
 
     public constructor(
-        @inject(TYPES.PermissionRepository) permissionRepo: AbstractPermissionRepository) 
+        @inject(TYPES.UserSettingsRepository) userSettingsRepo: SettingsRepository<UserSettings>) 
     {
-        this.permissionRepo = permissionRepo
+        this.permissionRepo = userSettingsRepo
     }
 
     public async getPermission(user: User): Promise<RecordingPermissionState> {
