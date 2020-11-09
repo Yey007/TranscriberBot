@@ -19,10 +19,13 @@
     "ffmpeg-static": "^4.2.7",
     "ibm-watson": "^5.7.1",
     "inversify": "^5.0.1",
+    "migrate": "^1.7.0",
     "mysql2": "^2.2.5",
     "reflect-metadata": "^0.1.13",
-    "sql-template-strings": "^2.2.2",
-    "typescript": "^4.0.5"
+    "sql-template-strings": "^2.2.2"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.5"
+  }
 }
