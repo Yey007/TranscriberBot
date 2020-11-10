@@ -31,9 +31,11 @@ import { GuildSettings } from "./services/repositories/guildsettings/guildsettin
 import { DbTranscriptChanRepository } from "./services/repositories/transcriptionchannels/dbtranscriptchanrepository";
 
 //Load env file if we're not in a container. That file will be passed as an argument to docker if we're running docker.
+/*
 if(process.env.CONTAINER !== "true") {
     env.config()
 }
+*/
 
 export let container = new Container();
 
@@ -58,18 +60,11 @@ container.bind<PermissionGetter>(TYPES.PermissionGetter).to(PermissionGetter).in
 container.bind<TranscriptionChannelGetter>(TYPES.TranscriptionChannelGetter).to(TranscriptionChannelGetter).inSingletonScope();
 container.bind<StandardEmbedMaker>(TYPES.StandardEmbedMaker).to(StandardEmbedMaker).inSingletonScope();
 
-// We need to use a seperate address when running inside docker AND we're using windows.
-// If we are using linux, an enviornment variable will be set and we will run with the 
-let host = 'localhost'
-if(process.env.CONTAINER === "true" && process.env.HOST_OS !== "linux") {
-    host = 'host.docker.internal'
-}
-
 let conn = createConnection({
-    host     : host,
-    user     : 'transcriberbot',
-    password : process.env.MYSQL_PASSWORD,
-    database : 'transcriberbot'
+    host: "db",
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE
 });
 
 container.bind<Connection>(TYPES.Database).toConstantValue(conn.promise())

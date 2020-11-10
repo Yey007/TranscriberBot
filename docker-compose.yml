@@ -1,0 +1,29 @@
+﻿version: "3.8"
+
+services: 
+  bot:
+    container_name: bot
+    image: yey007/transcriberbot:latest
+    depends_on: 
+      - db
+    env_file:
+      - .env
+    restart: always
+    networks:
+      - my_network
+  
+  db:
+    container_name: database
+    image: mysql:latest
+    volumes:
+      - db_data:/var/lib/mysql
+    env_file: 
+      - db.env
+    restart: always
+    networks:
+      - my_network
+
+volumes:
+  db_data:
+networks:
+  my_network:
