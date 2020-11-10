@@ -32,7 +32,7 @@ import { DbTranscriptChanRepository } from "./services/repositories/transcriptio
 
 //Load env file if we're not in a container. That file will be passed as an argument to docker if we're running docker.
 if(process.env.CONTAINER !== "true") {
-    env.config({path: "./bot.env"})
+    env.config()
 }
 
 export let container = new Container();
