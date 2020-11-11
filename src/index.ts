@@ -12,4 +12,7 @@ dbm.up().then(() => {
     }).catch((error) => {
         console.log('Oh no!!! ', error)
     });
+}).catch((error) => {
+    console.log("ERROR!!!!!!!!!!!!!!!!!!")
+    console.log(error)
 })

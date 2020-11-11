@@ -28,7 +28,7 @@ export class Bot {
 		console.log("Starting...")
 
         this.registerEvents()
-
+        
         return this.client.login(this.token)
     }
 
@@ -43,6 +43,9 @@ export class Bot {
                 let vc = botMember.voice.connection
                 this.transcriptionManager.speaking(vc, member)
             }
+        })
+        this.client.on("error", (err) => {
+            console.log("Fuck me.")
         })
     }
 }

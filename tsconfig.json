@@ -8,6 +8,6 @@
         "target": "esnext",
         "module": "commonjs",
         "outDir": "ts-built",
-        "rootDir": "src"
+        "rootDir": "src",
     }
 }

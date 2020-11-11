@@ -1,9 +1,10 @@
 {
     "dev": {
         "driver": "mysql8",
-        "user": "transcriberbot",
+        "user": {"ENV": "MYSQL_USER"},
         "password": {"ENV": "MYSQL_PASSWORD"},
-        "database": "transcriberbot",
-        "multipleStatements": "true"
+        "database": {"ENV": "MYSQL_DATABASE"},
+        "multipleStatements": "true",
+        "host": "db"
     }
 }
