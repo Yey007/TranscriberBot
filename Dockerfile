@@ -2,6 +2,8 @@ FROM mhart/alpine-node:14
 
 ENV NODE_ENV=production
 
+ENV CONTAINER=true
+
 LABEL maintainer="yey007tech@gmail.com"
 
 ARG BUILD_DATE

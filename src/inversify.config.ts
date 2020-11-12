@@ -30,12 +30,11 @@ import { UserSettings } from "./services/repositories/usersettings/usersettings"
 import { GuildSettings } from "./services/repositories/guildsettings/guildsettings";
 import { DbTranscriptChanRepository } from "./services/repositories/transcriptionchannels/dbtranscriptchanrepository";
 
-//Load env file if we're not in a container. That file will be passed as an argument to docker if we're running docker.
-/*
+//Load env files if we're not in a container. That file will be passed as an argument to docker if we're running docker.
 if(process.env.CONTAINER !== "true") {
-    env.config()
+    env.config({path: "bot.env"})
+    env.config({path: "db.env"})
 }
-*/
 
 export let container = new Container();
 
