@@ -60,14 +60,16 @@ container.bind<PermissionGetter>(TYPES.PermissionGetter).to(PermissionGetter).in
 container.bind<TranscriptionChannelGetter>(TYPES.TranscriptionChannelGetter).to(TranscriptionChannelGetter).inSingletonScope();
 container.bind<StandardEmbedMaker>(TYPES.StandardEmbedMaker).to(StandardEmbedMaker).inSingletonScope();
 
-// If we're in docker, this will likely crash the process multiple times.
-// That is fine. I really don't want to implement a try retry loop due to it being difficult with callbacks
 let conn = createConnection({
     host: "db",
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE,
 });
+
+conn.on("error", (err) => {
+    console.log("MySQL error: " + err.code)
+})
 
 container.bind<Connection>(TYPES.Database).toConstantValue(conn.promise())
 container.bind<SettingsRepository<UserSettings>>(TYPES.UserSettingsRepository).to(DbUserSettingsRepository).inSingletonScope();

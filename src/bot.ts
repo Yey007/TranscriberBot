@@ -45,7 +45,7 @@ export class Bot {
             }
         })
         this.client.on("error", (err) => {
-            console.log("Fuck me.")
+            console.log("Discord error: " + err)
         })
     }
 }
