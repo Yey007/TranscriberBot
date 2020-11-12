@@ -12,4 +12,6 @@ dbm.up().then(() => {
     }).catch((error) => {
         console.log('Oh no!!! ', error)
     });
+}).catch((err) => {
+    console.log("Issue running migrations: " + err)
 })

@@ -14,16 +14,23 @@ WORKDIR /app
 
 COPY package*.json ./
 
+RUN npm install
+
 COPY tsconfig*.json ./
-
-COPY ./src ./src
-
-COPY ./resources ./resources
 
 RUN npm install -g typescript
 
-RUN npm install
+COPY ./src ./src
 
 RUN tsc
+
+COPY ./database.json ./
+
+COPY ./resources ./resources
+
+COPY ./migrations ./migrations
+
+COPY ./misc/wait-for.sh ./
+
 
 CMD [ "npm", "start" ]

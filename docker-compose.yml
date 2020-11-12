@@ -1,0 +1,43 @@
+﻿version: "3.8"
+
+services: 
+  bot:
+    container_name: bot
+    build: ./
+    image: yey007/transcriberbot:latest
+    restart: always
+    command: sh -c './wait-for.sh db:3306 -- npm start'
+    env_file: 
+      - bot.env
+      - db.env
+    depends_on: 
+      - db
+    networks:
+      - my_network
+
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    env_file:
+      - db.env
+    expose: 
+      - 3306
+    networks:
+      - my_network
+  
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - my_network
+
+volumes:
+  db_data:
+
+networks:
+  my_network:
+    name: my_network
+    driver: bridge
