@@ -3,8 +3,10 @@
 services: 
   bot:
     container_name: bot
+    build: ./
     image: yey007/transcriberbot:latest
     restart: always
+    command: sh -c './wait-for.sh db:3306 -- npm start'
     env_file: 
       - .env
       - db.env

@@ -12,9 +12,15 @@ WORKDIR /app
 
 COPY package*.json ./
 
+RUN npm install
+
+COPY tsconfig*.json ./
+
 RUN npm install -g typescript
 
-RUN npm install
+COPY ./src ./src
+
+RUN tsc
 
 COPY ./database.json ./
 
@@ -22,10 +28,7 @@ COPY ./resources ./resources
 
 COPY ./migrations ./migrations
 
-COPY tsconfig*.json ./
+COPY ./misc/wait-for.sh ./
 
-COPY ./src ./src
-
-RUN tsc
 
 CMD [ "npm", "start" ]
