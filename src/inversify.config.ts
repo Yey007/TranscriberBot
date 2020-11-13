@@ -29,6 +29,7 @@ import { SettingsRepository } from "./services/repositories/settingsrepository";
 import { UserSettings } from "./services/repositories/usersettings/usersettings";
 import { GuildSettings } from "./services/repositories/guildsettings/guildsettings";
 import { DbTranscriptChanRepository } from "./services/repositories/transcriptionchannels/dbtranscriptchanrepository";
+import { RoleManager } from "./services/permissions/rolemanager";
 
 //Load env files if we're not in a container. That file will be passed as an argument to docker if we're running docker.
 if(process.env.CONTAINER !== "true") {
@@ -82,3 +83,5 @@ container.bind<SetTranscriptChannel>(TYPES.SetTranscriptChannel).to(SetTranscrip
 container.bind<SetRecordingPermission>(TYPES.SetRecordingPermission).to(SetRecordingPermission).inSingletonScope();
 container.bind<Help>(TYPES.Help).to(Help).inSingletonScope();
 container.bind<SetPrefix>(TYPES.SetPrefix).to(SetPrefix).inSingletonScope();
+
+container.bind<RoleManager>(TYPES.RoleManager).to(RoleManager).inSingletonScope();

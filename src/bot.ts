@@ -33,6 +33,12 @@ export class Bot {
     }
 
     private registerEvents() {
+        this.client.on("ready", () => {
+            let guilds = this.client.guilds.cache.array()
+            for(let guild of guilds) {
+                
+            }
+        })
         this.client.on("message", (message) => {
             this.executor.executeCommand(message)
         })
@@ -43,6 +49,9 @@ export class Bot {
                 let vc = botMember.voice.connection
                 this.transcriptionManager.speaking(vc, member)
             }
+        })
+        this.client.on("guildCreate", (guild) => {
+            
         })
         this.client.on("error", (err) => {
             console.log("Discord error: " + err)
