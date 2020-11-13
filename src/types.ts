@@ -1,4 +1,3 @@
-
 export const TYPES = {
     Bot: Symbol("Bot"),
     Client: Symbol("Client"),
@@ -30,5 +29,7 @@ export const TYPES = {
     SetTranscriptChannel: Symbol("SetTranscriptChannel"),
     SetRecordingPermission: Symbol("SetRecordingPermission"),
     Help: Symbol("Help"),
-    SetPrefix: Symbol("SetPrefix")
+    SetPrefix: Symbol("SetPrefix"),
+
+    RoleManager: Symbol("RoleManager")
 };
