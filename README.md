@@ -1,3 +1,6 @@
+![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/yey007/transcriberbot?logo=docker)
+![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/yey007/transcriberbot?logo=docker)
+
 # TranscriberBot
 
 Should you allow it, TranscriberBot can transcribe all of your words with *reasonable* accuracy. It's useful for
@@ -20,29 +23,7 @@ You're ready to go! Type `!help` to earn about other commands.
 
 ## Prerequisites ##
 * [Docker](https://www.docker.com/)
-
-## Setting Up MySQL ##
-I will be assuming you have some knowledge of how to set up MySQL.
-1. Create a new database called `transcriberbot`
-2. Create a user called `transcriber` with any password you choose
-3. Grant all permission on `transcriberbot` to `transcriber`
-4. Run 
-```
-CREATE TABLE `user_settings` (`id` varchar(20) NOT NULL, `permission` int NOT NULL DEFAULT '0', PRIMARY KEY (`id`),
-CONSTRAINT `enum_permission` CHECK (((`permission` >= 0) and (`permission` <= 2)))) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-```
-5. Run 
-```
-CREATE TABLE `guild_settings` (`id` varchar(20) NOT NULL, `prefix` varchar(5) NOT NULL DEFAULT '!', PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-```
-6. Run 
-```
-CREATE TABLE `transcription_channels` (`voiceId` varchar(20) NOT NULL, `textId` varchar(20) NOT NULL,
-`guildId` varchar(20) NOT NULL, PRIMARY KEY (`voiceId`), KEY `guildId` (`guildId`),
-CONSTRAINT `transcription_channels_ibfk_1` FOREIGN KEY (`guildId`) REFERENCES `guild_settings` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-```
-7. Check back here in a while, this may become easier if I start running mysql in a docker contianer
+* [docker-compose](https://docs.docker.com/compose/install/)
 
 ## Obtaining Secrets ##
 I can't go into details here, but you need to obtain these secrets. There are tons of tutorials for discord bots and IBM covers using Speech-To-Text pretty well.
@@ -59,16 +40,18 @@ WATSON_SPEECH_API_KEY=your_api_key
 WATSON_SPEECH_URL=your_url
 MYSQL_PASSWORD=the_password_you_set
 ```
-3. If you're running the container on linux, add this line
+3. Create another file called db.env
+2. Make the file look like this (you can replace or leave these placeholders)
 ```
-HOST_OS=linux
+MYSQL_ROOT_PASSWORD=rootpassword
+MYSQL_PASSWORD=password
+MYSQL_DATABASE=transcriberbot
+MYSQL_USER=bot
 ```
 
 ## Running ##
-### Windows ###
-Run `sudo docker run --env-file bot.env -d yey007/transcriberbot`
-### Linux ###
-Run `sudo docker run --env-file bot.env --net=host -d yey007/transcriberbot`
+Run `docker-compose up`
+Note: You may need to run with sudo/privileged if that doesn't work
 
 You're good to go :)
 
