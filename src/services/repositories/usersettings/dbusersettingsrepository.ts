@@ -5,6 +5,7 @@ import SQL from "sql-template-strings";
 import { Connection, RowDataPacket } from "mysql2/promise";
 import { SettingsRepository } from "../settingsrepository";
 
+//TODO: tempSet function for vollatile sets? get checks there first, if set is called key is deleted
 @injectable()
 export class DbUserSettingsRepository extends SettingsRepository<UserSettings> {
 

@@ -1,12 +1,13 @@
-﻿version: "3.8"
+version: "3.8"
 
 services: 
   bot:
+    privileged: true
     container_name: bot
     build: ./
     image: yey007/transcriberbot:latest
     restart: always
-    command: sh -c './wait-for.sh db:3306 -- npm start'
+    command: sh -c "./wait-for db:3306 -- npm start"
     env_file: 
       - bot.env
       - db.env
@@ -33,9 +34,6 @@ services:
       - 8080:8080
     networks:
       - my_network
-
-volumes:
-  db_data:
 
 networks:
   my_network:
