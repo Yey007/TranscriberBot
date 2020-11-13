@@ -16,56 +16,48 @@ export class PermissionGetter {
     }
 
     public async getPermission(user: User): Promise<RecordingPermissionState> {
-        let settings = await this.permissionRepo.get(user.id)
         if (user.bot) {
             return RecordingPermissionState.NoConsent
         }
+        
+        let settings = await this.permissionRepo.get(user.id)
         
         switch (settings.permission) {
             case RecordingPermissionState.Consent:
             case RecordingPermissionState.NoConsent:
                 return settings.permission
             case RecordingPermissionState.Unknown:
+                return await this.askUser(user)
+        }
+    }
 
-                // Assume no consent for now so that we don't ask again
-                // There is a low chance that this will cause a datarace
-                settings.permission = RecordingPermissionState.NoConsent
-                this.permissionRepo.set(user.id, settings)
+    private async askUser(user: User): Promise<RecordingPermissionState> {
+        await this.permissionRepo.set(user.id, {permission: RecordingPermissionState.NoConsent})
 
-                let dm = await user.createDM()
-                let noconsent = false
-                dm.send("Hey! I'm currently transcribing audio from the voice channel you're in, but before I can transcribe yours," +
-                    " I need your permission. Type `!accept` to accept and `!refuse` to refuse")
+        let dm = await user.createDM()
+        dm.send("Hey! I'm currently transcribing audio from the voice channel you're in, but before I can transcribe your voice," +
+            " I need your permission. Type `!accept` to accept and `!deny` to deny.")
 
-                dm.awaitMessages(response => response.content === "!accept", {
+        try {
+            let collected = await dm.awaitMessages(response => 
+                response.content === "!accept" || response.content === "!deny", {
                     max: 1,
                     time: 30000,
                     errors: ['time']
-                }).then(async collected => {
-                    settings = await this.permissionRepo.get(user.id)
-                    settings.permission = RecordingPermissionState.Consent
-                    this.permissionRepo.set(user.id, settings)
-                    dm.send("Permission preference set.")
-                    return RecordingPermissionState.Consent
-                }).catch(() => {
-                    if (!noconsent) {
-                        dm.send("Assumed no permission after 30 seconds.")
-                        return RecordingPermissionState.NoConsent
-                    }
                 })
-
-                dm.awaitMessages(response => response.content === "!refuse", {
-                    max: 1,
-                    time: 30000,
-                    errors: ['time']
-                }).then(collected => {
-                    noconsent = true
-                    dm.send("Refused.")
-                    return RecordingPermissionState.NoConsent
-                }).catch(() => {
-
-                })
-                break;
+            let preference = collected.first().content
+            if(preference === "!accept") {
+                this.permissionRepo.set(user.id, {permission: RecordingPermissionState.Consent})
+                dm.send(`Preference set to \`${preference}\``)
+                return RecordingPermissionState.Consent
+            } else {
+                this.permissionRepo.set(user.id, {permission: RecordingPermissionState.NoConsent})
+                dm.send(`Preference set to \`${preference}\``)
+                return RecordingPermissionState.NoConsent
+            }
+        } catch(error) {
+            dm.send("Assumed no permission after 30 seconds.")
+            return RecordingPermissionState.NoConsent
         }
     }
 }

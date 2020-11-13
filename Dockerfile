@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:14
+FROM node:14-alpine
 
 ENV NODE_ENV=production
 
@@ -11,6 +11,10 @@ ARG BUILD_DATE
 LABEL org.label-schema.build-date=$BUILD_DATE
 
 WORKDIR /app
+
+RUN apk add --no-cache curl
+
+RUN curl -OL https://raw.githubusercontent.com/mrako/wait-for/master/wait-for && chmod +x wait-for
 
 COPY package*.json ./
 
@@ -29,8 +33,5 @@ COPY ./database.json ./
 COPY ./resources ./resources
 
 COPY ./migrations ./migrations
-
-COPY ./misc/wait-for.sh ./
-
 
 CMD [ "npm", "start" ]

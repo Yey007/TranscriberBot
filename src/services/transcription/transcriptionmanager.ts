@@ -34,7 +34,6 @@ export class TranscriptionManager {
 
     public async speaking(vc: VoiceConnection, member: GuildMember | PartialGuildMember): Promise<void> {
         let state = await this.permissiongetter.getPermission(member.user)
-        console.log(state)
         if (state === RecordingPermissionState.NoConsent || state === RecordingPermissionState.Unknown)
             return
         let stream = vc.receiver.createStream(member.user, { mode: "pcm", end: "silence" })
