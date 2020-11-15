@@ -1,11 +1,11 @@
-import { User } from "discord.js";
+import { DMChannel, User } from "discord.js";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
 import { SettingsRepository } from "../repositories/settingsrepository";
 import { RecordingPermissionState, UserSettings } from "../repositories/usersettings/usersettings";
 
 @injectable()
-export class PermissionGetter {
+export class RecPermissionGetter {
 
     private permissionRepo: SettingsRepository<UserSettings>
 
@@ -34,9 +34,15 @@ export class PermissionGetter {
     private async askUser(user: User): Promise<RecordingPermissionState> {
         await this.permissionRepo.set(user.id, {permission: RecordingPermissionState.NoConsent})
 
-        let dm = await user.createDM()
-        dm.send("Hey! I'm currently transcribing audio from the voice channel you're in, but before I can transcribe your voice," +
-            " I need your permission. Type `!accept` to accept and `!deny` to deny.")
+        let dm: DMChannel
+        try {     
+            dm = await user.createDM()
+            console.log("awudagduy " + dm)
+            dm.send("Hey! I'm currently transcribing audio from the voice channel you're in, but before I can transcribe your voice," +
+                " I need your permission. Type `!accept` to accept and `!deny` to deny.")
+        } catch(err) {
+            return RecordingPermissionState.NoConsent
+        }
 
         try {
             let collected = await dm.awaitMessages(response => 

@@ -10,7 +10,7 @@ import { Transcriber } from "./services/transcription/transcriber";
 import SpeechToText, { RecognizeConstants } from "ibm-watson/speech-to-text/v1"
 import { IamAuthenticator } from 'ibm-watson/auth';
 import { TranscriptionSender } from "./services/transcription/transcriptionsender";
-import { PermissionGetter } from "./services/transcription/permissiongetter";
+import { RecPermissionGetter } from "./services/transcription/recpermissiongetter";
 import { StandardEmbedMaker } from "./services/misc/standardembedmaker";
 import { ChannelLeaver } from "./services/commands/leave";
 import { CommandMapper } from "./services/commands/commandmapper";
@@ -56,7 +56,7 @@ container.bind<CommandMapper>(TYPES.CommandMapper).to(CommandMapper).inSingleton
 container.bind<Transcriber>(TYPES.Transcriber).to(Transcriber).inSingletonScope();
 container.bind<TranscriptionSender>(TYPES.TranscriptionSender).to(TranscriptionSender).inSingletonScope();
 container.bind<TranscriptionManager>(TYPES.TranscriptionManager).to(TranscriptionManager).inSingletonScope();
-container.bind<PermissionGetter>(TYPES.PermissionGetter).to(PermissionGetter).inSingletonScope();
+container.bind<RecPermissionGetter>(TYPES.PermissionGetter).to(RecPermissionGetter).inSingletonScope();
 container.bind<TranscriptionChannelGetter>(TYPES.TranscriptionChannelGetter).to(TranscriptionChannelGetter).inSingletonScope();
 container.bind<StandardEmbedMaker>(TYPES.StandardEmbedMaker).to(StandardEmbedMaker).inSingletonScope();
 

@@ -3,7 +3,6 @@ import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
 import { StandardEmbedMaker } from "../misc/standardembedmaker";
 import { managerRequired } from "../permissions/rolerequierments";
-import { GuildSettings } from "../repositories/guildsettings/guildsettings";
 import { SettingsRepository } from "../repositories/settingsrepository";
 import { BotCommand } from "./botcommand";
 

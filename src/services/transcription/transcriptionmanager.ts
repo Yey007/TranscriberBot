@@ -1,6 +1,6 @@
 import { GuildMember, PartialGuildMember, TextChannel, VoiceConnection } from "discord.js";
 import { inject, injectable } from "inversify";
-import { PermissionGetter } from "./permissiongetter";
+import { RecPermissionGetter } from "./recpermissiongetter";
 import { Transcriber } from "./transcriber";
 import { TranscriptionSender } from "./transcriptionsender";
 import { TYPES } from "../../types";
@@ -8,20 +8,19 @@ import { StandardEmbedMaker } from "../misc/standardembedmaker";
 import { TranscriptionChannelGetter } from "./transcriptionchannelgetter";
 import { RecordingPermissionState } from "../repositories/usersettings/usersettings";
 
-//TODO: Per voice channel transcriptions
 @injectable()
 export class TranscriptionManager {
 
     private transcriber: Transcriber
     private transcriptionSender: TranscriptionSender
-    private permissiongetter: PermissionGetter
+    private permissiongetter: RecPermissionGetter
     private transcriptionChannelGetter: TranscriptionChannelGetter
     private embedMaker: StandardEmbedMaker
 
     public constructor(
         @inject(TYPES.Transcriber) transcriber: Transcriber,
         @inject(TYPES.TranscriptionSender) sender: TranscriptionSender,
-        @inject(TYPES.PermissionGetter) consent: PermissionGetter,
+        @inject(TYPES.PermissionGetter) consent: RecPermissionGetter,
         @inject(TYPES.TranscriptionChannelGetter) channelGetter: TranscriptionChannelGetter,
         @inject(TYPES.StandardEmbedMaker) embed: StandardEmbedMaker)        
     {

@@ -19,8 +19,9 @@ export class TranscriptionChannelGetter {
         let textId = await this.transcriptionChannelRepo.get(vcId)
 
         let chan = guild.channels.cache.get(textId)
-        if (chan !== null)
+        if (chan !== undefined) {
             return chan as TextChannel
+        }
 
         // This may not exist, but this function can't deal with it at that point.
         chan = guild.channels.cache.find(channel => channel.type === 'text' && channel.permissionsFor(guild.me).has('SEND_MESSAGES'))
