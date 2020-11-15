@@ -25,14 +25,21 @@ export class CommandExecutor {
 
     public async executeCommand(message: Message) {
         
-        if (message.author.bot || message.channel.type === "dm") 
+        if (message.author.bot || message.channel.type === "dm")
             return
 
         let settings = await this.repo.get(message.guild.id)
-        if(!message.content.startsWith(settings.prefix))
+        let trimmed = ""
+        if (message.content.startsWith(settings.prefix)) {
+            trimmed = message.content.slice(settings.prefix.length, message.content.length)
+        //Starts with mention
+        } else if (message.content.startsWith(`<@${message.guild.me.user.id}>`) ||
+            message.content.startsWith(`<@!${message.guild.me.user.id}>`)) {
+            trimmed = message.content.slice(message.content.indexOf(" ") + 1, message.content.length)
+        } else {
             return
+        }
 
-        let trimmed = message.content.slice(settings.prefix.length, message.content.length)
         let args = trimmed.split(" ")
         let cmd = this.mapper.map(args[0])
         if (cmd !== undefined) {

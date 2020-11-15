@@ -23,14 +23,23 @@ export class Help extends BotCommand {
 
     public async execute(message: Message, args: string[]): Promise<void> {
         let e = this.embed.makeInfo()
-        e.title = "Commands"
+        e.title = "Help"
+
+        let commands = ""
         this.mapper.commands().sort((a, b) => {
             let [nameA] = a
             let [nameB] = b
             return nameA.localeCompare(nameB)
         }).forEach(([name, command]) => {
-            e.description += `\`${name}\` - ${command.help}\n`
+            commands += `\`${name}\` - ${command.help}\n`
         });
+        e.addField("Commands", commands)
+
+        e.addField("Addressing", `You can address the bot in two ways
+
+            1. Mention the bot at the start of your message, like this: **${message.guild.me.toString()} command**
+            2. Use the prefix (! by default), like this: **!command**`)
+
         message.channel.send(e)
     }
 
