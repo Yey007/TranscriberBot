@@ -37,7 +37,6 @@ export class RecPermissionGetter {
         let dm: DMChannel
         try {     
             dm = await user.createDM()
-            console.log("awudagduy " + dm)
             dm.send("Hey! I'm currently transcribing audio from the voice channel you're in, but before I can transcribe your voice," +
                 " I need your permission. Type `!accept` to accept and `!deny` to deny.")
         } catch(err) {

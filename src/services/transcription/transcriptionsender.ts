@@ -42,6 +42,8 @@ export class TranscriptionSender {
 
         embed.description = formatted
         embed.setFooter(voiceChannelName)
+
+        embed.setTimestamp(Date.now())
         
         return embed
     }
