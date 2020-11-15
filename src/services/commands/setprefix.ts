@@ -2,7 +2,7 @@ import { Message } from "discord.js";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
 import { StandardEmbedMaker } from "../misc/standardembedmaker";
-import { managerRequired } from "../permissions/rolerequierments";
+import { managerOrAdminRequired } from "../permissions/rolerequierments";
 import { GuildSettings } from "../repositories/guildsettings/guildsettings";
 import { SettingsRepository } from "../repositories/settingsrepository";
 import { BotCommand } from "./botcommand";
@@ -27,7 +27,7 @@ export class SetPrefix extends BotCommand {
         this.maker = maker
     }
 
-    @managerRequired
+    @managerOrAdminRequired
     public async execute(message: Message, args: string[]): Promise<void> {
         if(args[1].length > 5) {
             let embed = this.maker.makeWarning()

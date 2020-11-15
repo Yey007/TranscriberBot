@@ -35,11 +35,15 @@ export class CommandExecutor {
         let trimmed = message.content.slice(settings.prefix.length, message.content.length)
         let args = trimmed.split(" ")
         let cmd = this.mapper.map(args[0])
-        if(cmd !== undefined) {
-            if(args.length < cmd.args.length + 1) {
+        if (cmd !== undefined) {
+            if (args.length !== cmd.args.length + 1) {
+                let argString = cmd.args.length === 1 ? "argument" : "arguments"
                 let embed = this.maker.makeWarning()
+
                 embed.title = "Invalid Arguments"
-                embed.description = `That command requires ${cmd.args.length + 1} arguments but you provided ${args.length}.`
+                embed.description = `That command requires ${cmd.args.length} ${argString} but you provided ${args.length - 1}.
+                                    *Use \`about ${args[0]}\` for more information.*`
+
                 message.channel.send(embed)
                 return
             }

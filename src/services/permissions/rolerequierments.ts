@@ -5,7 +5,7 @@ import { BotCommand } from "../commands/botcommand";
 import { StandardEmbedMaker } from "../misc/standardembedmaker";
 import { RoleManager } from "./rolemanager";
 
-export function managerRequired(
+export function managerOrAdminRequired(
     target: BotCommand, // The prototype of the class
     propertyKey: "execute", // The name of the method
     descriptor: TypedPropertyDescriptor<(message: Message, args: string[]) => Promise<void>>
@@ -17,7 +17,8 @@ export function managerRequired(
         const embedMaker = container.get<StandardEmbedMaker>(TYPES.StandardEmbedMaker)
 
         if (message) {
-            if (message.member.roles.cache.find(role => role.name === roleManager.roleName)) {
+            if (message.member.roles.cache.find(role => role.name === roleManager.roleName) || 
+                message.member.hasPermission("ADMINISTRATOR")) {
                 return original.call(this, message, args)
             } else {
                 let embed = embedMaker.makeWarning()

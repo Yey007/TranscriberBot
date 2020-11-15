@@ -24,7 +24,11 @@ export class Help extends BotCommand {
     public async execute(message: Message, args: string[]): Promise<void> {
         let e = this.embed.makeInfo()
         e.title = "Commands"
-        this.mapper.commands().forEach(([name, command]) => {
+        this.mapper.commands().sort((a, b) => {
+            let [nameA] = a
+            let [nameB] = b
+            return nameA.localeCompare(nameB)
+        }).forEach(([name, command]) => {
             e.description += `\`${name}\` - ${command.help}\n`
         });
         message.channel.send(e)
