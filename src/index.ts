@@ -3,6 +3,7 @@ import { container } from "./inversify.config"
 import { Bot } from "./bot"
 import { TYPES } from "./types"
 
+//TODO: Allowed channels
 const bot: Bot = container.get<Bot>(TYPES.Bot)
 const dbm = migrate.getInstance(true)
 
