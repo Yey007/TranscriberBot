@@ -11,7 +11,7 @@ dbm.up().then(() => {
     bot.start().then(() => {
         console.log('Logged in!')
     }).catch((error) => {
-        console.log('Oh no!!! ', error)
+        console.log('Oh no! ', error)
     });
 }).catch((err) => {
     console.log("Issue running migrations: " + err)
