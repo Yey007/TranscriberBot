@@ -1,10 +1,11 @@
 import { Message } from "discord.js";
 import { inject, injectable } from "inversify";
-import { TYPES } from "../../types";
-import { StandardEmbedMaker } from "../misc/standardembedmaker";
-import { managerOrAdminRequired } from "../permissions/rolerequierments";
-import { SettingsRepository } from "../repositories/settingsrepository";
-import { BotCommand } from "./botcommand";
+import { TYPES } from "../../../types";
+import { StandardEmbedMaker } from "../../misc/standardembedmaker";
+import { managerOrAdminRequired } from "../../permissions/rolerequierments";
+import { SettingsRepository } from "../../repositories/settingsrepository";
+import { BotCommand } from "../botcommand";
+import { CommandArgs } from "../commandargs";
 
 @injectable()
 export class SetTranscriptChannel extends BotCommand {
@@ -12,8 +13,8 @@ export class SetTranscriptChannel extends BotCommand {
     private repo: SettingsRepository<string>
     private maker: StandardEmbedMaker
     private _help = "sets the transcription channel for a discord server as the current channel"
-    private _args: [string, string][] = [
-        ["voiceChannel", "the name of the voice channel that should be transcribed into this channel."]
+    private _args: CommandArgs[] = [
+        {name: "voiceChannel", desc: "the name of the voice channel that should be transcribed into this channel.", optional: false}
     ]
 
     public constructor(
@@ -44,7 +45,7 @@ export class SetTranscriptChannel extends BotCommand {
         return this._help
     }
 
-    public get args(): [string, string][] {
+    public get args(): CommandArgs[] {
         return this._args
     }
 

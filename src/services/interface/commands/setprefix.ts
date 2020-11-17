@@ -1,11 +1,12 @@
 import { Message } from "discord.js";
 import { inject, injectable } from "inversify";
-import { TYPES } from "../../types";
-import { StandardEmbedMaker } from "../misc/standardembedmaker";
-import { managerOrAdminRequired } from "../permissions/rolerequierments";
-import { GuildSettings } from "../repositories/guildsettings/guildsettings";
-import { SettingsRepository } from "../repositories/settingsrepository";
-import { BotCommand } from "./botcommand";
+import { TYPES } from "../../../types";
+import { StandardEmbedMaker } from "../../misc/standardembedmaker";
+import { managerOrAdminRequired } from "../../permissions/rolerequierments";
+import { GuildSettings } from "../../repositories/guildsettings/guildsettings";
+import { SettingsRepository } from "../../repositories/settingsrepository";
+import { BotCommand } from "../botcommand";
+import { CommandArgs } from "../commandargs";
 
 @injectable()
 export class SetPrefix extends BotCommand {
@@ -14,8 +15,8 @@ export class SetPrefix extends BotCommand {
     private maker: StandardEmbedMaker
 
     private _help = "sets this bot's prefix for this server"
-    private _args: [string, string][] = [
-        ["prefix", "the prefix this bot should use for commands"]
+    private _args: CommandArgs[] = [
+        {name: "prefix", desc: "the prefix this bot should use for commands", optional: false}
     ]
 
     public constructor(
@@ -43,7 +44,7 @@ export class SetPrefix extends BotCommand {
     public get help(): string {
         return this._help
     }
-    public get args(): [string, string][] {
+    public get args(): CommandArgs[] {
         return this._args
     }
 

@@ -1,5 +1,5 @@
 import { Client } from "discord.js";
-import { CommandExecutor } from "./services/commands/commandexecutor";
+import { CommandExecutor } from "./services/interface/commandexecutor";
 import { inject, injectable } from "inversify";
 import { TYPES } from "./types";
 import { TranscriptionManager } from "./services/transcription/transcriptionmanager";

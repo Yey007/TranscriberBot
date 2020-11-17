@@ -1,10 +1,11 @@
 import { Message } from "discord.js"
 import { inject, injectable } from "inversify"
-import { TYPES } from "../../types"
-import { StandardEmbedMaker } from "../misc/standardembedmaker"
-import { SettingsRepository } from "../repositories/settingsrepository"
-import { RecordingPermissionState, UserSettings } from "../repositories/usersettings/usersettings"
-import { BotCommand } from "./botcommand"
+import { TYPES } from "../../../types"
+import { StandardEmbedMaker } from "../../misc/standardembedmaker"
+import { SettingsRepository } from "../../repositories/settingsrepository"
+import { RecordingPermissionState, UserSettings } from "../../repositories/usersettings/usersettings"
+import { BotCommand } from "../botcommand"
+import { CommandArgs } from "../commandargs"
 
 @injectable()
 export class SetRecordingPermission extends BotCommand {
@@ -12,8 +13,9 @@ export class SetRecordingPermission extends BotCommand {
     private repo: SettingsRepository<UserSettings>
     private maker: StandardEmbedMaker
     private _help = "sets the recording permission for the user executing the command"
-    private _args: [string, string][] = [
-        ["permission", "Whether the bot is allowed to record this user. Possible values are `accept` or `deny`"]
+    private _args: CommandArgs[] = [
+        {name: "permission", desc: "Whether the bot is allowed to record this user. Possible values are `accept` or `deny`", 
+        optional: false}
     ]
 
     public constructor(
@@ -50,7 +52,7 @@ export class SetRecordingPermission extends BotCommand {
         return this._help
     }
 
-    public get args(): [string, string][] {
+    public get args(): CommandArgs[] {
         return this._args
     }
 

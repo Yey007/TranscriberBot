@@ -3,25 +3,24 @@ import { Container } from "inversify";
 import { TYPES } from "./types";
 import { Bot } from "./bot";
 import { Client } from "discord.js";
-import { CommandExecutor } from "./services/commands/commandexecutor";
-import { ChannelJoiner } from "./services/commands/join";
-import { About } from "./services/commands/about";
+import { CommandExecutor } from "./services/interface/commandexecutor";
+import { ChannelJoiner } from "./services/interface/commands/join";
 import { Transcriber } from "./services/transcription/transcriber";
 import SpeechToText, { RecognizeConstants } from "ibm-watson/speech-to-text/v1"
 import { IamAuthenticator } from 'ibm-watson/auth';
 import { TranscriptionSender } from "./services/transcription/transcriptionsender";
 import { RecPermissionGetter } from "./services/transcription/recpermissiongetter";
 import { StandardEmbedMaker } from "./services/misc/standardembedmaker";
-import { ChannelLeaver } from "./services/commands/leave";
-import { CommandMapper } from "./services/commands/commandmapper";
+import { ChannelLeaver } from "./services/interface/commands/leave";
+import { MainCommandMapper } from "./services/interface/commandmapper";
 import { TranscriptionManager } from "./services/transcription/transcriptionmanager";
 import { DbUserSettingsRepository } from "./services/repositories/usersettings/dbusersettingsrepository";
 import { DbGuildSettingsRespository } from "./services/repositories/guildsettings/dbguildsettingsrepository";
-import { SetTranscriptChannel } from "./services/commands/settranscriptchannel";
-import { Help } from "./services/commands/help";
+import { SetTranscriptChannel } from "./services/interface/commands/settranscriptchannel";
+import { Help } from "./services/interface/commands/help";
 import { TranscriptionChannelGetter } from "./services/transcription/transcriptionchannelgetter";
-import { SetRecordingPermission } from "./services/commands/setrecordingpermission";
-import { SetPrefix } from "./services/commands/setprefix";
+import { SetRecordingPermission } from "./services/interface/commands/setrecordingpermission";
+import { SetPrefix } from "./services/interface/commands/setprefix";
 import { createConnection } from "mysql2"
 import { Connection } from "mysql2/promise"
 import env from "dotenv"
@@ -51,7 +50,7 @@ container.bind<SpeechToText>(TYPES.SpeechToText).toConstantValue(new SpeechToTex
 }));
 
 container.bind<CommandExecutor>(TYPES.CommandExecutor).to(CommandExecutor).inSingletonScope();
-container.bind<CommandMapper>(TYPES.CommandMapper).to(CommandMapper).inSingletonScope();
+container.bind<MainCommandMapper>(TYPES.CommandMapper).to(MainCommandMapper).inSingletonScope();
 
 container.bind<Transcriber>(TYPES.Transcriber).to(Transcriber).inSingletonScope();
 container.bind<TranscriptionSender>(TYPES.TranscriptionSender).to(TranscriptionSender).inSingletonScope();
@@ -77,7 +76,6 @@ container.bind<SettingsRepository<GuildSettings>>(TYPES.GuildSettingsRepository)
 container.bind<SettingsRepository<string>>(TYPES.TranscriptionChannelRespository).to(DbTranscriptChanRepository).inSingletonScope();
 
 container.bind<ChannelJoiner>(TYPES.ChannelJoiner).to(ChannelJoiner).inSingletonScope();
-container.bind<About>(TYPES.About).to(About).inSingletonScope();
 container.bind<ChannelLeaver>(TYPES.ChannelLeaver).to(ChannelLeaver).inSingletonScope();
 container.bind<SetTranscriptChannel>(TYPES.SetTranscriptChannel).to(SetTranscriptChannel).inSingletonScope();
 container.bind<SetRecordingPermission>(TYPES.SetRecordingPermission).to(SetRecordingPermission).inSingletonScope();

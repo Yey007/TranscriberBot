@@ -1,15 +1,16 @@
 import { Message, VoiceConnection } from "discord.js";
 import { inject, injectable } from "inversify";
-import { TYPES } from "../../types";
-import { StandardEmbedMaker } from "../misc/standardembedmaker";
-import { BotCommand } from "./botcommand";
+import { TYPES } from "../../../types";
+import { StandardEmbedMaker } from "../../misc/standardembedmaker";
+import { BotCommand } from "../botcommand";
+import { CommandArgs } from "../commandargs";
 
 @injectable()
 export class ChannelJoiner extends BotCommand {
 
     private embedMaker: StandardEmbedMaker
     private _help = "joins a voice channel"
-    private _args: [string, string][] = []
+    private _args: CommandArgs[] = []
 
     public constructor(
         @inject(TYPES.StandardEmbedMaker) embedMaker: StandardEmbedMaker) 
@@ -40,8 +41,7 @@ export class ChannelJoiner extends BotCommand {
         return this._help
     }
 
-    public get args(): [string, string][] {
+    public get args(): CommandArgs[] {
         return this._args
     }
-    
 }
