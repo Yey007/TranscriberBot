@@ -28,28 +28,38 @@ export class Prefix extends BotCommand {
         this.maker = maker
     }
 
-    @managerOrAdminRequired
     public async execute(message: Message, args: string[]): Promise<void> {
         if(args[1]) {
             //set
-            if(args[1].length > 5) {
-                let embed = this.maker.makeWarning()
-                embed.description = "Prefix cannot be more than 5 characters."
-                message.channel.send(embed)
-                return
-            }
-            this.repo.set(message.guild.id, {prefix: args[1]})
-            let embed = this.maker.makeSuccess()
-            embed.description = `Prefix set to \`${args[1]}\``
-            message.channel.send(embed)
+            await this.prefixSet(message, args[1])
         } else {
             //get
-            let embed = this.maker.makeInfo()
-            let settings = await this.repo.get(message.guild.id)
-            embed.description = `The prefix is currently \`${settings.prefix}\``
-            message.channel.send(embed)
+            await this.prefixGet(message)
         }
     }
+
+    @managerOrAdminRequired
+    private async prefixSet(message: Message, prefix: string): Promise<void> 
+    {
+        if(prefix.length > 5) {
+            let embed = this.maker.makeWarning()
+            embed.description = "Prefix cannot be more than 5 characters."
+            message.channel.send(embed)
+            return
+        }
+        this.repo.set(message.guild.id, {prefix: prefix})
+        let embed = this.maker.makeSuccess()
+        embed.description = `Prefix set to \`${prefix}\``
+        message.channel.send(embed)
+    }
+
+    private async prefixGet(message: Message): Promise<void> {
+        let embed = this.maker.makeInfo()
+        let settings = await this.repo.get(message.guild.id)
+        embed.description = `The prefix is currently \`${settings.prefix}\``
+        message.channel.send(embed)
+    }
+
     public get help(): string {
         return this._help
     }
