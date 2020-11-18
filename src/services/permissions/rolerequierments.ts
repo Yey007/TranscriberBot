@@ -1,7 +1,7 @@
 import { Message } from "discord.js";
 import { container } from "../../inversify.config";
 import { TYPES } from "../../types";
-import { BotCommand } from "../commands/botcommand";
+import { BotCommand } from "../interface/botcommand";
 import { StandardEmbedMaker } from "../misc/standardembedmaker";
 import { RoleManager } from "./rolemanager";
 

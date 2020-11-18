@@ -1,7 +1,7 @@
 import { Message } from "discord.js"
 import { inject, injectable } from "inversify"
 import { TYPES } from "../../types"
-import { CommandMapper } from "./commandmapper"
+import { MainCommandMapper } from "./commandmapper"
 import { StandardEmbedMaker } from "../misc/standardembedmaker"
 import { GuildSettings } from "../repositories/guildsettings/guildsettings"
 import { SettingsRepository } from "../repositories/settingsrepository"
@@ -10,12 +10,12 @@ import { SettingsRepository } from "../repositories/settingsrepository"
 export class CommandExecutor {
 
     private maker: StandardEmbedMaker
-    private mapper: CommandMapper
+    private mapper: MainCommandMapper
     private repo: SettingsRepository<GuildSettings>
 
     public constructor(
         @inject(TYPES.StandardEmbedMaker) maker: StandardEmbedMaker,
-        @inject(TYPES.CommandMapper) mapper: CommandMapper,
+        @inject(TYPES.CommandMapper) mapper: MainCommandMapper,
         @inject(TYPES.GuildSettingsRepository) repo: SettingsRepository<GuildSettings>) 
     {
         this.maker = maker
@@ -43,13 +43,19 @@ export class CommandExecutor {
         let args = trimmed.split(" ")
         let cmd = this.mapper.map(args[0])
         if (cmd !== undefined) {
-            if (args.length !== cmd.args.length + 1) {
-                let argString = cmd.args.length === 1 ? "argument" : "arguments"
+            let requiredLength = cmd.args.filter(arg => !arg.optional).length
+            let allLength = cmd.args.length
+            if(args.length - 1 < requiredLength || args.length - 1 > allLength) {
                 let embed = this.maker.makeWarning()
 
+                let requiredPlural = requiredLength === 1 ? "argument" : "arguments"
+                let allPlural = allLength === 1 ? "argument" : "arguments"
+
                 embed.title = "Invalid Arguments"
-                embed.description = `That command requires ${cmd.args.length} ${argString} but you provided ${args.length - 1}.
-                                    *Use \`about ${args[0]}\` for more information.*`
+                embed.description = `This command requires at least ${requiredLength} ${requiredPlural} and 
+                accepts at most ${allLength} ${allPlural} but you provided ${args.length - 1}.`
+
+                embed.setFooter(`Use about ${args[0]} for more information.`)
 
                 message.channel.send(embed)
                 return
