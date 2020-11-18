@@ -9,14 +9,14 @@ import { BotCommand } from "../botcommand";
 import { CommandArgs } from "../commandargs";
 
 @injectable()
-export class SetPrefix extends BotCommand {
+export class Prefix extends BotCommand {
 
     private repo: SettingsRepository<GuildSettings>
     private maker: StandardEmbedMaker
 
     private _help = "sets this bot's prefix for this server"
     private _args: CommandArgs[] = [
-        {name: "prefix", desc: "the prefix this bot should use for commands", optional: false}
+        {name: "new", desc: "the new prefix this bot should use for commands", optional: true}
     ]
 
     public constructor(
@@ -30,16 +30,25 @@ export class SetPrefix extends BotCommand {
 
     @managerOrAdminRequired
     public async execute(message: Message, args: string[]): Promise<void> {
-        if(args[1].length > 5) {
-            let embed = this.maker.makeWarning()
-            embed.description = "Prefix cannot be more than 5 characters."
+        if(args[1]) {
+            //set
+            if(args[1].length > 5) {
+                let embed = this.maker.makeWarning()
+                embed.description = "Prefix cannot be more than 5 characters."
+                message.channel.send(embed)
+                return
+            }
+            this.repo.set(message.guild.id, {prefix: args[1]})
+            let embed = this.maker.makeSuccess()
+            embed.description = `Prefix set to \`${args[1]}\``
             message.channel.send(embed)
-            return
+        } else {
+            //get
+            let embed = this.maker.makeInfo()
+            let settings = await this.repo.get(message.guild.id)
+            embed.description = `The prefix is currently \`${settings.prefix}\``
+            message.channel.send(embed)
         }
-        this.repo.set(message.guild.id, {prefix: args[1]})
-        let embed = this.maker.makeSuccess()
-        embed.description = `Prefix set to \`${args[1]}\``
-        message.channel.send(embed)
     }
     public get help(): string {
         return this._help

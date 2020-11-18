@@ -53,11 +53,11 @@ export class RecPermissionGetter {
             let preference = collected.first().content
             if(preference === "!accept") {
                 this.permissionRepo.set(user.id, {permission: RecordingPermissionState.Consent})
-                dm.send(`Preference set to \`${preference}\``)
+                dm.send(`Preference set to \`${preference.slice(1)}\``)
                 return RecordingPermissionState.Consent
             } else {
                 this.permissionRepo.set(user.id, {permission: RecordingPermissionState.NoConsent})
-                dm.send(`Preference set to \`${preference}\``)
+                dm.send(`Preference set to \`${preference.slice(1)}\``)
                 return RecordingPermissionState.NoConsent
             }
         } catch(error) {

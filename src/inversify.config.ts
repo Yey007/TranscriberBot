@@ -19,8 +19,8 @@ import { DbGuildSettingsRespository } from "./services/repositories/guildsetting
 import { SetTranscriptChannel } from "./services/interface/commands/settranscriptchannel";
 import { Help } from "./services/interface/commands/help";
 import { TranscriptionChannelGetter } from "./services/transcription/transcriptionchannelgetter";
-import { SetRecordingPermission } from "./services/interface/commands/setrecordingpermission";
-import { SetPrefix } from "./services/interface/commands/setprefix";
+import { SetRecordingPermission } from "./services/interface/commands/recordingpermission";
+import { Prefix } from "./services/interface/commands/prefix";
 import { createConnection } from "mysql2"
 import { Connection } from "mysql2/promise"
 import env from "dotenv"
@@ -80,6 +80,6 @@ container.bind<ChannelLeaver>(TYPES.ChannelLeaver).to(ChannelLeaver).inSingleton
 container.bind<SetTranscriptChannel>(TYPES.SetTranscriptChannel).to(SetTranscriptChannel).inSingletonScope();
 container.bind<SetRecordingPermission>(TYPES.SetRecordingPermission).to(SetRecordingPermission).inSingletonScope();
 container.bind<Help>(TYPES.Help).to(Help).inSingletonScope();
-container.bind<SetPrefix>(TYPES.SetPrefix).to(SetPrefix).inSingletonScope();
+container.bind<Prefix>(TYPES.SetPrefix).to(Prefix).inSingletonScope();
 
 container.bind<RoleManager>(TYPES.RoleManager).to(RoleManager).inSingletonScope();

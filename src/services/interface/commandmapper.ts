@@ -5,8 +5,8 @@ import { BotCommand } from "./botcommand";
 import { ChannelJoiner } from "./commands/join";
 import { ChannelLeaver } from "./commands/leave";
 import { Help } from "./commands/help";
-import { SetPrefix } from "./commands/setprefix";
-import { SetRecordingPermission } from "./commands/setrecordingpermission";
+import { Prefix } from "./commands/prefix";
+import { SetRecordingPermission } from "./commands/recordingpermission";
 import { SetTranscriptChannel } from "./commands/settranscriptchannel";
 
 @injectable()
@@ -19,8 +19,8 @@ export class MainCommandMapper {
         this.m.set("join", container.get<ChannelJoiner>(TYPES.ChannelJoiner))
         this.m.set("leave", container.get<ChannelLeaver>(TYPES.ChannelLeaver))
         this.m.set("set-transcript-chan", container.get<SetTranscriptChannel>(TYPES.SetTranscriptChannel))
-        this.m.set("set-rec-perm", container.get<SetRecordingPermission>(TYPES.SetRecordingPermission))
-        this.m.set("set-prefix", container.get<SetPrefix>(TYPES.SetPrefix))
+        this.m.set("rec-perm", container.get<SetRecordingPermission>(TYPES.SetRecordingPermission))
+        this.m.set("prefix", container.get<Prefix>(TYPES.SetPrefix))
     }
 
     public map(command: string): BotCommand {
