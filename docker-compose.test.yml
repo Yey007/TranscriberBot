@@ -1,6 +1,13 @@
-version: "3.8"
+﻿version: "3.8"
 
-services: 
+services:
+  sut:
+    container_name: sut
+    build: ./tests
+    depends_on:
+      - bot
+    env_file: 
+      - test.env
   bot:
     privileged: true
     container_name: bot
@@ -12,7 +19,7 @@ services:
       - bot.env
       - db.env
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=testing
     depends_on: 
       - db
     networks:
@@ -27,15 +34,6 @@ services:
       - db.env
     expose: 
       - 3306
-    networks:
-      - my_network
-  
-  adminer:
-    container_name: adminer
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
     networks:
       - my_network
 

@@ -25,19 +25,21 @@ export class Bot {
     }
 
 	public start(): Promise<string> {
-		console.log("Starting...")
+		console.log("Starting bot...")
 
         this.registerEvents()
         
         return this.client.login(this.token)
     }
 
+    public stop() {
+        console.log("Destroying client...")
+        this.client.destroy()
+    }
+
     private registerEvents() {
-        this.client.on("ready", () => {
-            let guilds = this.client.guilds.cache.array()
-            for(let guild of guilds) {
-                
-            }
+        this.client.on("ready", async () => {
+            await this.client.user.setStatus("online")
         })
         this.client.on("message", (message) => {
             this.executor.executeCommand(message)
@@ -50,11 +52,17 @@ export class Bot {
                 this.transcriptionManager.speaking(vc, member)
             }
         })
-        this.client.on("guildCreate", (guild) => {
-            
-        })
         this.client.on("error", (err) => {
             console.log("Discord error: " + err)
         })
+        this.client.setInterval(async () => {
+            let serversPlural = this.client.guilds.cache.size === 1 ? "server" : "servers"
+            await this.client.user.setPresence({
+                activity: {
+                    name: `${this.client.guilds.cache.size} ${serversPlural}`,
+                    type: "LISTENING"
+                }
+            })
+        }, 5000)
     }
 }

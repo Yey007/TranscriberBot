@@ -1,7 +1,5 @@
 FROM node:14-alpine
 
-ENV NODE_ENV=production
-
 ENV CONTAINER=true
 
 LABEL maintainer="yey007tech@gmail.com"
@@ -16,11 +14,11 @@ RUN apk add --no-cache curl
 
 RUN curl -OL https://raw.githubusercontent.com/mrako/wait-for/master/wait-for && chmod +x wait-for
 
-COPY package*.json ./
+COPY ./package*.json ./
 
 RUN npm install
 
-COPY tsconfig*.json ./
+COPY ./tsconfig.json ./
 
 RUN npm install -g typescript
 

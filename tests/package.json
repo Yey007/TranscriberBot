@@ -1,0 +1,31 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/chai": "^4.2.14",
+    "@types/mocha": "^8.0.4",
+    "@types/node": "^14.14.9",
+    "chai": "^4.2.0",
+    "discord.js": "^12.4.1",
+    "dotenv": "^8.2.0",
+    "mocha": "^8.2.1",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.1.2"
+  },
+  "mocha": {
+    "recursive": true,
+    "require": "ts-node/register",
+    "extension": [
+      "ts"
+    ],
+    "parallel": true,
+    "exit": true,
+    "timeout": 10000
+  }
+}

@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "types": ["node", "mocha"],
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "target": "esnext",
+        "module": "commonjs",
+        "outDir": "ts-built",
+        "rootDir": "./test",
+    }
+}

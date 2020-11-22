@@ -46,10 +46,7 @@ export class Help extends BotCommand {
         });
         e.addField("Commands", commands)
 
-        e.addField("Addressing", `You can address the bot in two ways
-
-            1. Mention the bot at the start of your message, like this: **${message.guild.me.toString()} command**
-            2. Use the prefix (! by default), like this: **!command**`)
+        e.addField("Addressing", `You can address the bot in two ways\n\n1. Mention the bot at the start of your message, like this: **${message.guild.me.toString()} command**\n2. Use the prefix (! by default), like this: **!command**`)
 
         message.channel.send(e)
     }

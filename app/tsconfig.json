@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "types": ["reflect-metadata"],
+        "types": ["reflect-metadata", "node"],
         "moduleResolution": "node",
         "esModuleInterop": true,
         "experimentalDecorators": true,
@@ -8,6 +8,6 @@
         "target": "esnext",
         "module": "commonjs",
         "outDir": "ts-built",
-        "rootDir": "src",
+        "rootDir": "./src",
     }
 }
