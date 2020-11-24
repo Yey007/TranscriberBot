@@ -22,7 +22,17 @@ export class ChannelJoiner extends BotCommand {
     public async execute(message: Message, args: string[]): Promise<void> {
         if(message.member.voice.channel) 
         {
-            let vc: VoiceConnection = await message.member.voice.channel.join();
+            let vc: VoiceConnection
+
+            try {
+                vc = await message.member.voice.channel.join();
+            } catch(err) {
+                let embed = this.embedMaker.makeWarning()
+                embed.title = "Channel Unavailable"
+                embed.description = "I can't join that channel. Please make sure I have the correct permissions."
+                message.channel.send(embed)
+                return
+            }
 
             //Due to the wacky API on recieving audio, something must be sent before we can recieve anything
             let dispatcher = vc.play(process.cwd() + "/resources/dummy.mp3", { volume: 0 })
