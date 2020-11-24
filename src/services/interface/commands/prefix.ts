@@ -31,6 +31,7 @@ export class Prefix extends BotCommand {
     public async execute(message: Message, args: string[]): Promise<void> {
         if(args[1]) {
             //set
+            console.log(args[1])
             await this.prefixSet(message, args[1])
         } else {
             //get
@@ -42,6 +43,7 @@ export class Prefix extends BotCommand {
     private async prefixSet(message: Message, prefix: string): Promise<void> 
     {
         if(prefix.length > 5) {
+            console.log(prefix.length)
             let embed = this.maker.makeWarning()
             embed.description = "Prefix cannot be more than 5 characters."
             message.channel.send(embed)

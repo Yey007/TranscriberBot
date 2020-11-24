@@ -19,7 +19,7 @@ export function managerOrAdminRequired(
         if (message) {
             if (message.member.roles.cache.find(role => role.name === roleManager.roleName) || 
                 message.member.hasPermission("ADMINISTRATOR")) {
-                return original.call(this, message, args)
+                return original.call(this, message, ...args)
             } else {
                 let embed = embedMaker.makeWarning()
                 embed.title = "Permission Denied"

@@ -7,7 +7,7 @@ import { TranscriptionManager } from "./services/transcription/transcriptionmana
 @injectable()
 export class Bot {
     
-    private client: Client
+    public client: Client
     private readonly token: string
     private executor: CommandExecutor
     private transcriptionManager: TranscriptionManager
@@ -24,12 +24,10 @@ export class Bot {
         this.transcriptionManager = transcriptionManager
     }
 
-	public start(): Promise<string> {
-		console.log("Starting bot...")
-
+	public async start(): Promise<void> {
+		console.log("Starting bot...")     
+        await this.client.login(this.token)
         this.registerEvents()
-        
-        return this.client.login(this.token)
     }
 
     public stop() {

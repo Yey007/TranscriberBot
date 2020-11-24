@@ -1,13 +1,12 @@
 {
     "compilerOptions": {
-        "types": ["reflect-metadata", "node"],
+        "types": ["node", "mocha"],
         "moduleResolution": "node",
         "esModuleInterop": true,
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
         "target": "esnext",
         "module": "commonjs",
         "outDir": "ts-built",
         "rootDir": "./src",
+        "experimentalDecorators": true
     }
 }

@@ -5,14 +5,21 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./ts-built/index.js",
-    "debug": "node --trace-warnings ./ts-built/index.js"
+    "debug": "node --trace-warnings ./ts-built/index.js",
+    "test": "mocha ts-built/test/**/*.js"
   },
-  "author": "Yey007",
+  "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/chai": "^4.2.14",
+    "@types/mocha": "^8.0.4",
+    "@types/node": "^14.14.9",
+    "chai": "^4.2.0",
+    "mocha": "^8.2.1",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.1.2",
     "@discordjs/opus": "^0.3.2",
     "@types/mysql": "^2.15.15",
-    "@types/node": "^14.11.5",
     "db-migrate": "^0.11.11",
     "db-migrate-mysql8": "^1.0.1",
     "discord.js": "^12.3.1",
@@ -24,8 +31,14 @@
     "reflect-metadata": "^0.1.13",
     "sql-template-strings": "^2.2.2"
   },
-  "devDependencies": {
-    "ts-node": "^9.0.0",
-    "typescript": "^4.0.5"
+  "mocha": {
+    "recursive": true,
+    "extension": [
+      "js"
+    ],
+    "parallel": false,
+    "exit": true,
+    "timeout": 10000,
+    "slow": 450
   }
 }

@@ -2,5 +2,3 @@
 ts-built
 node_modules
 .vscode/
-*.migrate
-corde.json

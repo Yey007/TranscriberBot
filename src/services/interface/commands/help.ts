@@ -51,6 +51,7 @@ export class Help extends BotCommand {
         message.channel.send(e)
     }
 
+    //Argument order, which arguments are required etc.
     private specificHelp(message: Message, command: string) {
         let cmd = this.mapper.map(command)
         if(cmd !== undefined) {
@@ -58,10 +59,9 @@ export class Help extends BotCommand {
             embed.title = "Help"
 
             //What the command does overall
-            embed.description = `\`${command}\` ${cmd.help}
-            Brackets [] denote optional arguments.`
+            embed.description = `\`${command}\` ${cmd.help}\nBrackets [] denote optional arguments.`
 
-            let usage = "`" + command //Argument order, which arguments are required etc.
+            let usage = "`" + command
             let argumentString = ""
             for(let arg of cmd.args) {
                 usage += arg.optional ? ` [${arg.name}]`: ` ${arg.name}` //If optional surround with brackets
