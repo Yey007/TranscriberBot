@@ -44,8 +44,8 @@ export class Bot {
         })
         this.client.on("guildMemberSpeaking", (member, speaking) => {
             let channelMembers = member.voice.channel.members
-            let botMember = member.guild.member(this.client.user)
-            if(speaking.bitfield === 1 && channelMembers.get(botMember.id) !== undefined) {
+            let botMember = member.guild.me
+            if(!member.user.bot && speaking.bitfield === 1 && channelMembers.get(botMember.id) !== undefined) {
                 let vc = botMember.voice.connection
                 this.transcriptionManager.speaking(vc, member)
             }

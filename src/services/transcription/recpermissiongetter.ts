@@ -16,9 +16,6 @@ export class RecPermissionGetter {
     }
 
     public async getPermission(user: User): Promise<RecordingPermissionState> {
-        if (user.bot) {
-            return RecordingPermissionState.NoConsent
-        }
         
         let settings = await this.permissionRepo.get(user.id)
         

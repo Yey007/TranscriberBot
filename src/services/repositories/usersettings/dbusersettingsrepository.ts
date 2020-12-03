@@ -28,9 +28,12 @@ export class DbUserSettingsRepository extends SettingsRepository<UserSettings> {
             return {permission: RecordingPermissionState.Unknown}
     }
     public async set(userid: string, settings: UserSettings): Promise<void> {
+        if(userid === undefined)
+            return
+
         await this.db.query(
             SQL`INSERT INTO user_settings(id, permission) 
-            VALUES(${userid}, ${settings.permission})
+            VALUES(${userid}, IFNULL(${settings.permission}, DEFAULT(permission)))
             ON DUPLICATE KEY UPDATE
             permission = IFNULL(${settings.permission}, permission)`)
     }

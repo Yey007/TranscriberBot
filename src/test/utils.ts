@@ -9,9 +9,9 @@ export function expectMessage(expected: string | MessageEmbed): Promise<void | C
         let msg = collected.first()
         if (expected instanceof MessageEmbed) {
             let actual = msg.embeds[0]
-            expect(expected).to.deep.equal(actual)
+            expect(actual).to.deep.equal(expected)
         } else {
-            expect(expected).to.equal(msg.content)
+            expect(msg.content).to.equal(expected)
         }
     })
 }

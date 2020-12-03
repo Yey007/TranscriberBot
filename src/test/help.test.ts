@@ -3,8 +3,7 @@ import { COLORS, expectMessage, sendCommand } from "./utils";
 
 describe("Help", () => {
     context("without arguments", () => {
-        it("should return command list", async () => {
-            await sendCommand("help")
+        it("should return command list", async () => {         
             const embedJson = {
                 type: "rich",
                 title: "Help",
@@ -20,14 +19,15 @@ describe("Help", () => {
                     }
                 ],
             };
-            await expectMessage(new MessageEmbed(embedJson))
+            let promise = expectMessage(new MessageEmbed(embedJson))
+            await sendCommand("help")
+            await promise
         });
     })
 
     context("with arguments", () => {
         it("should respond correctly when the given command has no arguments", async () => {
             //join
-            await sendCommand("help join")
             const embedJson = {
                 type: "rich",
                 title: "Help",
@@ -40,11 +40,12 @@ describe("Help", () => {
                     }
                 ],
             };
-            await expectMessage(new MessageEmbed(embedJson))
+            let promise = expectMessage(new MessageEmbed(embedJson))
+            await sendCommand("help join")
+            await promise
         })
         it("should respond correctly when the given command has required arguments", async () => {
             //set-transcript-chan
-            await sendCommand("help set-transcript-chan")
             const embedJson = {
                 type: "rich",
                 title: "Help",
@@ -61,11 +62,12 @@ describe("Help", () => {
                     }
                 ],
             };
-            await expectMessage(new MessageEmbed(embedJson))
+            let promise = expectMessage(new MessageEmbed(embedJson))
+            await sendCommand("help set-transcript-chan")
+            await promise
         })
         it("should respond correctly when the given command has optional arguments", async () => {
             //prefix
-            await sendCommand("help set-transcript-chan")
             const embedJson = {
                 type: "rich",
                 title: "Help",
@@ -82,7 +84,9 @@ describe("Help", () => {
                     }
                 ],
             };
-            await expectMessage(new MessageEmbed(embedJson))
+            let promise = expectMessage(new MessageEmbed(embedJson))
+            await sendCommand("help set-transcript-chan")
+            await promise
         })
     })
 });

@@ -7,9 +7,10 @@ describe("Join", () => {
         await selfVoiceChannel.join()
     })
 
-    it("should join voice channel of bot", async () => {
+    it("should join voice channel of bot", async () => { 
+        let promise = awaitChannelJoin()
         await sendCommand("join")
-        await awaitChannelJoin()
+        await promise
     })
 
     after(async () => {
