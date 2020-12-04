@@ -1,5 +1,4 @@
-![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/yey007/transcriberbot?logo=docker)
-![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/yey007/transcriberbot?logo=docker)
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FYey007%2FTranscriberBot%2Fbadge%3Fref%3Dmaster&style=flat)](https://actions-badge.atrox.dev/Yey007/TranscriberBot/goto?ref=master)
 
 # TranscriberBot
 
