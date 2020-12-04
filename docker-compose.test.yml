@@ -1,7 +1,7 @@
 ﻿version: "3.8"
 
 services:
-  bot:
+  sut:
     privileged: true
     container_name: bot
     build:

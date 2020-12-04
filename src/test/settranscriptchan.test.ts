@@ -43,5 +43,6 @@ describe("Set Transcript Channel", () => {
 
     after(async () => {
         await repo.set(selfVoiceChannel.id, "")
+        await selfMember.roles.remove(selfMember.guild.roles.cache.find(x => x.name === "TranscriberBot Manager"))
     })
 })
