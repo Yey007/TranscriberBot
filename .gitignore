@@ -2,4 +2,3 @@
 ts-built
 node_modules
 .vscode/
-*.migrate

@@ -25,7 +25,10 @@ export class CommandExecutor {
 
     public async executeCommand(message: Message) {
         
-        if (message.author.bot || message.channel.type === "dm")
+        if(process.env.NODE_ENV === "production" && message.author.bot)
+            return
+
+        if (message.channel.type === "dm")
             return
 
         let settings = await this.repo.get(message.guild.id)

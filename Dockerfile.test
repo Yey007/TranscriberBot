@@ -2,13 +2,9 @@ FROM node:14-alpine
 
 ENV CONTAINER=true
 
-LABEL maintainer="yey007tech@gmail.com"
+ENV NODE_ENV=testing
 
-ARG BUILD_DATE
-
-LABEL org.label-schema.build-date=$BUILD_DATE
-
-WORKDIR /app
+WORKDIR /testing
 
 RUN apk add --no-cache curl
 
@@ -32,4 +28,4 @@ COPY ./resources ./resources
 
 COPY ./migrations ./migrations
 
-CMD [ "npm", "start" ]
+CMD [ "npm", "test" ]

@@ -1,22 +1,23 @@
-version: "3.8"
+﻿version: "3.8"
 
-services: 
-  bot:
+services:
+  sut:
     privileged: true
     container_name: bot
-    build: ./
+    build:
+      context: ./
+      dockerfile: Dockerfile.test
     image: yey007/transcriberbot:latest
-    restart: always
-    command: sh -c "./wait-for db:3306 -- npm start"
+    command: sh -c "./wait-for db:3306 -- npm test"
     env_file: 
       - ./bot.env
       - ./db.env
-    environment:
-      - NODE_ENV=production
+      - ./test.env
     depends_on: 
       - db
     networks:
       - my_network
+    tty: true
 
   db:
     container_name: db
@@ -27,15 +28,6 @@ services:
       - ./db.env
     expose: 
       - 3306
-    networks:
-      - my_network
-  
-  adminer:
-    container_name: adminer
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
     networks:
       - my_network
 

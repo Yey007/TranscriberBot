@@ -7,7 +7,7 @@ import { TranscriptionManager } from "./services/transcription/transcriptionmana
 @injectable()
 export class Bot {
     
-    private client: Client
+    public client: Client
     private readonly token: string
     private executor: CommandExecutor
     private transcriptionManager: TranscriptionManager
@@ -24,22 +24,28 @@ export class Bot {
         this.transcriptionManager = transcriptionManager
     }
 
-	public start(): Promise<string> {
-		console.log("Starting...")
-
+	public async start(): Promise<void> {
+		console.log("Starting bot...")     
+        await this.client.login(this.token)
         this.registerEvents()
-        
-        return this.client.login(this.token)
+    }
+
+    public stop() {
+        console.log("Destroying client...")
+        this.client.destroy()
     }
 
     private registerEvents() {
+        this.client.on("ready", async () => {
+            await this.client.user.setStatus("online")
+        })
         this.client.on("message", (message) => {
             this.executor.executeCommand(message)
         })
         this.client.on("guildMemberSpeaking", (member, speaking) => {
             let channelMembers = member.voice.channel.members
-            let botMember = member.guild.member(this.client.user)
-            if(speaking.bitfield === 1 && channelMembers.get(botMember.id) !== undefined) {
+            let botMember = member.guild.me
+            if(!member.user.bot && speaking.bitfield === 1 && channelMembers.get(botMember.id) !== undefined) {
                 let vc = botMember.voice.connection
                 this.transcriptionManager.speaking(vc, member)
             }
@@ -47,5 +53,14 @@ export class Bot {
         this.client.on("error", (err) => {
             console.log("Discord error: " + err)
         })
+        this.client.setInterval(async () => {
+            let serversPlural = this.client.guilds.cache.size === 1 ? "server" : "servers"
+            await this.client.user.setPresence({
+                activity: {
+                    name: `${this.client.guilds.cache.size} ${serversPlural}`,
+                    type: "LISTENING"
+                }
+            })
+        }, 5000)
     }
 }

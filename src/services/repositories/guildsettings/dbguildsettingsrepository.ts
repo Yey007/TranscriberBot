@@ -35,6 +35,6 @@ export class DbGuildSettingsRespository extends SettingsRepository<GuildSettings
             SQL`INSERT INTO guild_settings(id, prefix) 
             VALUES(${guildid}, IFNULL(${settings.prefix}, DEFAULT(prefix))) 
             ON DUPLICATE KEY UPDATE
-            prefix = IFNULL(${settings.prefix}, DEFAULT(prefix))`)
+            prefix = IFNULL(${settings.prefix}, prefix)`)
     }
 }
