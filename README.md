@@ -37,7 +37,6 @@ I can't go into details here, but you need to obtain these secrets. There are to
 DISCORD_TOKEN=your_token
 WATSON_SPEECH_API_KEY=your_api_key
 WATSON_SPEECH_URL=your_url
-MYSQL_PASSWORD=the_password_you_set
 ```
 3. Create another file called db.env
 2. Make the file look like this (you can replace or leave these placeholders)
@@ -62,3 +61,4 @@ I learned a lot of new stuff while making this bot. Here is everything I used:
 4. Watson Speech API wrapper
 5. MySQL
 6. Docker
+7. Github Actions
