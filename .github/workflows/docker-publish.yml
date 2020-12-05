@@ -13,20 +13,6 @@ on:
   # Run tests for any PRs.
   pull_request:
 
-env:
-  IMAGE_NAME: transcriberbot
-  DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
-  WATSON_SPEECH_API_KEY: ${{ secrets.WATSON_SPEECH_API_KEY }}
-  WATSON_SPEECH_URL: ${{ secrets.WATSON_SPEECH_URL }}
-  MYSQL_ROOT_PASSWORD: bruh
-  MYSQL_PASSWORD: pass
-  MYSQL_DATABASE: transcriberbot
-  MYSQL_USER: transcriberbot
-  DISCORD_TEST_TOKEN: ${{ secrets.DISCORD_TEST_TOKEN }}
-  TESTING_CHANNEL_ID: "778808634226245663"
-  TESTING_VOICE_CHANNEL_ID: "780612930684977173"
-  PREFIX: "!"
-
 jobs:
   # Run tests.
   # See also https://docs.docker.com/docker-hub/builds/automated-testing/
@@ -44,6 +30,18 @@ jobs:
           else
             docker build . --file Dockerfile
           fi
+    env:
+      DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+      WATSON_SPEECH_API_KEY: ${{ secrets.WATSON_SPEECH_API_KEY }}
+      WATSON_SPEECH_URL: ${{ secrets.WATSON_SPEECH_URL }}
+      MYSQL_ROOT_PASSWORD: bruh
+      MYSQL_PASSWORD: pass
+      MYSQL_DATABASE: transcriberbot
+      MYSQL_USER: transcriberbot
+      DISCORD_TEST_TOKEN: ${{ secrets.DISCORD_TEST_TOKEN }}
+      TESTING_CHANNEL_ID: "778808634226245663"
+      TESTING_VOICE_CHANNEL_ID: "780612930684977173"
+      PREFIX: "!"
 
   push:
     # Ensure test job passes before pushing image.
@@ -51,7 +49,8 @@ jobs:
 
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
-
+    env:
+      IMAGE_NAME: transcriberbot
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
@@ -60,7 +59,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: yey007/${{ $IMAGE_NAME }}
+          repository: yey007/${{ env.IMAGE_NAME }}
           tag_with_ref: true
       - name: Push to GitHub Packages
         uses: docker/build-push-action@v1
@@ -68,5 +67,5 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          repository: ${{ github.repository }}/${{ $IMAGE_NAME }}
+          repository: ${{ github.repository }}/${{ env.IMAGE_NAME }}
           tag_with_ref: true
