@@ -67,5 +67,5 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          repository: $(echo ${{ github.repository }} | tr '[A-Z]' '[a-z]')/${{ env.IMAGE_NAME }}
+          repository: yey007/transcriberbot/${{ env.IMAGE_NAME }}
           tag_with_ref: true
