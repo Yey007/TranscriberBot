@@ -61,3 +61,4 @@ I learned a lot of new stuff while making this bot. Here is everything I used:
 4. Watson Speech API wrapper
 5. MySQL
 6. Docker
+7. Github Actions
