@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run tests
+        run: |
+          if [ -f docker-compose.github.test.yml ]; then
+            docker-compose --file docker-compose.github.test.yml build
+            docker-compose --file docker-compose.github.test.yml run sut
+          else
+            docker build . --file Dockerfile
+          fi
+    env:
+      DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+      WATSON_SPEECH_API_KEY: ${{ secrets.WATSON_SPEECH_API_KEY }}
+      WATSON_SPEECH_URL: ${{ secrets.WATSON_SPEECH_URL }}
+      MYSQL_ROOT_PASSWORD: bruh
+      MYSQL_PASSWORD: pass
+      MYSQL_DATABASE: transcriberbot
+      MYSQL_USER: transcriberbot
+      DISCORD_TEST_TOKEN: ${{ secrets.DISCORD_TEST_TOKEN }}
+      TESTING_CHANNEL_ID: "778808634226245663"
+      TESTING_VOICE_CHANNEL_ID: "780612930684977173"
+      PREFIX: "!"
