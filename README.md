@@ -1,4 +1,4 @@
-[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FYey007%2FTranscriberBot%2Fbadge%3Fref%3Dmaster&style=flat)](https://actions-badge.atrox.dev/Yey007/TranscriberBot/goto?ref=master)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/yey007/TranscriberBot/Docker?label=Build&logo=Github)](https://github.com/Yey007/TranscriberBot/actions)
 
 # TranscriberBot
 
