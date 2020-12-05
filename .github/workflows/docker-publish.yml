@@ -51,7 +51,6 @@ jobs:
     if: github.event_name == 'push'
     env:
       IMAGE_NAME: transcriberbot
-      LOWERCASE_REPO: ${{ github.repository | tr '[:upper:]' '[:lower:]' }}
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
@@ -68,5 +67,5 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          repository: ${{ env.LOWERCASE_REPO }}/${{ env.IMAGE_NAME }}
+          repository: $(echo ${{ github.repository }} | tr '[A-Z]' '[a-z]')/${{ env.IMAGE_NAME }}
           tag_with_ref: true
