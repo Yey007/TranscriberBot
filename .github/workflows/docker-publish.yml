@@ -72,5 +72,5 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.CR_PAT }}
           registry: docker.pkg.github.com
-          repository: yey007/${{ env.IMAGE_NAME }}
+          repository: yey007/transcriberbot/${{ env.IMAGE_NAME }}
           tag_with_ref: true
