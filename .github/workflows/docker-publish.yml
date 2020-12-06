@@ -1,15 +1,14 @@
 name: Docker
 
 on:
-  workflow_dispatch:
-  #push:
+  push:
     # Publish `master` as Docker `latest` image.
-    #branches:
-      #- master
+    branches:
+      - master
 
     # Publish `v1.2.3` tags as releases.
-    #tags:
-      #- v*
+    tags:
+      - v*
 
 jobs:
   # Run tests.
