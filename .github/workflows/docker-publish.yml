@@ -82,7 +82,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          platforms: linux/amd64,linux/arm64,linux/386
+          platforms: linux/amd64
           tags: |
             ghcr.io/yey007/transcriberbot:latest
             docker.pkg.github.com/yey007/transcriberbot/transcriberbot:latest
