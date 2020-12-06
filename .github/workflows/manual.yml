@@ -37,7 +37,7 @@ jobs:
         with:
           registry: docker.pkg.github.com
           username: yey007
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.CR_PAT }}
       -
         name: Build and push
         uses: docker/build-push-action@v2
@@ -47,7 +47,7 @@ jobs:
           tags: |
             yey007/transcriberbot:latest
             ghcr.io/yey007/transcriberbot:latest
-            docker.pkg.github.com/yey007/transcriberbot:latest
+            docker.pkg.github.com/yey007/transcriberbot/transcriberbot:latest
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
