@@ -47,7 +47,7 @@ jobs:
           tags: |
             yey007/transcriberbot:latest
             ghcr.io/yey007/transcriberbot:latest
-            docker.pkg.github.com/yey007/transcriberbot/transcriberbot:latest
+            docker.pkg.github.com/yey007/transcriberbot:latest
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
