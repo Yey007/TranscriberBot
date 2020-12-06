@@ -81,7 +81,7 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          load: true
+          push: true
           tags: |
             ghcr.io/yey007/transcriberbot:latest
             docker.pkg.github.com/yey007/transcriberbot/transcriberbot:latest
