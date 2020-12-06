@@ -42,6 +42,7 @@ jobs:
       PREFIX: "!"
 
   push:
+    needs: test
     runs-on: ubuntu-latest
     env:
       IMAGE_NAME: transcriberbot
