@@ -1,3 +1,3 @@
 export interface GuildSettings {
-    prefix?: string
+    prefix?: string;
 }
