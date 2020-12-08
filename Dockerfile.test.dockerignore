@@ -1,6 +1,0 @@
-/.vscode
-node_modules
-npm-debug.log
-*.env
-README.md
-docker-compose*.yml
