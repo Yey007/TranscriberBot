@@ -12,14 +12,18 @@ on:
       - v*
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: npm run lint
+        
   # Run tests.
   # See also https://docs.docker.com/docker-hub/builds/automated-testing/
   test:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
-
       - name: Run tests
         run: |
           if [ -f docker-compose.github.test.yml ]; then
@@ -42,7 +46,7 @@ jobs:
       PREFIX: "!"
 
   push:
-    needs: test
+    needs: [test, lint]
     runs-on: ubuntu-latest
     env:
       IMAGE_NAME: transcriberbot
