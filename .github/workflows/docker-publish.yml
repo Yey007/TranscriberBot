@@ -15,10 +15,15 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: |
-          npm install
-          npm run lint
+      - 
+          name: Checkout
+          uses: actions/checkout@v2
+      - 
+          name: Install Dependencies
+          run: npm install
+      -
+         name: Lint
+         run: npm run lint
         
   # Run tests.
   # See also https://docs.docker.com/docker-hub/builds/automated-testing/
