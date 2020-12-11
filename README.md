@@ -25,13 +25,13 @@ You're ready to go! Type `!help` to earn about other commands.
 * [docker-compose](https://docs.docker.com/compose/install/)
 
 ## Obtaining Secrets ##
-I can't go into details here, but you need to obtain these secrets. There are tons of tutorials for discord bots and IBM covers using Speech-To-Text pretty well.
+I can't go into details here, but you need to obtain the following secrets. There are tons of tutorials for discord bots and IBM covers using Speech-To-Text pretty well.
 1. A Discord bot token
 2. An IBM Speech-To-Text API key
 3. An IBM Speech-To-Text URL
 
 ## Creating Neccessary Files ##
-1. In the directory you're going to run the contianer in, create a file called bot.env
+1. In the directory you're going to run the contianer app in, create a file called bot.env
 2. Make your file look like this: (replace placeholders with the value you obtained)
 ```
 DISCORD_TOKEN=your_token
@@ -39,14 +39,14 @@ WATSON_SPEECH_API_KEY=your_api_key
 WATSON_SPEECH_URL=your_url
 ```
 3. Create another file called db.env
-2. Make the file look like this (you can replace or leave these placeholders)
+4. Make the file look like this (you can replace or leave these placeholders)
 ```
 MYSQL_ROOT_PASSWORD=rootpassword
 MYSQL_PASSWORD=password
 MYSQL_DATABASE=transcriberbot
 MYSQL_USER=bot
 ```
-
+5. Copy paste (or download) the docker-compose file in this repo. Modify it to your own need (you can remove adminer, for example).
 ## Running ##
 Run `docker-compose up`
 Note: You may need to run with sudo/privileged if that doesn't work
