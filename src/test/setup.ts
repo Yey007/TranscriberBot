@@ -15,7 +15,7 @@ export let botMember: GuildMember;
 export let prefix = process.env.PREFIX;
 
 export const mochaHooks = {
-    beforeAll(done: () => unknown) {
+    beforeAll(done: () => unknown): void {
         this.timeout(30000);
         (async () => {
             if (process.env.CONTAINER !== 'true') {
@@ -39,7 +39,7 @@ export const mochaHooks = {
         })().then(done);
     },
 
-    afterAll() {
+    afterAll(): void {
         selfClient.destroy();
         bot.stop();
     }

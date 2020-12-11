@@ -8,14 +8,20 @@ import { TYPES } from '../types';
 import { COLORS, expectMessage, sendCommand } from './utils';
 
 describe('Recording Permission', function () {
-    const userRepo = container.get<SettingsRepository<UserSettings>>(TYPES.UserSettingsRepository);
+    let userRepo: SettingsRepository<UserSettings>;
+    before(function () {
+        userRepo = container.get(TYPES.UserSettingsRepository);
+    });
     context('without arguments', function () {
-        const denyJson = {
-            type: 'rich',
-            title: 'Info',
-            color: COLORS.Info,
-            description: 'Your recording preference is currently set to `deny`'
-        };
+        let denyJson: Record<string, unknown>;
+        before(function () {
+            denyJson = {
+                type: 'rich',
+                title: 'Info',
+                color: COLORS.Info,
+                description: 'Your recording preference is currently set to `deny`'
+            };
+        });
         it('should return deny if not set', async function () {
             const promise = expectMessage(new MessageEmbed(denyJson));
             await sendCommand('rec-perm');

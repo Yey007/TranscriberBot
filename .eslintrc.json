@@ -5,7 +5,13 @@
         "ecmaVersion": 2020
     },
     "plugins": ["@typescript-eslint", "mocha"],
-    "extends": ["eslint:recommended", "plugin:mocha/recommended", "prettier"],
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:mocha/recommended",
+        "prettier"
+    ],
     "env": {
         "node": true,
         "mocha": true
