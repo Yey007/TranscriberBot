@@ -13,8 +13,8 @@ export class RoleManager {
                     name: this.roleName,
                     color: 0x4399b5,
                     position: 0,
-                    mentionable: false,
-                },
+                    mentionable: false
+                }
             });
         }
         return new Promise((resolutionFunc: (role: Role) => void) => {

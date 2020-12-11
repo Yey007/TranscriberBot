@@ -17,7 +17,7 @@ export class DbGuildSettingsRespository extends SettingsRepository<GuildSettings
     public async get(guildid: string): Promise<GuildSettings> {
         const [rows] = await this.db.query<RowDataPacket[]>(
             SQL`SELECT prefix FROM guild_settings
-            WHERE id=${guildid}`,
+            WHERE id=${guildid}`
         );
 
         if (rows[0]) return { prefix: rows[0].prefix };
@@ -30,7 +30,7 @@ export class DbGuildSettingsRespository extends SettingsRepository<GuildSettings
             SQL`INSERT INTO guild_settings(id, prefix) 
             VALUES(${guildid}, IFNULL(${settings.prefix}, DEFAULT(prefix))) 
             ON DUPLICATE KEY UPDATE
-            prefix = IFNULL(${settings.prefix}, prefix)`,
+            prefix = IFNULL(${settings.prefix}, prefix)`
         );
     }
 }

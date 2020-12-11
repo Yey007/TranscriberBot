@@ -21,7 +21,7 @@ export class TranscriptionManager {
         @inject(TYPES.TranscriptionSender) sender: TranscriptionSender,
         @inject(TYPES.PermissionGetter) consent: RecPermissionGetter,
         @inject(TYPES.TranscriptionChannelGetter) channelGetter: TranscriptionChannelGetter,
-        @inject(TYPES.StandardEmbedMaker) embed: StandardEmbedMaker,
+        @inject(TYPES.StandardEmbedMaker) embed: StandardEmbedMaker
     ) {
         this.transcriber = transcriber;
         this.transcriptionSender = sender;

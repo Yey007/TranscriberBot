@@ -1,25 +1,25 @@
-import { botMember, botVoiceChannel, selfMember, selfVoiceChannel } from '.';
+import { botMember, botVoiceChannel, selfMember, selfVoiceChannel } from './setup';
 import { awaitChannelLeave, sendCommand } from './utils';
 
-describe('Leave', () => {
-    before(async () => {
+describe('Leave', function () {
+    before(async function () {
         await selfVoiceChannel.join();
     });
 
-    beforeEach(async () => {
+    beforeEach(async function () {
         await botVoiceChannel.join();
     });
 
-    context('when self in channel', () => {
-        it('should leave voice channel', async () => {
+    context('when self in channel', function () {
+        it('should leave voice channel', async function () {
             const promise = awaitChannelLeave();
             await sendCommand('leave');
             await promise;
         });
     });
 
-    context('when self not in channel', () => {
-        it('should leave voice channel', async () => {
+    context('when self not in channel', function () {
+        it('should leave voice channel', async function () {
             selfVoiceChannel.leave();
             const promise = awaitChannelLeave();
             await sendCommand('leave');
@@ -27,7 +27,7 @@ describe('Leave', () => {
         });
     });
 
-    after(async () => {
+    after(async function () {
         //Kick bot
         await botMember.voice.setChannel(null);
 

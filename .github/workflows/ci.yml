@@ -7,15 +7,14 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - 
-          name: Checkout
-          uses: actions/checkout@v2
-      - 
-          name: Install Dependencies
-          run: npm install
-      -
-         name: Lint
-         run: npm run lint
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: npm install
+      - name: Format
+        run: npm run format
+      - name: Lint
+        run: npm run lint
   test:
     runs-on: ubuntu-latest
 
@@ -39,6 +38,6 @@ jobs:
       MYSQL_DATABASE: transcriberbot
       MYSQL_USER: transcriberbot
       DISCORD_TEST_TOKEN: ${{ secrets.DISCORD_TEST_TOKEN }}
-      TESTING_CHANNEL_ID: "778808634226245663"
-      TESTING_VOICE_CHANNEL_ID: "780612930684977173"
-      PREFIX: "!"
+      TESTING_CHANNEL_ID: '778808634226245663'
+      TESTING_VOICE_CHANNEL_ID: '780612930684977173'
+      PREFIX: '!'

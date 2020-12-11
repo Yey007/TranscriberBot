@@ -15,7 +15,7 @@ export class Transcriber {
         const params = {
             //sending raw pcm, watson claims to accept opus but couldn't get it to work, possibly because of container
             contentType: 'audio/l16;rate=48000;channels=2;endianness=little-endian;',
-            objectMode: false,
+            objectMode: false
         };
 
         const recognizeStream = this.stt.recognizeUsingWebSocket(params);

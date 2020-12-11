@@ -15,12 +15,12 @@ export class Prefix extends BotCommand {
 
     private _help = "sets this bot's prefix for this server";
     private _args: CommandArgs[] = [
-        { name: 'new', desc: 'the new prefix this bot should use for commands', optional: true },
+        { name: 'new', desc: 'the new prefix this bot should use for commands', optional: true }
     ];
 
     public constructor(
         @inject(TYPES.GuildSettingsRepository) repo: SettingsRepository<GuildSettings>,
-        @inject(TYPES.StandardEmbedMaker) maker: StandardEmbedMaker,
+        @inject(TYPES.StandardEmbedMaker) maker: StandardEmbedMaker
     ) {
         super();
         this.repo = repo;

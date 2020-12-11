@@ -5,5 +5,5 @@ export interface UserSettings {
 export enum RecordingPermissionState {
     Unknown,
     Consent,
-    NoConsent,
+    NoConsent
 }

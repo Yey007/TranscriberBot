@@ -16,13 +16,13 @@ export class SetRecordingPermission extends BotCommand {
         {
             name: 'permission',
             desc: 'Whether the bot is allowed to record this user. Possible values are `accept` or `deny`',
-            optional: true,
-        },
+            optional: true
+        }
     ];
 
     public constructor(
         @inject(TYPES.UserSettingsRepository) repo: SettingsRepository<UserSettings>,
-        @inject(TYPES.StandardEmbedMaker) maker: StandardEmbedMaker,
+        @inject(TYPES.StandardEmbedMaker) maker: StandardEmbedMaker
     ) {
         super();
         this.repo = repo;

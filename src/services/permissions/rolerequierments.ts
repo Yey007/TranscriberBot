@@ -8,7 +8,7 @@ import { RoleManager } from './rolemanager';
 export function managerOrAdminRequired(
     target: BotCommand, // The prototype of the class
     propertyKey: string, // The name of the method
-    descriptor: TypedPropertyDescriptor<(message: Message, ...args: unknown[]) => Promise<void>>,
+    descriptor: TypedPropertyDescriptor<(message: Message, ...args: unknown[]) => Promise<void>>
 ): void {
     const original = descriptor.value;
     descriptor.value = function (message: Message, ...args: unknown[]): Promise<void> {

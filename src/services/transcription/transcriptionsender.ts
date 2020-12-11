@@ -15,7 +15,7 @@ export class TranscriptionSender {
         member: GuildMember | PartialGuildMember,
         transcriptChannel: TextChannel,
         voiceChannelName: string,
-        transcript: string,
+        transcript: string
     ): Promise<void> {
         transcriptChannel.send(this.format(member, voiceChannelName, transcript));
     }
@@ -23,7 +23,7 @@ export class TranscriptionSender {
     private format(
         member: GuildMember | PartialGuildMember,
         voiceChannelName: string,
-        transcript: string,
+        transcript: string
     ): MessageEmbed {
         let formatted = transcript;
 

@@ -8,7 +8,7 @@ export class TranscriptionChannelGetter {
     private transcriptionChannelRepo: SettingsRepository<string>;
 
     public constructor(
-        @inject(TYPES.TranscriptionChannelRespository) transcriptionChannelRepo: SettingsRepository<string>,
+        @inject(TYPES.TranscriptionChannelRespository) transcriptionChannelRepo: SettingsRepository<string>
     ) {
         this.transcriptionChannelRepo = transcriptionChannelRepo;
     }
@@ -23,7 +23,7 @@ export class TranscriptionChannelGetter {
 
         // This may not exist, but this function can't deal with it at that point.
         chan = guild.channels.cache.find(
-            (channel) => channel.type === 'text' && channel.permissionsFor(guild.me).has('SEND_MESSAGES'),
+            (channel) => channel.type === 'text' && channel.permissionsFor(guild.me).has('SEND_MESSAGES')
         );
         return chan as TextChannel;
     }

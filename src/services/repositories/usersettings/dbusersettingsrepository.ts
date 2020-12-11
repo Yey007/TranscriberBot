@@ -18,7 +18,7 @@ export class DbUserSettingsRepository extends SettingsRepository<UserSettings> {
     public async get(userid: string): Promise<UserSettings> {
         const [rows] = await this.db.query<RowDataPacket[]>(
             SQL`SELECT permission FROM user_settings 
-            WHERE id=${userid}`,
+            WHERE id=${userid}`
         );
         if (rows[0]) return { permission: rows[0].permission };
         else return { permission: RecordingPermissionState.Unknown };
@@ -30,7 +30,7 @@ export class DbUserSettingsRepository extends SettingsRepository<UserSettings> {
             SQL`INSERT INTO user_settings(id, permission) 
             VALUES(${userid}, IFNULL(${settings.permission}, DEFAULT(permission)))
             ON DUPLICATE KEY UPDATE
-            permission = IFNULL(${settings.permission}, permission)`,
+            permission = IFNULL(${settings.permission}, permission)`
         );
     }
 }

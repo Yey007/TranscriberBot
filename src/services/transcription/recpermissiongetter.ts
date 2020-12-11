@@ -32,7 +32,7 @@ export class RecPermissionGetter {
             dm = await user.createDM();
             dm.send(
                 "Hey! I'm currently transcribing audio from the voice channel you're in, but before I can transcribe your voice," +
-                    ' I need your permission. Type `!accept` to accept and `!deny` to deny.',
+                    ' I need your permission. Type `!accept` to accept and `!deny` to deny.'
             );
         } catch (err) {
             return RecordingPermissionState.NoConsent;
@@ -44,8 +44,8 @@ export class RecPermissionGetter {
                 {
                     max: 1,
                     time: 30000,
-                    errors: ['time'],
-                },
+                    errors: ['time']
+                }
             );
             const preference = collected.first().content;
             if (preference === '!accept') {

@@ -2,12 +2,6 @@ FROM node:14-alpine
 
 ENV CONTAINER=true
 
-LABEL maintainer="yey007tech@gmail.com"
-
-ARG BUILD_DATE
-
-LABEL org.label-schema.build-date=$BUILD_DATE
-
 WORKDIR /app
 
 RUN apk add --no-cache curl
