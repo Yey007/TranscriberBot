@@ -14,7 +14,7 @@ describe('Recording Permission', () => {
             type: 'rich',
             title: 'Info',
             color: COLORS.Info,
-            description: 'Your recording preference is currently set to `deny`',
+            description: 'Your recording preference is currently set to `deny`'
         };
         it('should return deny if not set', async () => {
             const promise = expectMessage(new MessageEmbed(denyJson));
@@ -40,7 +40,7 @@ describe('Recording Permission', () => {
                 type: 'rich',
                 title: 'Info',
                 color: COLORS.Info,
-                description: 'Your recording preference is currently set to `accept`',
+                description: 'Your recording preference is currently set to `accept`'
             };
 
             const promise = expectMessage(new MessageEmbed(acceptJson));
@@ -59,7 +59,7 @@ describe('Recording Permission', () => {
                 type: 'rich',
                 title: 'Success',
                 color: COLORS.Success,
-                description: 'Recording permission set to `deny`',
+                description: 'Recording permission set to `deny`'
             };
 
             const promise = expectMessage(new MessageEmbed(embedJson));
@@ -74,7 +74,7 @@ describe('Recording Permission', () => {
                 type: 'rich',
                 title: 'Success',
                 color: COLORS.Success,
-                description: 'Recording permission set to `accept`',
+                description: 'Recording permission set to `accept`'
             };
 
             const promise = expectMessage(new MessageEmbed(embedJson));

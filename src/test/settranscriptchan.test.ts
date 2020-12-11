@@ -19,7 +19,7 @@ describe('Set Transcript Channel', () => {
             type: 'rich',
             title: 'Success',
             color: COLORS.Success,
-            description: `Set the transcription channel for \`${selfVoiceChannel.name}\` to this channel`,
+            description: `Set the transcription channel for \`${selfVoiceChannel.name}\` to this channel`
         };
         const promise = expectMessage(new MessageEmbed(embedJson));
         await sendCommand(`set-transcript-chan ${selfVoiceChannel.name}`);
@@ -33,7 +33,7 @@ describe('Set Transcript Channel', () => {
             type: 'rich',
             title: 'Warning',
             color: COLORS.Warning,
-            description: 'Voice channel `channel-that-doesnt-exist` not found',
+            description: 'Voice channel `channel-that-doesnt-exist` not found'
         };
         const promise = expectMessage(new MessageEmbed(embedJson));
         await sendCommand('set-transcript-chan channel-that-doesnt-exist');

@@ -5,7 +5,7 @@ import { expect } from 'chai';
 export function expectMessage(expected: string | MessageEmbed): Promise<void | Collection<string, Message>> {
     return channel
         .awaitMessages((x) => x.author.id === botMember.user.id, {
-            max: 1,
+            max: 1
         })
         .then((collected) => {
             const msg = collected.first();
@@ -26,7 +26,7 @@ export const COLORS = {
     Info: 0x469fe0,
     Success: 0x55ab46,
     Error: 0x9e3f3f,
-    Warning: 0xdeb900,
+    Warning: 0xdeb900
 };
 
 export async function awaitChannelLeave(): Promise<void> {

@@ -15,7 +15,7 @@ export class CommandExecutor {
     public constructor(
         @inject(TYPES.StandardEmbedMaker) maker: StandardEmbedMaker,
         @inject(TYPES.CommandMapper) mapper: MainCommandMapper,
-        @inject(TYPES.GuildSettingsRepository) repo: SettingsRepository<GuildSettings>,
+        @inject(TYPES.GuildSettingsRepository) repo: SettingsRepository<GuildSettings>
     ) {
         this.maker = maker;
         this.mapper = mapper;

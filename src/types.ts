@@ -30,5 +30,5 @@ export const TYPES = {
     Help: Symbol('Help'),
     SetPrefix: Symbol('SetPrefix'),
 
-    RoleManager: Symbol('RoleManager'),
+    RoleManager: Symbol('RoleManager')
 };

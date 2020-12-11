@@ -4,6 +4,7 @@ import SQL from 'sql-template-strings';
 import { TYPES } from '../../../types';
 import { SettingsRepository } from '../settingsrepository';
 
+//TODO: Type alias a textchannel and use that instead of string
 @injectable()
 export class DbTranscriptChanRepository extends SettingsRepository<string> {
     private db: Connection;
@@ -16,7 +17,7 @@ export class DbTranscriptChanRepository extends SettingsRepository<string> {
     public async get(vcid: string): Promise<string> {
         const [rows] = await this.db.query<RowDataPacket[]>(
             SQL`SELECT textId FROM transcription_channels
-            WHERE voiceId=${vcid}`,
+            WHERE voiceId=${vcid}`
         );
         if (rows[0]) return rows[0].textId;
         else return null;
@@ -24,7 +25,7 @@ export class DbTranscriptChanRepository extends SettingsRepository<string> {
     public async set(vcid: string, tcid: string): Promise<void> {
         await this.db.query(
             SQL`REPLACE INTO transcription_channels(voiceId, textId)
-            VALUES (${vcid}, ${tcid})`,
+            VALUES (${vcid}, ${tcid})`
         );
     }
 }

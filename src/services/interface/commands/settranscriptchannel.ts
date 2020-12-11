@@ -16,13 +16,13 @@ export class SetTranscriptChannel extends BotCommand {
         {
             name: 'voiceChannel',
             desc: 'the name of the voice channel that should be transcribed into this channel.',
-            optional: false,
-        },
+            optional: false
+        }
     ];
 
     public constructor(
         @inject(TYPES.TranscriptionChannelRespository) repo: SettingsRepository<string>,
-        @inject(TYPES.StandardEmbedMaker) maker: StandardEmbedMaker,
+        @inject(TYPES.StandardEmbedMaker) maker: StandardEmbedMaker
     ) {
         super();
         this.repo = repo;

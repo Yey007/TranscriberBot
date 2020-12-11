@@ -13,7 +13,7 @@ describe('Prefix', () => {
                 type: 'rich',
                 title: 'Info',
                 color: COLORS.Info,
-                description: 'The prefix is currently `!`',
+                description: 'The prefix is currently `!`'
             };
             const promise = expectMessage(new MessageEmbed(embedJson));
             await sendCommand('prefix');
@@ -24,7 +24,7 @@ describe('Prefix', () => {
         context('with permission', () => {
             before(async () => {
                 await selfMember.roles.add(
-                    selfMember.guild.roles.cache.find((x) => x.name === 'TranscriberBot Manager'),
+                    selfMember.guild.roles.cache.find((x) => x.name === 'TranscriberBot Manager')
                 );
             });
             it('should respond with a success message', async () => {
@@ -32,7 +32,7 @@ describe('Prefix', () => {
                     type: 'rich',
                     title: 'Success',
                     color: COLORS.Success,
-                    description: 'Prefix set to `&`',
+                    description: 'Prefix set to `&`'
                 };
                 const promise = expectMessage(new MessageEmbed(embedJson));
                 await sendCommand('prefix &');
@@ -40,7 +40,7 @@ describe('Prefix', () => {
             });
             it('should be addressable by the new prefix', async () => {
                 const promise = channel.awaitMessages((x) => x.author.id === botClient.user.id, {
-                    max: 1,
+                    max: 1
                 });
                 await channel.send('&prefix');
                 await promise;
@@ -50,7 +50,7 @@ describe('Prefix', () => {
                     type: 'rich',
                     title: 'Warning',
                     color: COLORS.Warning,
-                    description: 'Prefix cannot be more than 5 characters.',
+                    description: 'Prefix cannot be more than 5 characters.'
                 };
                 const promise = expectMessage(new MessageEmbed(embedJson));
                 await channel.send('&prefix thisistoolong');
@@ -58,7 +58,7 @@ describe('Prefix', () => {
             });
             after(async () => {
                 await selfMember.roles.remove(
-                    selfMember.guild.roles.cache.find((x) => x.name === 'TranscriberBot Manager'),
+                    selfMember.guild.roles.cache.find((x) => x.name === 'TranscriberBot Manager')
                 );
             });
         });
@@ -69,7 +69,7 @@ describe('Prefix', () => {
                     title: 'Permission Denied',
                     color: COLORS.Warning,
                     description:
-                        'You must have the role `TranscriberBot Manager` or be an administrator in order to use this command.',
+                        'You must have the role `TranscriberBot Manager` or be an administrator in order to use this command.'
                 };
                 const promise = expectMessage(new MessageEmbed(embedJson));
                 await channel.send('&prefix $');

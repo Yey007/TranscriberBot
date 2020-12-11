@@ -47,8 +47,8 @@ container.bind<string>(TYPES.WatsonURL).toConstantValue(process.env.WATSON_SPEEC
 container.bind<SpeechToText>(TYPES.SpeechToText).toConstantValue(
     new SpeechToText({
         authenticator: new IamAuthenticator({ apikey: process.env.WATSON_SPEECH_API_KEY }),
-        version: '', //this doesn't seem to matter?
-    }),
+        version: '' //this doesn't seem to matter?
+    })
 );
 
 container.bind<CommandExecutor>(TYPES.CommandExecutor).to(CommandExecutor).inSingletonScope();
@@ -68,7 +68,7 @@ const conn = createConnection({
     host: 'db',
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE,
+    database: process.env.MYSQL_DATABASE
 });
 
 conn.on('error', (err) => {

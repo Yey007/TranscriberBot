@@ -15,7 +15,7 @@ export class Bot {
         @inject(TYPES.Client) client: Client,
         @inject(TYPES.Token) token: string,
         @inject(TYPES.CommandExecutor) commandExecutor: CommandExecutor,
-        @inject(TYPES.TranscriptionManager) transcriptionManager: TranscriptionManager,
+        @inject(TYPES.TranscriptionManager) transcriptionManager: TranscriptionManager
     ) {
         this.client = client;
         this.token = token;
@@ -57,8 +57,8 @@ export class Bot {
             await this.client.user.setPresence({
                 activity: {
                     name: `${this.client.guilds.cache.size} ${serversPlural}`,
-                    type: 'LISTENING',
-                },
+                    type: 'LISTENING'
+                }
             });
         }, 5000);
     }
