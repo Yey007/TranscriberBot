@@ -8,7 +8,7 @@
         "debug": "node --trace-warnings ./ts-built/index.js",
         "test": "mocha ts-built/test/**/*.js",
         "format": "prettier --write ./src",
-        "lint": "eslint --fix ./src"
+        "lint": "eslint --fix './src/**/*.ts'"
     },
     "author": "",
     "license": "ISC",
@@ -41,13 +41,15 @@
         "parallel": false,
         "exit": true,
         "timeout": 20000,
-        "slow": 450
+        "slow": 450,
+        "require": "ts-built/test/setup.js"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^4.9.1",
         "@typescript-eslint/parser": "^4.9.1",
         "eslint": "^7.15.0",
         "eslint-config-prettier": "^7.0.0",
+        "eslint-plugin-mocha": "^8.0.0",
         "prettier": "^2.2.1"
     }
 }

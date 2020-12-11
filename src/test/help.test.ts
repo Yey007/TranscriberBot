@@ -1,9 +1,9 @@
 import { MessageEmbed } from 'discord.js';
 import { COLORS, expectMessage, sendCommand } from './utils';
 
-describe('Help', () => {
-    context('without arguments', () => {
-        it('should return command list', async () => {
+describe('Help', function() {
+    context('without arguments', function() {
+        it('should return command list', async function() {
             const embedJson = {
                 type: 'rich',
                 title: 'Help',
@@ -27,8 +27,8 @@ describe('Help', () => {
         });
     });
 
-    context('with arguments', () => {
-        it('should respond correctly when the given command has no arguments', async () => {
+    context('with arguments', function() {
+        it('should respond correctly when the given command has no arguments', async function() {
             //join
             const embedJson = {
                 type: 'rich',
@@ -46,7 +46,7 @@ describe('Help', () => {
             await sendCommand('help join');
             await promise;
         });
-        it('should respond correctly when the given command has required arguments', async () => {
+        it('should respond correctly when the given command has required arguments', async function() {
             //set-transcript-chan
             const embedJson = {
                 type: 'rich',
@@ -70,7 +70,7 @@ describe('Help', () => {
             await sendCommand('help set-transcript-chan');
             await promise;
         });
-        it('should respond correctly when the given command has optional arguments', async () => {
+        it('should respond correctly when the given command has optional arguments', async function() {
             //prefix
             const embedJson = {
                 type: 'rich',

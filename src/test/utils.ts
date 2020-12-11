@@ -1,6 +1,6 @@
 import { Collection, Message, MessageEmbed } from 'discord.js';
-import { botMember, channel, prefix, selfVoiceChannel } from './index';
 import { expect } from 'chai';
+import { botMember, channel, prefix, selfVoiceChannel } from './setup';
 
 export function expectMessage(expected: string | MessageEmbed): Promise<void | Collection<string, Message>> {
     return channel

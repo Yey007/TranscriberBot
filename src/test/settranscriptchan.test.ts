@@ -1,20 +1,21 @@
 import { expect } from 'chai';
 import { MessageEmbed } from 'discord.js';
-import { channel, selfMember, selfVoiceChannel } from '.';
+import { channel, selfMember, selfVoiceChannel } from './setup';
 import { container } from '../inversify.config';
 import { SettingsRepository } from '../services/repositories/settingsrepository';
 import { TYPES } from '../types';
 import { COLORS, expectMessage, sendCommand } from './utils';
 
-describe('Set Transcript Channel', () => {
-    const repo = container.get<SettingsRepository<string>>(TYPES.TranscriptionChannelRespository);
+describe('Set Transcript Channel', function () {
+    let repo: SettingsRepository<string>;
 
-    before(async () => {
+    before(async function () {
+        repo = container.get<SettingsRepository<string>>(TYPES.TranscriptionChannelRespository);
         await repo.set(selfVoiceChannel.id, '');
         await selfMember.roles.add(selfMember.guild.roles.cache.find((x) => x.name === 'TranscriberBot Manager'));
     });
 
-    it('should return a success message and set in database when channel exists', async () => {
+    it('should return a success message and set in database when channel exists', async function () {
         const embedJson = {
             type: 'rich',
             title: 'Success',
@@ -28,7 +29,7 @@ describe('Set Transcript Channel', () => {
         const results = await repo.get(selfVoiceChannel.id);
         expect(results).to.equal(channel.id);
     });
-    it('should return a warning message when channel does not exist', async () => {
+    it('should return a warning message when channel does not exist', async function () {
         const embedJson = {
             type: 'rich',
             title: 'Warning',
@@ -40,7 +41,7 @@ describe('Set Transcript Channel', () => {
         await promise;
     });
 
-    after(async () => {
+    after(async function () {
         await repo.set(selfVoiceChannel.id, '');
         await selfMember.roles.remove(selfMember.guild.roles.cache.find((x) => x.name === 'TranscriberBot Manager'));
     });

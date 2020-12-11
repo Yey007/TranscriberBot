@@ -1,18 +1,18 @@
-import { botMember, selfMember, selfVoiceChannel } from '.';
+import { botMember, selfMember, selfVoiceChannel } from './setup';
 import { awaitChannelJoin, sendCommand } from './utils';
 
-describe('Join', () => {
-    before(async () => {
+describe('Join', function () {
+    before(async function () {
         await selfVoiceChannel.join();
     });
 
-    it('should join voice channel of bot', async () => {
+    it('should join voice channel of bot', async function () {
         const promise = awaitChannelJoin();
         await sendCommand('join');
         await promise;
     });
 
-    after(async () => {
+    after(async function () {
         //Kick bot
         await botMember.voice.setChannel(null);
 

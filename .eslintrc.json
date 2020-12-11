@@ -4,6 +4,10 @@
     "parserOptions": {
         "ecmaVersion": 2020
     },
-    "plugins": ["@typescript-eslint"],
-    "extends": ["prettier"]
+    "plugins": ["@typescript-eslint", "mocha"],
+    "extends": ["eslint:recommended", "plugin:mocha/recommended", "prettier"],
+    "env": {
+        "node": true,
+        "mocha": true
+    }
 }
