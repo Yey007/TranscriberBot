@@ -7,6 +7,7 @@
         "start": "node ./ts-built/index.js",
         "debug": "node --trace-warnings ./ts-built/index.js",
         "test": "mocha ts-built/test/**/*.js",
+        "format": "prettier --write ./src",
         "lint": "eslint --fix ./src"
     },
     "author": "",
