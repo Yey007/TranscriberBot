@@ -4,7 +4,9 @@ services:
   sut:
     privileged: true
     container_name: bot
-    build: ./
+    build:
+      context: ./
+      dockerfile: Dockerfile.test
     image: yey007/transcriberbot:latest
     command: sh -c "./wait-for db:3306 -- npm test"
     env_file:
