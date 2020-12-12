@@ -1,7 +1,7 @@
 {
-    "name": "betterdebatesbot",
+    "name": "transcriberbot",
     "version": "1.0.0",
-    "description": "Better debates for discord.",
+    "description": "Transcribe Discord voice channel conversations.",
     "main": "index.js",
     "scripts": {
         "start": "node ./ts-built/index.js",
@@ -13,15 +13,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "@types/chai": "^4.2.14",
-        "@types/mocha": "^8.0.4",
-        "@types/node": "^14.14.9",
-        "chai": "^4.2.0",
-        "mocha": "^8.2.1",
-        "ts-node": "^9.0.0",
-        "typescript": "^4.1.2",
         "@discordjs/opus": "^0.3.2",
-        "@types/mysql": "^2.15.15",
         "db-migrate": "^0.11.11",
         "db-migrate-mysql8": "^1.0.1",
         "discord.js": "^12.3.1",
@@ -31,7 +23,8 @@
         "inversify": "^5.0.1",
         "mysql2": "^2.2.5",
         "reflect-metadata": "^0.1.13",
-        "sql-template-strings": "^2.2.2"
+        "sql-template-strings": "^2.2.2",
+        "typescript": "^4.1.2"
     },
     "mocha": {
         "recursive": true,
@@ -45,11 +38,17 @@
         "require": "ts-built/test/setup.js"
     },
     "devDependencies": {
+        "@types/chai": "^4.2.14",
+        "@types/mocha": "^8.2.0",
+        "@types/mysql": "^2.15.16",
+        "@types/node": "^14.14.13",
         "@typescript-eslint/eslint-plugin": "^4.9.1",
         "@typescript-eslint/parser": "^4.9.1",
+        "chai": "^4.2.0",
         "eslint": "^7.15.0",
         "eslint-config-prettier": "^7.0.0",
         "eslint-plugin-mocha": "^8.0.0",
+        "mocha": "^8.2.1",
         "prettier": "^2.2.1"
     }
 }

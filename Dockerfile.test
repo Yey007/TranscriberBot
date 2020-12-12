@@ -10,18 +10,15 @@ RUN curl -OL https://raw.githubusercontent.com/mrako/wait-for/master/wait-for &&
 
 COPY ./package*.json ./
 
-RUN npm ci --production=true
+RUN npm ci --production=false
 
-COPY ./tsconfig.json ./
+COPY ./tsconfig.test.json ./
 
 RUN npm install -g typescript
 
 COPY ./src ./src
 
-#TEMPORARY (docker-compose has an issue with .dockerignore files)
-RUN rm -rf ./src/test
-
-RUN tsc
+RUN tsc -p tsconfig.test.json
 
 COPY ./database.json ./
 
@@ -29,4 +26,4 @@ COPY ./resources ./resources
 
 COPY ./migrations ./migrations
 
-CMD [ "npm", "start" ]
+CMD [ "npm", "test" ]
