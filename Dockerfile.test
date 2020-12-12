@@ -10,7 +10,7 @@ RUN curl -OL https://raw.githubusercontent.com/mrako/wait-for/master/wait-for &&
 
 COPY ./package*.json ./
 
-RUN npm install --production=false
+RUN npm ci --production=false
 
 COPY ./tsconfig.test.json ./
 
