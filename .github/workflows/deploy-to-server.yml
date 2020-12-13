@@ -96,7 +96,7 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: ${{ secrets.SERVER_PORT }}
           source: 'docker-compose.yml'
-          target: 'C:\Users\${{ secrets.SERVER_USERNAME }}\Desktop\TranscriberBot'
+          target: 'C:\Users\${{ secrets.SERVER_USERNAME }}\Desktop\TranscriberBot\${{ github.sha }}'
       - name: Compose up
         uses: appleboy/ssh-action@master
         with:
@@ -105,8 +105,8 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: ${{ secrets.SERVER_PORT }}
           script: |
-            cd C:\Users\${{ secrets.SERVER_USERNAME }}\Desktop\TranscriberBot
+            cd C:\Users\${{ secrets.SERVER_USERNAME }}\Desktop\TranscriberBot\${{ github.sha }}
             docker-compose stop
             docker image prune -f
-            docker pull yey007/transcriberbot
+            docker pull ghcr.io/yey007/transcriberbot:latest
             docker-compose up -d
