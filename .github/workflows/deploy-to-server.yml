@@ -97,7 +97,7 @@ jobs:
           port: ${{ secrets.SERVER_PORT }}
           source: 'docker-compose.yml'
           target: 'C:\Users\${{ secrets.SERVER_USERNAME }}\Desktop\TranscriberBot'
-      - name: Start new container
+      - name: Compose up
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_IP }}
