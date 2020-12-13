@@ -95,7 +95,7 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: ${{ secrets.SERVER_PORT }}
           source: 'docker-compose.yml'
-          target: '~/Desktop/TranscriberBot/'
+          target: 'C:\Users\${{ secrets.SERVER_USERNAME }}\Desktop\TranscriberBot'
       - name: Start new container
         uses: appleboy/ssh-action@master
         with:
@@ -104,7 +104,7 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: ${{ secrets.SERVER_PORT }}
           script: |
-            cd ~/Desktop/TranscriberBot/
+            cd C:\Users\${{ secrets.SERVER_USERNAME }}\Desktop\TranscriberBot
             docker-compose stop
             docker image prune -f
             docker pull yey007/transcriberbot
