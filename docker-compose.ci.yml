@@ -7,7 +7,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.test
-    image: yey007/transcriberbot:latest
+    image: ghcr.io/yey007/transcriberbot:latest
     command: sh -c "./wait-for db:3306 -- npm test"
     environment:
       - DISCORD_TOKEN

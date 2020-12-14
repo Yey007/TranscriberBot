@@ -5,14 +5,14 @@ services:
     privileged: true
     container_name: bot
     build: ./
-    image: ghcr.io/yey007/transcriberbot:latest
+    image: yey007/transcriberbot:latest
     restart: always
     command: sh -c "./wait-for db:3306 -- npm start"
     env_file:
       - ./bot.env
       - ./db.env
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
     depends_on:
       - db
     networks:
@@ -27,15 +27,6 @@ services:
       - ./db.env
     expose:
       - 3306
-    networks:
-      - my_network
-
-  adminer:
-    container_name: adminer
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
     networks:
       - my_network
 
