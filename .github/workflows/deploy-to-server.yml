@@ -94,7 +94,6 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_PRIVATE_KEY }}
-          passphrase: ''
           port: ${{ secrets.SERVER_PORT }}
           source: docker-compose.yml
           target: ~/Desktop/TranscriberBot/${{ github.sha }}
@@ -104,7 +103,6 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_PRIVATE_KEY }}
-          passphrase: ''
           port: ${{ secrets.SERVER_PORT }}
           script: |
             cd ~/Desktop/TranscriberBot/${{ github.sha }}
