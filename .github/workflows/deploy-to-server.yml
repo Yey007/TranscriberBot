@@ -96,7 +96,7 @@ jobs:
           key: ${{ secrets.SERVER_PRIVATE_KEY }}
           port: ${{ secrets.SERVER_PORT }}
           source: docker-compose.yml
-          target: ~/Desktop/TranscriberBot/${{ github.sha }}
+          target: ~/Desktop/TranscriberBot
       - name: Compose up
         uses: appleboy/ssh-action@master
         with:
@@ -105,5 +105,5 @@ jobs:
           key: ${{ secrets.SERVER_PRIVATE_KEY }}
           port: ${{ secrets.SERVER_PORT }}
           script: |
-            cd ~/Desktop/TranscriberBot/${{ github.sha }}
+            cd ~/Desktop/TranscriberBot
             docker-compose config
