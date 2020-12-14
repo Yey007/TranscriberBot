@@ -12,7 +12,7 @@ COPY ./package*.json ./
 
 RUN npm ci --production=true
 
-COPY ./tsconfig.json ./
+COPY ./tsconfig.prod.json ./
 
 RUN npm install -g typescript
 

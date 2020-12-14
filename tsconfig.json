@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "types": ["node"],
+        "types": ["node", "mocha"],
         "moduleResolution": "node",
         "esModuleInterop": true,
         "target": "esnext",
