@@ -6,7 +6,6 @@ on:
     # Publish `master` as Docker `latest` image.
     branches:
       - master
-      - feature-auto-deploy
 
     # Publish `v1.2.3` tags as releases.
     tags:
@@ -106,7 +105,7 @@ jobs:
           port: ${{ secrets.SERVER_PORT }}
           script: |
             cd ~/Desktop/TranscriberBot
-            docker-compose stop
-            docker image prune -f
-            docker pull yey007/transcriberbot
-            docker-compose up -d
+            sudo docker-compose stop
+            sudo docker image prune -f
+            sudo docker pull ghcr.io/yey007/transcriberbot:latest
+            sudo docker-compose up -d
