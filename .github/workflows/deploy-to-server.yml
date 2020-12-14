@@ -54,8 +54,6 @@ jobs:
   push:
     needs: [test, lint]
     runs-on: ubuntu-latest
-    env:
-      IMAGE_NAME: transcriberbot
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -84,3 +82,30 @@ jobs:
             ghcr.io/yey007/transcriberbot:latest
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+  deploy:
+    needs: [push]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Copy docker-compose.yml
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_PRIVATE_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          source: docker-compose.yml
+          target: ~/Desktop/TranscriberBot/${{ github.sha }}
+      - name: Compose up
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_PRIVATE_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            cd ~/Desktop/TranscriberBot
+            sudo docker-compose stop
+            sudo docker image prune -f
+            sudo docker pull ghcr.io/yey007/transcriberbot:latest
+            sudo docker-compose up -d
