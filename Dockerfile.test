@@ -18,7 +18,7 @@ RUN npm install -g typescript
 
 COPY ./src ./src
 
-RUN tsc -p tsconfig.test.json
+RUN tsc -p tsconfig.json
 
 COPY ./database.json ./
 

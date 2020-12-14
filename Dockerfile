@@ -21,7 +21,7 @@ COPY ./src ./src
 #TEMPORARY (docker-compose has an issue with .dockerignore files)
 RUN rm -rf ./src/test
 
-RUN tsc
+RUN tsc -p tsconfig.prod.json
 
 COPY ./database.json ./
 
