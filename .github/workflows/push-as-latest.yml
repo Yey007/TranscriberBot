@@ -1,9 +1,11 @@
 name: Docker
 
 on:
-  release:
-    types:
-      - published
+  workflow_dispatch:
+  push:
+    # Publish `master` as Docker `latest` image.
+    branches:
+      - master
 
 jobs:
   lint:
@@ -74,34 +76,5 @@ jobs:
           tags: |
             yey007/transcriberbot:latest
             ghcr.io/yey007/transcriberbot:latest
-            yey007/transcriberbot:${{ github.event.release.tag_name }}
-            ghcr.io/yey007/transcriberbot:${{ github.event.release.tag_name }}
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
-  deploy:
-    needs: [push]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - name: Copy docker-compose.yml
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          key: ${{ secrets.SERVER_PRIVATE_KEY }}
-          port: ${{ secrets.SERVER_PORT }}
-          source: docker-compose.yml
-          target: ~/Desktop/TranscriberBot/
-      - name: Compose up
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          key: ${{ secrets.SERVER_PRIVATE_KEY }}
-          port: ${{ secrets.SERVER_PORT }}
-          script: |
-            cd ~/Desktop/TranscriberBot
-            sudo docker-compose stop
-            sudo docker image prune -f
-            sudo docker pull ghcr.io/yey007/transcriberbot:latest
-            sudo docker-compose up -d
