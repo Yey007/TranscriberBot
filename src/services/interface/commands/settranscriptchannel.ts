@@ -1,6 +1,8 @@
 import { Message } from 'discord.js';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../../types';
+import { Logger } from '../../logging/logger';
+import { LogOrigin } from '../../logging/logorigin';
 import { StandardEmbedMaker } from '../../misc/standardembedmaker';
 import { managerOrAdminRequired } from '../../permissions/rolerequierments';
 import { SettingsRepository } from '../../repositories/settingsrepository';
@@ -37,10 +39,18 @@ export class SetTranscriptChannel extends BotCommand {
             const embed = this.maker.makeSuccess();
             embed.description = `Set the transcription channel for \`${args[1]}\` to this channel`;
             message.channel.send(embed);
+            Logger.verbose(
+                `Sent transcription channel set success message in channel with id ${message.channel.id}`,
+                LogOrigin.Discord
+            );
         } else {
             const embed = this.maker.makeWarning();
             embed.description = `Voice channel \`${args[1]}\` not found`;
             message.channel.send(embed);
+            Logger.verbose(
+                `Sent transcription channel set failure message in channel with id ${message.channel.id}`,
+                LogOrigin.Discord
+            );
         }
     }
 

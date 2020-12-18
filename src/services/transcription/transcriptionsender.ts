@@ -1,6 +1,8 @@
 import { GuildMember, MessageEmbed, PartialGuildMember, TextChannel } from 'discord.js';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../types';
+import { Logger } from '../logging/logger';
+import { LogOrigin } from '../logging/logorigin';
 import { StandardEmbedMaker } from '../misc/standardembedmaker';
 
 @injectable()
@@ -18,6 +20,10 @@ export class TranscriptionSender {
         transcript: string
     ): Promise<void> {
         transcriptChannel.send(this.format(member, voiceChannelName, transcript));
+        Logger.verbose(
+            `Sent transcription in transcription channel with id ${transcriptChannel.id}`,
+            LogOrigin.Discord
+        );
     }
 
     private format(

@@ -29,6 +29,8 @@ import { UserSettings } from './services/repositories/usersettings/usersettings'
 import { GuildSettings } from './services/repositories/guildsettings/guildsettings';
 import { DbTranscriptChanRepository } from './services/repositories/transcriptionchannels/dbtranscriptchanrepository';
 import { RoleManager } from './services/permissions/rolemanager';
+import { Logger } from './services/logging/logger';
+import { LogOrigin } from './services/logging/logorigin';
 
 //Load env files if we're not in a container. That file will be passed as an argument to docker if we're running docker.
 if (process.env.CONTAINER !== 'true') {
@@ -69,10 +71,9 @@ const conn = createConnection({
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE
-});
-
-conn.on('error', (err) => {
-    console.log('MySQL error: ' + err.code);
+}).on('error', (err) => {
+    // Only applies to initial connection
+    Logger.error(err.code, LogOrigin.MySQL);
 });
 
 container.bind<Connection>(TYPES.Database).toConstantValue(conn.promise());

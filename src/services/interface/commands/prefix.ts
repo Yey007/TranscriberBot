@@ -1,6 +1,8 @@
 import { Message } from 'discord.js';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../../types';
+import { Logger } from '../../logging/logger';
+import { LogOrigin } from '../../logging/logorigin';
 import { StandardEmbedMaker } from '../../misc/standardembedmaker';
 import { managerOrAdminRequired } from '../../permissions/rolerequierments';
 import { GuildSettings } from '../../repositories/guildsettings/guildsettings';
@@ -49,6 +51,7 @@ export class Prefix extends BotCommand {
         const embed = this.maker.makeSuccess();
         embed.description = `Prefix set to \`${prefix}\``;
         message.channel.send(embed);
+        Logger.verbose(`Sent prefix set success message in channel with id ${message.channel.id}`, LogOrigin.Discord);
     }
 
     private async prefixGet(message: Message): Promise<void> {
@@ -56,6 +59,7 @@ export class Prefix extends BotCommand {
         const settings = await this.repo.get(message.guild.id);
         embed.description = `The prefix is currently \`${settings.prefix}\``;
         message.channel.send(embed);
+        Logger.verbose(`Sent prefix get message in channel with id ${message.channel.id}`, LogOrigin.Discord);
     }
 
     public get help(): string {

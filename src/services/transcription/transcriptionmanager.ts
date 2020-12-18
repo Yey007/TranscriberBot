@@ -7,6 +7,8 @@ import { TYPES } from '../../types';
 import { StandardEmbedMaker } from '../misc/standardembedmaker';
 import { TranscriptionChannelGetter } from './transcriptionchannelgetter';
 import { RecordingPermissionState } from '../repositories/usersettings/usersettings';
+import { Logger } from '../logging/logger';
+import { LogOrigin } from '../logging/logorigin';
 
 @injectable()
 export class TranscriptionManager {
@@ -32,7 +34,13 @@ export class TranscriptionManager {
 
     public async speaking(vc: VoiceConnection, member: GuildMember | PartialGuildMember): Promise<void> {
         const state = await this.permissiongetter.getPermission(member.user);
-        if (state === RecordingPermissionState.NoConsent || state === RecordingPermissionState.Unknown) return;
+        if (state === RecordingPermissionState.NoConsent || state === RecordingPermissionState.Unknown) {
+            Logger.verbose(
+                `Permission check failed for user with id ${member.user.id}. Aborting transcription`,
+                LogOrigin.Discord
+            );
+            return;
+        }
         const stream = vc.receiver.createStream(member.user, { mode: 'pcm', end: 'silence' });
         const s = this.transcriptionSender;
         const embed = this.embedMaker;
@@ -42,11 +50,19 @@ export class TranscriptionManager {
             this.transcriber.transcribe(stream, function (words: string, err: unknown) {
                 if (err === undefined) {
                     s.send(member, channel, vc.channel.name, words);
+                    Logger.verbose(
+                        `Transcription succeeded for user with id ${member.user.id} in voice channel with id ${vc.channel.id}`,
+                        LogOrigin.Transcription
+                    );
                 } else {
                     const e = embed.makeWarning();
                     e.description =
                         "Problem transcribing audio. This usually doesn't happen, but it's nothing to worry about.";
                     channel.send(e);
+                    Logger.verbose(
+                        `Transcription failed for user with id ${member.user.id} in voice channel with id ${vc.channel.id}`,
+                        LogOrigin.Transcription
+                    );
                 }
             });
         }

@@ -1,6 +1,8 @@
 import { inject, injectable } from 'inversify';
 import { Readable } from 'stream';
 import { TYPES } from '../../types';
+import { Logger } from '../logging/logger';
+import { LogOrigin } from '../logging/logorigin';
 
 @injectable()
 export class Transcriber {
@@ -22,9 +24,11 @@ export class Transcriber {
         stream.pipe(recognizeStream);
 
         recognizeStream.on('data', function (data) {
+            Logger.verbose('Recieved data from IBM', LogOrigin.Transcription);
             onTranscription(data.toString('utf-8'), undefined);
         });
         recognizeStream.on('error', function (err) {
+            Logger.warn('Recieved error from IBM while attempting to transcribe', LogOrigin.Transcription);
             onTranscription('', err);
         });
     }
