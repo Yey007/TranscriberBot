@@ -23,7 +23,8 @@ export async function botInit(): Promise<void> {
 }
 
 if (require.main === module) {
-    Logger.logLevel = LogLevel.Debug;
+    //TODO: Load from env
+    Logger.logLevel = LogLevel.Verbose;
     botInit()
         .then(() => {
             Logger.info('Logged in!', LogOrigin.Self);
