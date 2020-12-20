@@ -4,9 +4,9 @@ import { Bot } from './bot';
 import { TYPES } from './types';
 import { cleanUpInit } from './cleanup';
 import { Logger } from './services/logging/logger';
-import { LogLevel } from './services/logging/loglevel';
 import { LogOrigin } from './services/logging/logorigin';
 import { errorHandlingInit } from './errorhandling';
+import { parseLogLevel } from './services/logging/loglevelparser';
 
 export const bot: Bot = container.get<Bot>(TYPES.Bot);
 
@@ -24,7 +24,7 @@ export async function botInit(): Promise<void> {
 
 if (require.main === module) {
     //TODO: Load from env
-    Logger.logLevel = LogLevel.Verbose;
+    Logger.logLevel = parseLogLevel(process.env.LOG_LEVEL);
     botInit()
         .then(() => {
             Logger.info('Logged in!', LogOrigin.Self);
