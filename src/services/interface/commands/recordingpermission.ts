@@ -1,6 +1,8 @@
 import { Message } from 'discord.js';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../../types';
+import { Logger } from '../../logging/logger';
+import { LogOrigin } from '../../logging/logorigin';
 import { StandardEmbedMaker } from '../../misc/standardembedmaker';
 import { SettingsRepository } from '../../repositories/settingsrepository';
 import { RecordingPermissionState, UserSettings } from '../../repositories/usersettings/usersettings';
@@ -36,6 +38,10 @@ export class SetRecordingPermission extends BotCommand {
                 const embed = maker.makeSuccess();
                 embed.description = `Recording permission set to \`${args[1]}\``;
                 message.channel.send(embed);
+                Logger.verbose(
+                    `Sent recording permission set success message in channel with id ${message.channel.id}`,
+                    LogOrigin.Discord
+                );
             };
 
             if (args[1] === 'accept') {
@@ -48,12 +54,20 @@ export class SetRecordingPermission extends BotCommand {
                 return;
             }
             message.channel.send('Invalid setting. Acceptable arguments are `accept` and `deny`.');
+            Logger.verbose(
+                `Sent recording permission set failure message in channel with id ${message.channel.id}`,
+                LogOrigin.Discord
+            );
         } else {
             const embed = this.maker.makeInfo();
             const settings = await this.repo.get(message.member.user.id);
             const perm = settings.permission === RecordingPermissionState.Consent ? 'accept' : 'deny';
             embed.description = `Your recording preference is currently set to \`${perm}\``;
             message.channel.send(embed);
+            Logger.verbose(
+                `Sent recording permission get message in channel with id ${message.channel.id}`,
+                LogOrigin.Discord
+            );
         }
     }
 

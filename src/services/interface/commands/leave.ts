@@ -1,5 +1,7 @@
 import { Message } from 'discord.js';
 import { injectable } from 'inversify';
+import { Logger } from '../../logging/logger';
+import { LogOrigin } from '../../logging/logorigin';
 import { BotCommand } from '../botcommand';
 import { CommandArgs } from '../commandargs';
 
@@ -11,6 +13,7 @@ export class ChannelLeaver extends BotCommand {
     public async execute(message: Message): Promise<void> {
         if (message.member.guild.me.voice.channel) {
             message.member.guild.me.voice.channel.leave();
+            Logger.verbose(`Left voice channel with id ${message.member.guild.me.voice.channel.id}`, LogOrigin.Discord);
         }
     }
 

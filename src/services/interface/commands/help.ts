@@ -1,6 +1,8 @@
 import { Message } from 'discord.js';
 import { inject } from 'inversify';
 import { TYPES } from '../../../types';
+import { Logger } from '../../logging/logger';
+import { LogOrigin } from '../../logging/logorigin';
 import { StandardEmbedMaker } from '../../misc/standardembedmaker';
 import { BotCommand } from '../botcommand';
 import { CommandArgs } from '../commandargs';
@@ -52,6 +54,7 @@ export class Help extends BotCommand {
         );
 
         message.channel.send(e);
+        Logger.verbose(`Generic help sent in channel with id ${message.channel.id}`, LogOrigin.Discord);
     }
 
     //Argument order, which arguments are required etc.
@@ -77,11 +80,16 @@ export class Help extends BotCommand {
                 embed.addField('Arguments', argumentString);
             }
             message.channel.send(embed);
+            Logger.verbose(`Specific help sent in channel ${message.channel.id}`, LogOrigin.Discord);
         } else {
             const embed = this.maker.makeWarning();
             embed.title = 'Command not found';
             embed.description = `The command "${command}" does not exist.`;
             message.channel.send(embed);
+            Logger.verbose(
+                `Command not found while trying to send specific help in channel with id ${message.channel.id}`,
+                LogOrigin.Discord
+            );
         }
     }
 

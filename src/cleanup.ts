@@ -1,5 +1,7 @@
 import { Bot } from './bot';
 import { container } from './inversify.config';
+import { Logger } from './services/logging/logger';
+import { LogOrigin } from './services/logging/logorigin';
 import { TYPES } from './types';
 
 export function cleanUpInit(): void {
@@ -10,8 +12,8 @@ export function cleanUpInit(): void {
 }
 
 function cleanUp(eventType) {
-    console.log('Recieved ' + eventType);
-    console.log('Stopping bot...');
+    Logger.info('Recieved ' + eventType, LogOrigin.Self);
+    Logger.info('Stopping bot...', LogOrigin.Self);
     const bot = container.get<Bot>(TYPES.Bot);
     bot.stop();
 }
