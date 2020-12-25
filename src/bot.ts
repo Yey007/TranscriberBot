@@ -42,11 +42,11 @@ export class Bot {
             await this.client.user.setStatus('online');
         });
         this.client.on('message', (message) => {
-            Logger.verbose(`Recieved message from channel with id ${message.channel.id}`, LogOrigin.Discord);
+            Logger.debug(`Recieved message from channel with id ${message.channel.id}`, LogOrigin.Discord);
             this.executor.executeCommand(message);
         });
         this.client.on('guildMemberSpeaking', (member, speaking) => {
-            Logger.verbose(`Speech event fired from user with id ${member.user.id}`, LogOrigin.Discord);
+            Logger.debug(`Speech event fired from user with id ${member.user.id}`, LogOrigin.Discord);
             const channelMembers = member.voice.channel.members;
             const botMember = member.guild.me;
             if (!member.user.bot && speaking.bitfield === 1 && channelMembers.get(botMember.id) !== undefined) {
