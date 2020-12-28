@@ -2,15 +2,15 @@ import { expect } from 'chai';
 import { MessageEmbed } from 'discord.js';
 import { channel, selfMember, selfVoiceChannel } from './setup';
 import { container } from '../inversify.config';
-import { SettingsRepository } from '../services/repositories/settingsrepository';
 import { TYPES } from '../types';
 import { COLORS, expectMessage, sendCommand } from './utils';
+import { TranscriptChanRepository } from '../services/repositories/transcriptchanrepository';
 
 describe('Set Transcript Channel', function () {
-    let repo: SettingsRepository<string>;
+    let repo: TranscriptChanRepository;
 
     before(async function () {
-        repo = container.get<SettingsRepository<string>>(TYPES.TranscriptionChannelRespository);
+        repo = container.get<TranscriptChanRepository>(TYPES.TranscriptionChannelRespository);
         await repo.set(selfVoiceChannel.id, '');
         await selfMember.roles.add(selfMember.guild.roles.cache.find((x) => x.name === 'TranscriberBot Manager'));
     });

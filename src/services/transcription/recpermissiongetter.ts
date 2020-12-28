@@ -4,7 +4,7 @@ import { TYPES } from '../../types';
 import { Logger } from '../logging/logger';
 import { LogOrigin } from '../logging/logorigin';
 import { SettingsRepository } from '../repositories/settingsrepository';
-import { RecordingPermissionState, UserSettings } from '../repositories/usersettings/usersettings';
+import { RecordingPermissionState, UserSettings } from '../repositories/repotypes';
 
 @injectable()
 export class RecPermissionGetter {
@@ -20,7 +20,7 @@ export class RecPermissionGetter {
         switch (settings.permission) {
             case RecordingPermissionState.Consent:
             case RecordingPermissionState.NoConsent:
-                Logger.verbose(`Found know recording permission for user with id ${user.id}`, LogOrigin.Transcription);
+                Logger.verbose(`Found known recording permission for user with id ${user.id}`, LogOrigin.Transcription);
                 return settings.permission;
             case RecordingPermissionState.Unknown:
                 Logger.verbose(

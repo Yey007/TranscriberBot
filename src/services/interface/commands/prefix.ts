@@ -5,7 +5,7 @@ import { Logger } from '../../logging/logger';
 import { LogOrigin } from '../../logging/logorigin';
 import { StandardEmbedMaker } from '../../misc/standardembedmaker';
 import { managerOrAdminRequired } from '../../permissions/rolerequierments';
-import { GuildSettings } from '../../repositories/guildsettings/guildsettings';
+import { GuildSettings } from '../../repositories/repotypes';
 import { SettingsRepository } from '../../repositories/settingsrepository';
 import { BotCommand } from '../botcommand';
 import { CommandArgs } from '../commandargs';

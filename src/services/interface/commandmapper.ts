@@ -7,7 +7,7 @@ import { ChannelLeaver } from './commands/leave';
 import { Help } from './commands/help';
 import { Prefix } from './commands/prefix';
 import { SetRecordingPermission } from './commands/recordingpermission';
-import { SetTranscriptChannel } from './commands/settranscriptchannel';
+import { TranscriptChannel } from './commands/transcriptchannel';
 
 @injectable()
 export class MainCommandMapper {
@@ -17,7 +17,7 @@ export class MainCommandMapper {
         this.m = new Map();
         this.m.set('join', container.get<ChannelJoiner>(TYPES.ChannelJoiner));
         this.m.set('leave', container.get<ChannelLeaver>(TYPES.ChannelLeaver));
-        this.m.set('set-transcript-chan', container.get<SetTranscriptChannel>(TYPES.SetTranscriptChannel));
+        this.m.set('transcript-chan', container.get<TranscriptChannel>(TYPES.SetTranscriptChannel));
         this.m.set('rec-perm', container.get<SetRecordingPermission>(TYPES.SetRecordingPermission));
         this.m.set('prefix', container.get<Prefix>(TYPES.SetPrefix));
     }

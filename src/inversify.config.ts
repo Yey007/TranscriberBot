@@ -14,9 +14,9 @@ import { StandardEmbedMaker } from './services/misc/standardembedmaker';
 import { ChannelLeaver } from './services/interface/commands/leave';
 import { MainCommandMapper } from './services/interface/commandmapper';
 import { TranscriptionManager } from './services/transcription/transcriptionmanager';
-import { DbUserSettingsRepository } from './services/repositories/usersettings/dbusersettingsrepository';
-import { DbGuildSettingsRespository } from './services/repositories/guildsettings/dbguildsettingsrepository';
-import { SetTranscriptChannel } from './services/interface/commands/settranscriptchannel';
+import { DbUserSettingsRepository } from './services/repositories/dbusersettingsrepository';
+import { DbGuildSettingsRespository } from './services/repositories/dbguildsettingsrepository';
+import { TranscriptChannel } from './services/interface/commands/transcriptchannel';
 import { Help } from './services/interface/commands/help';
 import { TranscriptionChannelGetter } from './services/transcription/transcriptionchannelgetter';
 import { SetRecordingPermission } from './services/interface/commands/recordingpermission';
@@ -25,12 +25,13 @@ import { createConnection } from 'mysql2';
 import { Connection } from 'mysql2/promise';
 import env from 'dotenv';
 import { SettingsRepository } from './services/repositories/settingsrepository';
-import { UserSettings } from './services/repositories/usersettings/usersettings';
-import { GuildSettings } from './services/repositories/guildsettings/guildsettings';
-import { DbTranscriptChanRepository } from './services/repositories/transcriptionchannels/dbtranscriptchanrepository';
+import { UserSettings } from './services/repositories/repotypes';
+import { GuildSettings } from './services/repositories/repotypes';
+import { DbTranscriptChanRepository } from './services/repositories/dbtranscriptchanrepository';
 import { RoleManager } from './services/permissions/rolemanager';
 import { Logger } from './services/logging/logger';
 import { LogOrigin } from './services/logging/logorigin';
+import { TranscriptChanRepository } from './services/repositories/transcriptchanrepository';
 
 //Load env files if we're not in a container. That file will be passed as an argument to docker if we're running docker.
 if (process.env.CONTAINER !== 'true') {
@@ -86,13 +87,13 @@ container
     .to(DbGuildSettingsRespository)
     .inSingletonScope();
 container
-    .bind<SettingsRepository<string>>(TYPES.TranscriptionChannelRespository)
+    .bind<TranscriptChanRepository>(TYPES.TranscriptionChannelRespository)
     .to(DbTranscriptChanRepository)
     .inSingletonScope();
 
 container.bind<ChannelJoiner>(TYPES.ChannelJoiner).to(ChannelJoiner).inSingletonScope();
 container.bind<ChannelLeaver>(TYPES.ChannelLeaver).to(ChannelLeaver).inSingletonScope();
-container.bind<SetTranscriptChannel>(TYPES.SetTranscriptChannel).to(SetTranscriptChannel).inSingletonScope();
+container.bind<TranscriptChannel>(TYPES.SetTranscriptChannel).to(TranscriptChannel).inSingletonScope();
 container.bind<SetRecordingPermission>(TYPES.SetRecordingPermission).to(SetRecordingPermission).inSingletonScope();
 container.bind<Help>(TYPES.Help).to(Help).inSingletonScope();
 container.bind<Prefix>(TYPES.SetPrefix).to(Prefix).inSingletonScope();

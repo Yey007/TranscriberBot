@@ -1,11 +1,11 @@
 import { inject, injectable } from 'inversify';
 import { Connection, RowDataPacket } from 'mysql2/promise';
 import SQL from 'sql-template-strings';
-import { TYPES } from '../../../types';
-import { Logger } from '../../logging/logger';
-import { LogOrigin } from '../../logging/logorigin';
-import { SettingsRepository } from '../settingsrepository';
-import { GuildSettings } from './guildsettings';
+import { TYPES } from '../../types';
+import { Logger } from '../logging/logger';
+import { LogOrigin } from '../logging/logorigin';
+import { SettingsRepository } from './settingsrepository';
+import { DiscordId, GuildSettings } from './repotypes';
 
 @injectable()
 export class DbGuildSettingsRespository extends SettingsRepository<GuildSettings> {
@@ -16,7 +16,7 @@ export class DbGuildSettingsRespository extends SettingsRepository<GuildSettings
         this.db = db;
     }
 
-    public async get(guildid: string): Promise<GuildSettings> {
+    public async get(guildid: DiscordId): Promise<GuildSettings> {
         const [rows] = await this.db.query<RowDataPacket[]>(
             SQL`SELECT prefix FROM guild_settings
             WHERE id=${guildid}`
@@ -31,7 +31,7 @@ export class DbGuildSettingsRespository extends SettingsRepository<GuildSettings
         if (rows[0]) return { prefix: rows[0].prefix };
         else return { prefix: '!' };
     }
-    public async set(guildid: string, settings: GuildSettings): Promise<void> {
+    public async set(guildid: DiscordId, settings: GuildSettings): Promise<void> {
         if (guildid === undefined) return;
 
         await this.db.query(

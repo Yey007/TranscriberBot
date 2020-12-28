@@ -3,7 +3,7 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from '../../types';
 import { MainCommandMapper } from './commandmapper';
 import { StandardEmbedMaker } from '../misc/standardembedmaker';
-import { GuildSettings } from '../repositories/guildsettings/guildsettings';
+import { GuildSettings } from '../repositories/repotypes';
 import { SettingsRepository } from '../repositories/settingsrepository';
 import { Logger } from '../logging/logger';
 import { LogOrigin } from '../logging/logorigin';

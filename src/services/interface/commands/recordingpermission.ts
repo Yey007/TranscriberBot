@@ -5,7 +5,7 @@ import { Logger } from '../../logging/logger';
 import { LogOrigin } from '../../logging/logorigin';
 import { StandardEmbedMaker } from '../../misc/standardembedmaker';
 import { SettingsRepository } from '../../repositories/settingsrepository';
-import { RecordingPermissionState, UserSettings } from '../../repositories/usersettings/usersettings';
+import { RecordingPermissionState, UserSettings } from '../../repositories/repotypes';
 import { BotCommand } from '../botcommand';
 import { CommandArgs } from '../commandargs';
 

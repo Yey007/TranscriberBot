@@ -23,7 +23,6 @@ export async function botInit(): Promise<void> {
 }
 
 if (require.main === module) {
-    //TODO: Load from env
     Logger.logLevel = parseLogLevel(process.env.LOG_LEVEL);
     botInit()
         .then(() => {
