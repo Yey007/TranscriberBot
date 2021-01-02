@@ -1,9 +1,9 @@
 import { MessageEmbed } from 'discord.js';
 import { COLORS, expectMessage, sendCommand } from './utils';
 
-describe('Help', function() {
-    context('without arguments', function() {
-        it('should return command list', async function() {
+describe('Help', function () {
+    context('without arguments', function () {
+        it('should return command list', async function () {
             const embedJson = {
                 type: 'rich',
                 title: 'Help',
@@ -11,7 +11,7 @@ describe('Help', function() {
                 fields: [
                     {
                         value:
-                            "`help` - returns a list of commands\n`join` - joins a voice channel\n`leave` - returns a list of commands\n`prefix` - sets this bot's prefix for this server\n`rec-perm` - sets the recording permission for the user executing the command\n`set-transcript-chan` - sets the transcription channel for a discord server as the current channel",
+                            "`help` - returns a list of commands\n`join` - joins a voice channel\n`leave` - returns a list of commands\n`prefix` - sets this bot's prefix for this server\n`rec-perm` - sets the recording permission for the user executing the command\n`transcript-chan` - allows for various operations involving transcription channels",
                         name: 'Commands'
                     },
                     {
@@ -27,8 +27,8 @@ describe('Help', function() {
         });
     });
 
-    context('with arguments', function() {
-        it('should respond correctly when the given command has no arguments', async function() {
+    context('with arguments', function () {
+        it('should respond correctly when the given command has no arguments', async function () {
             //join
             const embedJson = {
                 type: 'rich',
@@ -46,52 +46,28 @@ describe('Help', function() {
             await sendCommand('help join');
             await promise;
         });
-        it('should respond correctly when the given command has required arguments', async function() {
+        it('should respond correctly when the given command has arguments', async function () {
             //set-transcript-chan
             const embedJson = {
                 type: 'rich',
                 title: 'Help',
                 color: COLORS.Info,
                 description:
-                    '`set-transcript-chan` sets the transcription channel for a discord server as the current channel\nBrackets [] denote optional arguments.',
+                    '`transcript-chan` allows for various operations involving transcription channels\nBrackets [] denote optional arguments.',
                 fields: [
                     {
-                        value: '`set-transcript-chan voiceChannel`',
+                        value: '`transcript-chan operation [voiceChannel]`',
                         name: 'Usage'
                     },
                     {
                         value:
-                            '`voiceChannel` - the name of the voice channel that should be transcribed into this channel.',
+                            '`operation` - can be `create`, `remove` or `all`. `create` will create a new transcription channel, `remove` will remove one, and `all` will return a list of all transcription channels.\n`voiceChannel` - the name of the voice channel that should be used for the specified operation. Not required if the operation is `all`',
                         name: 'Arguments'
                     }
                 ]
             };
             const promise = expectMessage(new MessageEmbed(embedJson));
-            await sendCommand('help set-transcript-chan');
-            await promise;
-        });
-        it('should respond correctly when the given command has optional arguments', async function() {
-            //prefix
-            const embedJson = {
-                type: 'rich',
-                title: 'Help',
-                color: COLORS.Info,
-                description:
-                    '`set-transcript-chan` sets the transcription channel for a discord server as the current channel\nBrackets [] denote optional arguments.',
-                fields: [
-                    {
-                        value: '`set-transcript-chan voiceChannel`',
-                        name: 'Usage'
-                    },
-                    {
-                        value:
-                            '`voiceChannel` - the name of the voice channel that should be transcribed into this channel.',
-                        name: 'Arguments'
-                    }
-                ]
-            };
-            const promise = expectMessage(new MessageEmbed(embedJson));
-            await sendCommand('help set-transcript-chan');
+            await sendCommand('help transcript-chan');
             await promise;
         });
     });

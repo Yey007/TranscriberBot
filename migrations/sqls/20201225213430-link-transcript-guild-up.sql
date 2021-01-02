@@ -1,0 +1,1 @@
+ALTER TABLE `transcription_channels` ADD `guildId` varchar(20) DEFAULT NULL;

@@ -3,14 +3,14 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from '../../types';
 import { Logger } from '../logging/logger';
 import { LogOrigin } from '../logging/logorigin';
-import { SettingsRepository } from '../repositories/settingsrepository';
+import { TranscriptChanRepository } from '../repositories/transcriptchanrepository';
 
 @injectable()
 export class TranscriptionChannelGetter {
-    private transcriptionChannelRepo: SettingsRepository<string>;
+    private transcriptionChannelRepo: TranscriptChanRepository;
 
     public constructor(
-        @inject(TYPES.TranscriptionChannelRespository) transcriptionChannelRepo: SettingsRepository<string>
+        @inject(TYPES.TranscriptionChannelRespository) transcriptionChannelRepo: TranscriptChanRepository
     ) {
         this.transcriptionChannelRepo = transcriptionChannelRepo;
     }
@@ -24,11 +24,12 @@ export class TranscriptionChannelGetter {
             return chan as TextChannel;
         }
 
-        // This may not exist, but this function can't deal with it at that point.
         Logger.verbose(
             `Failed to find transcription channel for voice channel with id ${vcId}. Resorting to channel search`,
             LogOrigin.Transcription
         );
+
+        // This may not exist, but this function can't deal with it at that point.
         chan = guild.channels.cache.find(
             (channel) => channel.type === 'text' && channel.permissionsFor(guild.me).has('SEND_MESSAGES')
         );

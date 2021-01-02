@@ -3,7 +3,7 @@ import { MessageEmbed } from 'discord.js';
 import { selfClient } from './setup';
 import { container } from '../inversify.config';
 import { SettingsRepository } from '../services/repositories/settingsrepository';
-import { RecordingPermissionState, UserSettings } from '../services/repositories/usersettings/usersettings';
+import { RecordingPermissionState, UserSettings } from '../services/repositories/repotypes';
 import { TYPES } from '../types';
 import { COLORS, expectMessage, sendCommand } from './utils';
 
@@ -55,7 +55,6 @@ describe('Recording Permission', function () {
         });
 
         after(async function () {
-            //TODO: Delete function?
             await userRepo.set(selfClient.user.id, { permission: RecordingPermissionState.Unknown });
         });
     });
@@ -92,7 +91,6 @@ describe('Recording Permission', function () {
         });
 
         after(async function () {
-            //TODO: Delete function?
             await userRepo.set(selfClient.user.id, { permission: RecordingPermissionState.Unknown });
         });
     });

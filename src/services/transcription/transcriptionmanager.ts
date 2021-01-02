@@ -6,7 +6,7 @@ import { TranscriptionSender } from './transcriptionsender';
 import { TYPES } from '../../types';
 import { StandardEmbedMaker } from '../misc/standardembedmaker';
 import { TranscriptionChannelGetter } from './transcriptionchannelgetter';
-import { RecordingPermissionState } from '../repositories/usersettings/usersettings';
+import { RecordingPermissionState } from '../repositories/repotypes';
 import { Logger } from '../logging/logger';
 import { LogOrigin } from '../logging/logorigin';
 

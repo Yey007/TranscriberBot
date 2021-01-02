@@ -1,7 +1,7 @@
 import { MessageEmbed } from 'discord.js';
 import { channel, botClient, botMember, prefix, selfMember } from './setup';
 import { container } from '../inversify.config';
-import { GuildSettings } from '../services/repositories/guildsettings/guildsettings';
+import { GuildSettings } from '../services/repositories/repotypes';
 import { SettingsRepository } from '../services/repositories/settingsrepository';
 import { TYPES } from '../types';
 import { COLORS, expectMessage, sendCommand } from './utils';

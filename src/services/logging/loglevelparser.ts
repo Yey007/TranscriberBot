@@ -6,11 +6,11 @@ export function parseLogLevel(level: string): LogLevel {
             return LogLevel.Debug;
         case 'VERBOSE':
             return LogLevel.Verbose;
-        case 'Info':
+        case 'INFOR':
             return LogLevel.Info;
-        case 'Warn':
+        case 'WARN':
             return LogLevel.Warn;
-        case 'Error':
+        case 'ERROR':
             return LogLevel.Error;
         default:
             return LogLevel.Info;

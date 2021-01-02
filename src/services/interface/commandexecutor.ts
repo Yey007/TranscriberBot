@@ -3,7 +3,7 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from '../../types';
 import { MainCommandMapper } from './commandmapper';
 import { StandardEmbedMaker } from '../misc/standardembedmaker';
-import { GuildSettings } from '../repositories/guildsettings/guildsettings';
+import { GuildSettings } from '../repositories/repotypes';
 import { SettingsRepository } from '../repositories/settingsrepository';
 import { Logger } from '../logging/logger';
 import { LogOrigin } from '../logging/logorigin';
@@ -77,7 +77,7 @@ export class CommandExecutor {
                 embed.description = `This command requires at least ${requiredLength} ${requiredPlural} and 
                 accepts at most ${allLength} ${allPlural} but you provided ${args.length - 1}.`;
 
-                embed.setFooter(`Use about ${args[0]} for more information.`);
+                embed.setFooter(`Use "help ${args[0]}" for more information.`);
 
                 message.channel.send(embed);
                 Logger.verbose(
