@@ -25,7 +25,7 @@ export const TYPES = {
 
     ChannelJoiner: Symbol('ChannelJoiner'),
     ChannelLeaver: Symbol('ChannelLeaver'),
-    SetTranscriptChannel: Symbol('SetTranscriptChannel'),
+    TranscriptChannel: Symbol('TranscriptChannel'),
     SetRecordingPermission: Symbol('SetRecordingPermission'),
     Help: Symbol('Help'),
     SetPrefix: Symbol('SetPrefix'),

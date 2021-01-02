@@ -17,7 +17,7 @@ export class MainCommandMapper {
         this.m = new Map();
         this.m.set('join', container.get<ChannelJoiner>(TYPES.ChannelJoiner));
         this.m.set('leave', container.get<ChannelLeaver>(TYPES.ChannelLeaver));
-        this.m.set('transcript-chan', container.get<TranscriptChannel>(TYPES.SetTranscriptChannel));
+        this.m.set('transcript-chan', container.get<TranscriptChannel>(TYPES.TranscriptChannel));
         this.m.set('rec-perm', container.get<SetRecordingPermission>(TYPES.SetRecordingPermission));
         this.m.set('prefix', container.get<Prefix>(TYPES.SetPrefix));
     }

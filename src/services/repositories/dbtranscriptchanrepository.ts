@@ -56,7 +56,7 @@ export class DbTranscriptChanRepository extends TranscriptChanRepository {
             voiceId: row.voiceId
         }));
     }
-    public remove(vcid: DiscordId): Promise<void> {
-        throw new Error('Method not implemented');
+    public async remove(vcid: DiscordId): Promise<void> {
+        await this.db.query(SQL`DELETE FROM transcription_channels WHERE voiceId=${vcid}`);
     }
 }

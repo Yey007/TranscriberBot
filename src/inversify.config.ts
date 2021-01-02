@@ -93,7 +93,7 @@ container
 
 container.bind<ChannelJoiner>(TYPES.ChannelJoiner).to(ChannelJoiner).inSingletonScope();
 container.bind<ChannelLeaver>(TYPES.ChannelLeaver).to(ChannelLeaver).inSingletonScope();
-container.bind<TranscriptChannel>(TYPES.SetTranscriptChannel).to(TranscriptChannel).inSingletonScope();
+container.bind<TranscriptChannel>(TYPES.TranscriptChannel).to(TranscriptChannel).inSingletonScope();
 container.bind<SetRecordingPermission>(TYPES.SetRecordingPermission).to(SetRecordingPermission).inSingletonScope();
 container.bind<Help>(TYPES.Help).to(Help).inSingletonScope();
 container.bind<Prefix>(TYPES.SetPrefix).to(Prefix).inSingletonScope();
