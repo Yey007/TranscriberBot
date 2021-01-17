@@ -3,6 +3,7 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from '../../../types';
 import { Logger } from '../../logging/logger';
 import { LogOrigin } from '../../logging/logorigin';
+import { checkedSend } from '../../misc/checkedsend';
 import { StandardEmbedMaker } from '../../misc/standardembedmaker';
 import { managerOrAdminRequired } from '../../permissions/rolerequierments';
 import { GuildSettings } from '../../repositories/repotypes';
@@ -44,13 +45,13 @@ export class Prefix extends BotCommand {
         if (prefix.length > 5) {
             const embed = this.maker.makeWarning();
             embed.description = 'Prefix cannot be more than 5 characters.';
-            message.channel.send(embed);
+            checkedSend(message.channel, embed);
             return;
         }
         this.repo.set(message.guild.id, { prefix: prefix });
         const embed = this.maker.makeSuccess();
         embed.description = `Prefix set to \`${prefix}\``;
-        message.channel.send(embed);
+        checkedSend(message.channel, embed);
         Logger.verbose(`Sent prefix set success message in channel with id ${message.channel.id}`, LogOrigin.Discord);
     }
 
@@ -58,7 +59,7 @@ export class Prefix extends BotCommand {
         const embed = this.maker.makeInfo();
         const settings = await this.repo.get(message.guild.id);
         embed.description = `The prefix is currently \`${settings.prefix}\``;
-        message.channel.send(embed);
+        checkedSend(message.channel, embed);
         Logger.verbose(`Sent prefix get message in channel with id ${message.channel.id}`, LogOrigin.Discord);
     }
 

@@ -7,6 +7,7 @@ import { GuildSettings } from '../repositories/repotypes';
 import { SettingsRepository } from '../repositories/settingsrepository';
 import { Logger } from '../logging/logger';
 import { LogOrigin } from '../logging/logorigin';
+import { checkedSend } from '../misc/checkedsend';
 
 @injectable()
 export class CommandExecutor {
@@ -79,7 +80,7 @@ export class CommandExecutor {
 
                 embed.setFooter(`Use "help ${args[0]}" for more information.`);
 
-                message.channel.send(embed);
+                checkedSend(message.channel, embed);
                 Logger.verbose(
                     `Execution of command "${trimmed}" aborted because number of arguments was wrong`,
                     LogOrigin.Discord
@@ -91,7 +92,7 @@ export class CommandExecutor {
             const embed = this.maker.makeWarning();
             embed.title = 'Command not found';
             embed.description = `The command "${args[0]}" does not exist.`;
-            message.channel.send(embed);
+            checkedSend(message.channel, embed);
             Logger.verbose(
                 `Execution of command "${trimmed}" aborted because command was not found`,
                 LogOrigin.Discord
