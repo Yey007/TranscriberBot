@@ -3,6 +3,7 @@ import { inject } from 'inversify';
 import { TYPES } from '../../../types';
 import { Logger } from '../../logging/logger';
 import { LogOrigin } from '../../logging/logorigin';
+import { checkedSend } from '../../misc/checkedsend';
 import { StandardEmbedMaker } from '../../misc/standardembedmaker';
 import { BotCommand } from '../botcommand';
 import { CommandArgs } from '../commandargs';
@@ -53,7 +54,7 @@ export class Help extends BotCommand {
             `You can address the bot in two ways\n\n1. Mention the bot at the start of your message, like this: **${message.guild.me.toString()} command**\n2. Use the prefix (! by default), like this: **!command**`
         );
 
-        message.channel.send(e);
+        checkedSend(message.channel, e);
         Logger.verbose(`Generic help sent in channel with id ${message.channel.id}`, LogOrigin.Discord);
     }
 
@@ -79,13 +80,13 @@ export class Help extends BotCommand {
             if (argumentString !== '') {
                 embed.addField('Arguments', argumentString);
             }
-            message.channel.send(embed);
+            checkedSend(message.channel, embed);
             Logger.verbose(`Specific help sent in channel ${message.channel.id}`, LogOrigin.Discord);
         } else {
             const embed = this.maker.makeWarning();
             embed.title = 'Command not found';
             embed.description = `The command "${command}" does not exist.`;
-            message.channel.send(embed);
+            checkedSend(message.channel, embed);
             Logger.verbose(
                 `Command not found while trying to send specific help in channel with id ${message.channel.id}`,
                 LogOrigin.Discord
