@@ -8,6 +8,7 @@ import { SettingsRepository } from '../../repositories/settingsrepository';
 import { RecordingPermissionState, UserSettings } from '../../repositories/repotypes';
 import { BotCommand } from '../botcommand';
 import { CommandArgs } from '../commandargs';
+import { checkedSend } from '../../misc/checkedsend';
 
 @injectable()
 export class SetRecordingPermission extends BotCommand {
@@ -37,7 +38,7 @@ export class SetRecordingPermission extends BotCommand {
             const success = function () {
                 const embed = maker.makeSuccess();
                 embed.description = `Recording permission set to \`${args[1]}\``;
-                message.channel.send(embed);
+                checkedSend(message.channel, embed);
                 Logger.verbose(
                     `Sent recording permission set success message in channel with id ${message.channel.id}`,
                     LogOrigin.Discord
@@ -63,7 +64,7 @@ export class SetRecordingPermission extends BotCommand {
             const settings = await this.repo.get(message.member.user.id);
             const perm = settings.permission === RecordingPermissionState.Consent ? 'accept' : 'deny';
             embed.description = `Your recording preference is currently set to \`${perm}\``;
-            message.channel.send(embed);
+            checkedSend(message.channel, embed);
             Logger.verbose(
                 `Sent recording permission get message in channel with id ${message.channel.id}`,
                 LogOrigin.Discord

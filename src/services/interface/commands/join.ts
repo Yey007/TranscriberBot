@@ -3,6 +3,7 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from '../../../types';
 import { Logger } from '../../logging/logger';
 import { LogOrigin } from '../../logging/logorigin';
+import { checkedSend } from '../../misc/checkedsend';
 import { StandardEmbedMaker } from '../../misc/standardembedmaker';
 import { BotCommand } from '../botcommand';
 import { CommandArgs } from '../commandargs';
@@ -29,7 +30,7 @@ export class ChannelJoiner extends BotCommand {
                 const embed = this.embedMaker.makeWarning();
                 embed.title = 'Channel Unavailable';
                 embed.description = "I can't join that channel. Please make sure I have the correct permissions.";
-                message.channel.send(embed);
+                checkedSend(message.channel, embed);
                 Logger.verbose(`Unable to join voice channel with id ${vc.channel.id}`, LogOrigin.Discord);
                 return;
             }
@@ -42,7 +43,7 @@ export class ChannelJoiner extends BotCommand {
                 embed.title = 'Transcription Error';
                 embed.description =
                     'There was a problem recieving audio from this channel. If this keeps happening, please contact the author.';
-                message.channel.send(embed);
+                checkedSend(message.channel, embed);
                 Logger.warn(`Unable to dispatch audio in voice channel with id ${vc.channel.id}`, LogOrigin.Discord);
             });
         }

@@ -3,6 +3,7 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from '../../../types';
 import { Logger } from '../../logging/logger';
 import { LogOrigin } from '../../logging/logorigin';
+import { checkedSend } from '../../misc/checkedsend';
 import { StandardEmbedMaker } from '../../misc/standardembedmaker';
 import { managerOrAdminRequired } from '../../permissions/rolerequierments';
 import { TranscriptChanRepository } from '../../repositories/transcriptchanrepository';
@@ -48,7 +49,7 @@ export class TranscriptChannel extends BotCommand {
         } else {
             const embed = this.maker.makeWarning();
             embed.description = 'Invalid operation. Valid operations are `create`, `remove`, and `all`';
-            message.channel.send(embed);
+            checkedSend(message.channel, embed);
         }
     }
 
@@ -59,7 +60,7 @@ export class TranscriptChannel extends BotCommand {
             await this.repo.set(vc.id, message.channel.id);
             const embed = this.maker.makeSuccess();
             embed.description = `Set the transcription channel for \`${args[2]}\` to this channel`;
-            message.channel.send(embed);
+            checkedSend(message.channel, embed);
             Logger.verbose(
                 `Sent transcription channel set success message in channel with id ${message.channel.id}`,
                 LogOrigin.Discord
@@ -67,7 +68,7 @@ export class TranscriptChannel extends BotCommand {
         } else {
             const embed = this.maker.makeWarning();
             embed.description = `Voice channel \`${args[2]}\` not found`;
-            message.channel.send(embed);
+            checkedSend(message.channel, embed);
             Logger.verbose(
                 `Sent transcription channel set failure message in channel with id ${message.channel.id}`,
                 LogOrigin.Discord
@@ -83,14 +84,14 @@ export class TranscriptChannel extends BotCommand {
             if (fromDb === null) {
                 const embed = this.maker.makeWarning();
                 embed.description = `A transcription channel for the voice channel \`${args[2]}\` does not exist`;
-                message.channel.send(embed);
+                checkedSend(message.channel, embed);
                 return;
             }
 
             await this.repo.remove(vc.id);
             const embed = this.maker.makeSuccess();
             embed.description = `Removed the transcription channel for \`${args[2]}\``;
-            message.channel.send(embed);
+            checkedSend(message.channel, embed);
             Logger.verbose(
                 `Sent transcription channel remove success message in channel with id ${message.channel.id}`,
                 LogOrigin.Discord
@@ -98,7 +99,7 @@ export class TranscriptChannel extends BotCommand {
         } else {
             const embed = this.maker.makeWarning();
             embed.description = `Voice channel \`${args[2]}\` not found`;
-            message.channel.send(embed);
+            checkedSend(message.channel, embed);
             Logger.verbose(
                 `Sent transcription channel remove failure message in channel with id ${message.channel.id}`,
                 LogOrigin.Discord
@@ -117,7 +118,7 @@ export class TranscriptChannel extends BotCommand {
         for (const namePair of allNames) {
             embed.description += `${namePair.voice} :arrow_right: ${namePair.text}\n`;
         }
-        message.channel.send(embed);
+        checkedSend(message.channel, embed);
     }
 
     public get help(): string {
