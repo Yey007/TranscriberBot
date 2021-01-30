@@ -27,7 +27,6 @@ export const mochaHooks = {
             await botInit();
 
             prefix = process.env.TESTING_PREFIX;
-            Logger.debug(process.env.TESTING_PREFIX);
 
             selfClient = new Client();
             await selfClient.login(process.env.DISCORD_TEST_TOKEN);
