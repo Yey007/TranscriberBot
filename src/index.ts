@@ -1,26 +1,27 @@
-import migrate from 'db-migrate';
-import { container } from './inversify.config';
+import 'reflect-metadata';
 import { Bot } from './bot';
-import { TYPES } from './types';
-import { cleanUpInit } from './cleanup';
+import { cleanUpInit } from './initialization/cleanup';
 import { Logger } from './services/logging/logger';
 import { LogOrigin } from './services/logging/logorigin';
-import { errorHandlingInit } from './errorhandling';
+import { errorHandlingInit } from './initialization/errorhandling';
 import { parseLogLevel } from './services/logging/loglevelparser';
+import { createConnection } from 'typeorm';
+import Container from 'typedi';
+import { containerInit } from './initialization/container';
+import { loadEnv } from './initialization/env';
+import { dbInit } from './initialization/db';
 
-export const bot: Bot = container.get<Bot>(TYPES.Bot);
+export let bot: Bot;
 
 export async function botInit(): Promise<void> {
+    loadEnv();
     Logger.logLevel = parseLogLevel(process.env.LOG_LEVEL);
+    containerInit();
+    await dbInit();
     errorHandlingInit();
     cleanUpInit();
-    const dbm = migrate.getInstance(true);
-    await dbm.up().catch((err) => {
-        Logger.error(err, LogOrigin.MySQL);
-    });
-    await bot.start().catch((err: Error) => {
-        Logger.error(err.message, LogOrigin.Discord);
-    });
+    bot = Container.get(Bot);
+    await bot.start();
 }
 
 if (require.main === module) {

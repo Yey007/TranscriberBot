@@ -1,27 +1,18 @@
 import { Message } from 'discord.js';
-import { inject } from 'inversify';
-import { TYPES } from '../../../types';
 import { Logger } from '../../logging/logger';
 import { LogOrigin } from '../../logging/logorigin';
-import { checkedSend } from '../../misc/checkedsend';
-import { StandardEmbedMaker } from '../../misc/standardembedmaker';
+import { checkedSend } from '../misc/checkedsend';
+import { StandardEmbedMaker } from '../misc/standardembedmaker';
 import { BotCommand } from '../botcommand';
 import { CommandArgs } from '../commandargs';
 import { MainCommandMapper } from '../commandmapper';
 
-export class Help extends BotCommand {
-    private mapper: MainCommandMapper;
-    private maker: StandardEmbedMaker;
+export class HelpCommand extends BotCommand {
     private _help = 'returns a list of commands';
     private _args: CommandArgs[] = [{ name: 'command', desc: 'the command to give help about', optional: true }];
 
-    public constructor(
-        @inject(TYPES.CommandMapper) mapper: MainCommandMapper,
-        @inject(TYPES.StandardEmbedMaker) maker: StandardEmbedMaker
-    ) {
+    public constructor(private mapper: MainCommandMapper, private maker: StandardEmbedMaker) {
         super();
-        this.mapper = mapper;
-        this.maker = maker;
     }
 
     public async execute(message: Message, args: string[]): Promise<void> {

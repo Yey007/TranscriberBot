@@ -1,12 +1,11 @@
 import { Message } from 'discord.js';
-import { container } from '../../inversify.config';
-import { TYPES } from '../../types';
 import { BotCommand } from '../interface/botcommand';
 import { Logger } from '../logging/logger';
 import { LogOrigin } from '../logging/logorigin';
-import { checkedSend } from '../misc/checkedsend';
-import { StandardEmbedMaker } from '../misc/standardembedmaker';
+import { checkedSend } from '../interface/misc/checkedsend';
 import { RoleManager } from './rolemanager';
+import Container from 'typedi';
+import { StandardEmbedMaker } from '../interface/misc/standardembedmaker';
 
 export function managerOrAdminRequired(
     target: BotCommand, // The prototype of the class
@@ -16,8 +15,8 @@ export function managerOrAdminRequired(
     const original = descriptor.value;
     descriptor.value = function (message: Message, ...args: unknown[]): Promise<void> {
         //Dumb but only way
-        const roleManager = container.get<RoleManager>(TYPES.RoleManager);
-        const embedMaker = container.get<StandardEmbedMaker>(TYPES.StandardEmbedMaker);
+        const roleManager = Container.get(RoleManager);
+        const embedMaker = Container.get(StandardEmbedMaker);
 
         if (message) {
             if (

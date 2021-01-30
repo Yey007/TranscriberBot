@@ -1,39 +1,26 @@
 import { GuildMember, PartialGuildMember, VoiceConnection } from 'discord.js';
-import { inject, injectable } from 'inversify';
 import { RecPermissionGetter } from './recpermissiongetter';
 import { Transcriber } from './transcriber';
 import { TranscriptionSender } from './transcriptionsender';
-import { TYPES } from '../../types';
-import { StandardEmbedMaker } from '../misc/standardembedmaker';
+import { StandardEmbedMaker } from '../interface/misc/standardembedmaker';
 import { TranscriptionChannelGetter } from './transcriptionchannelgetter';
-import { RecordingPermissionState } from '../repositories/repotypes';
+import { RecordingPermissionState } from '../interface/misc/misctypes';
 import { Logger } from '../logging/logger';
 import { LogOrigin } from '../logging/logorigin';
+import { Service } from 'typedi';
 
-@injectable()
+@Service()
 export class TranscriptionManager {
-    private transcriber: Transcriber;
-    private transcriptionSender: TranscriptionSender;
-    private permissiongetter: RecPermissionGetter;
-    private transcriptionChannelGetter: TranscriptionChannelGetter;
-    private embedMaker: StandardEmbedMaker;
-
     public constructor(
-        @inject(TYPES.Transcriber) transcriber: Transcriber,
-        @inject(TYPES.TranscriptionSender) sender: TranscriptionSender,
-        @inject(TYPES.PermissionGetter) consent: RecPermissionGetter,
-        @inject(TYPES.TranscriptionChannelGetter) channelGetter: TranscriptionChannelGetter,
-        @inject(TYPES.StandardEmbedMaker) embed: StandardEmbedMaker
-    ) {
-        this.transcriber = transcriber;
-        this.transcriptionSender = sender;
-        this.permissiongetter = consent;
-        this.transcriptionChannelGetter = channelGetter;
-        this.embedMaker = embed;
-    }
+        private transcriber: Transcriber,
+        private transcriptionSender: TranscriptionSender,
+        private permissionGetter: RecPermissionGetter,
+        private transcriptionChannelGetter: TranscriptionChannelGetter,
+        private embedMaker: StandardEmbedMaker
+    ) {}
 
     public async speaking(vc: VoiceConnection, member: GuildMember | PartialGuildMember): Promise<void> {
-        const state = await this.permissiongetter.getPermission(member.user);
+        const state = await this.permissionGetter.getPermission(member.user);
         if (state === RecordingPermissionState.NoConsent || state === RecordingPermissionState.Unknown) {
             Logger.verbose(
                 `Permission check failed for user with id ${member.user.id}. Aborting transcription`,

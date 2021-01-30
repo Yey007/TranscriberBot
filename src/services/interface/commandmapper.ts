@@ -1,38 +1,34 @@
-import { injectable } from 'inversify';
-import { container } from '../../inversify.config';
-import { TYPES } from '../../types';
 import { BotCommand } from './botcommand';
-import { ChannelJoiner } from './commands/join';
-import { ChannelLeaver } from './commands/leave';
-import { Help } from './commands/help';
-import { Prefix } from './commands/prefix';
-import { SetRecordingPermission } from './commands/recordingpermission';
-import { TranscriptChannel } from './commands/transcriptchannel';
+import { ChannelJoinCommand } from './commands/join';
+import { ChannelLeaveCommand } from './commands/leave';
+import { HelpCommand } from './commands/help';
+import { PrefixCommand } from './commands/prefix';
+import { RecordingPermissionCommand } from './commands/recordingpermission';
+import { TranscriptChannelCommand } from './commands/transcriptchannel';
+import Container, { Service } from 'typedi';
+import { StandardEmbedMaker } from './misc/standardembedmaker';
 
-@injectable()
+@Service({ transient: false })
 export class MainCommandMapper {
     private m: Map<string, BotCommand>;
 
     public constructor() {
         this.m = new Map();
-        this.m.set('join', container.get<ChannelJoiner>(TYPES.ChannelJoiner));
-        this.m.set('leave', container.get<ChannelLeaver>(TYPES.ChannelLeaver));
-        this.m.set('transcript-chan', container.get<TranscriptChannel>(TYPES.TranscriptChannel));
-        this.m.set('rec-perm', container.get<SetRecordingPermission>(TYPES.SetRecordingPermission));
-        this.m.set('prefix', container.get<Prefix>(TYPES.SetPrefix));
+        this.m.set('join', Container.get(ChannelJoinCommand));
+        this.m.set('leave', Container.get(ChannelLeaveCommand));
+        this.m.set('transcript-chan', Container.get(TranscriptChannelCommand));
+        this.m.set('rec-perm', Container.get(RecordingPermissionCommand));
+        this.m.set('prefix', Container.get(PrefixCommand));
+
+        //Avoid circular dependency
+        this.m.set('help', new HelpCommand(this, Container.get(StandardEmbedMaker)));
     }
 
     public map(command: string): BotCommand {
-        //Special case for help command to avoid circular dependency
-        if (command === 'help') {
-            return container.get<Help>(TYPES.Help);
-        }
         return this.m.get(command);
     }
 
     public commands(): [string, BotCommand][] {
-        const arr = Array.from(this.m.entries());
-        arr.push(['help', container.get<Help>(TYPES.Help)]);
-        return arr;
+        return Array.from(this.m.entries());
     }
 }

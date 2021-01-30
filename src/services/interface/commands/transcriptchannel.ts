@@ -1,19 +1,19 @@
 import { Message } from 'discord.js';
-import { inject, injectable } from 'inversify';
-import { TYPES } from '../../../types';
 import { Logger } from '../../logging/logger';
 import { LogOrigin } from '../../logging/logorigin';
-import { checkedSend } from '../../misc/checkedsend';
-import { StandardEmbedMaker } from '../../misc/standardembedmaker';
+import { checkedSend } from '../misc/checkedsend';
+import { StandardEmbedMaker } from '../misc/standardembedmaker';
 import { managerOrAdminRequired } from '../../permissions/rolerequierments';
-import { TranscriptChanRepository } from '../../repositories/transcriptchanrepository';
 import { BotCommand } from '../botcommand';
 import { CommandArgs } from '../commandargs';
+import { Service } from 'typedi';
+import { InjectRepository } from 'typeorm-typedi-extensions';
+import { TranscriptionPairRepository } from '../../repositories/transcriptionrepo';
+import { TranscriptionPair } from '../../../entity/transcriptionpair';
+import { from } from 'ibm-watson/lib/recognize-stream';
 
-@injectable()
-export class TranscriptChannel extends BotCommand {
-    private repo: TranscriptChanRepository;
-    private maker: StandardEmbedMaker;
+@Service()
+export class TranscriptChannelCommand extends BotCommand {
     private _help = 'allows for various operations involving transcription channels';
     private _args: CommandArgs[] = [
         {
@@ -31,12 +31,10 @@ export class TranscriptChannel extends BotCommand {
     ];
 
     public constructor(
-        @inject(TYPES.TranscriptionChannelRespository) repo: TranscriptChanRepository,
-        @inject(TYPES.StandardEmbedMaker) maker: StandardEmbedMaker
+        @InjectRepository() private repo: TranscriptionPairRepository,
+        private maker: StandardEmbedMaker
     ) {
         super();
-        this.repo = repo;
-        this.maker = maker;
     }
 
     public async execute(message: Message, args: string[]): Promise<void> {
@@ -57,7 +55,11 @@ export class TranscriptChannel extends BotCommand {
     public async setChannel(message: Message, args: string[]): Promise<void> {
         const vc = message.guild.channels.cache.find((x) => x.name === args[2] && x.type === 'voice');
         if (vc !== undefined) {
-            await this.repo.set(vc.id, message.channel.id);
+            await this.repo.save<TranscriptionPair>({
+                voiceId: vc.id,
+                textId: message.channel.id,
+                guildId: message.guild.id
+            });
             const embed = this.maker.makeSuccess();
             embed.description = `Set the transcription channel for \`${args[2]}\` to this channel`;
             checkedSend(message.channel, embed);
@@ -80,15 +82,15 @@ export class TranscriptChannel extends BotCommand {
     public async removeChannel(message: Message, args: string[]): Promise<void> {
         const vc = message.guild.channels.cache.find((x) => x.name === args[2] && x.type === 'voice');
         if (vc !== undefined) {
-            const fromDb = await this.repo.get(vc.id);
-            if (fromDb === null) {
+            const fromDb = await this.repo.findOne(vc.id);
+            if (fromDb === undefined) {
                 const embed = this.maker.makeWarning();
                 embed.description = `A transcription channel for the voice channel \`${args[2]}\` does not exist`;
                 checkedSend(message.channel, embed);
                 return;
             }
 
-            await this.repo.remove(vc.id);
+            await this.repo.delete({ voiceId: vc.id });
             const embed = this.maker.makeSuccess();
             embed.description = `Removed the transcription channel for \`${args[2]}\``;
             checkedSend(message.channel, embed);
@@ -108,7 +110,11 @@ export class TranscriptChannel extends BotCommand {
     }
 
     public async allChannels(message: Message): Promise<void> {
-        const allIds = await this.repo.getByGuild(message.guild.id);
+        const allIds = await this.repo.find({
+            where: {
+                guildId: message.guild.id
+            }
+        });
         const allNames = allIds.map((pair) => ({
             voice: message.guild.channels.resolve(pair.voiceId).name,
             text: `<#${message.guild.channels.resolve(pair.textId).id}>`

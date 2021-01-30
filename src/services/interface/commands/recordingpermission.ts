@@ -1,19 +1,18 @@
 import { Message } from 'discord.js';
-import { inject, injectable } from 'inversify';
-import { TYPES } from '../../../types';
 import { Logger } from '../../logging/logger';
 import { LogOrigin } from '../../logging/logorigin';
-import { StandardEmbedMaker } from '../../misc/standardembedmaker';
-import { SettingsRepository } from '../../repositories/settingsrepository';
-import { RecordingPermissionState, UserSettings } from '../../repositories/repotypes';
+import { StandardEmbedMaker } from '../misc/standardembedmaker';
+import { RecordingPermissionState } from '../misc/misctypes';
 import { BotCommand } from '../botcommand';
 import { CommandArgs } from '../commandargs';
-import { checkedSend } from '../../misc/checkedsend';
+import { checkedSend } from '../misc/checkedsend';
+import { Service } from 'typedi';
+import { UserSettingsRepository } from '../../repositories/userrepo';
+import { InjectRepository } from 'typeorm-typedi-extensions';
+import { UserSettings } from '../../../entity/usersettings';
 
-@injectable()
-export class SetRecordingPermission extends BotCommand {
-    private repo: SettingsRepository<UserSettings>;
-    private maker: StandardEmbedMaker;
+@Service()
+export class RecordingPermissionCommand extends BotCommand {
     private _help = 'sets the recording permission for the user executing the command';
     private _args: CommandArgs[] = [
         {
@@ -23,13 +22,8 @@ export class SetRecordingPermission extends BotCommand {
         }
     ];
 
-    public constructor(
-        @inject(TYPES.UserSettingsRepository) repo: SettingsRepository<UserSettings>,
-        @inject(TYPES.StandardEmbedMaker) maker: StandardEmbedMaker
-    ) {
+    public constructor(@InjectRepository() private repo: UserSettingsRepository, private maker: StandardEmbedMaker) {
         super();
-        this.repo = repo;
-        this.maker = maker;
     }
 
     public async execute(message: Message, args: string[]): Promise<void> {
@@ -46,11 +40,17 @@ export class SetRecordingPermission extends BotCommand {
             };
 
             if (args[1] === 'accept') {
-                this.repo.set(message.member.user.id, { permission: RecordingPermissionState.Consent });
+                await this.repo.save<UserSettings>({
+                    userId: message.member.user.id,
+                    permission: RecordingPermissionState.Consent
+                });
                 success();
                 return;
             } else if (args[1] === 'deny') {
-                this.repo.set(message.member.user.id, { permission: RecordingPermissionState.NoConsent });
+                await this.repo.save<UserSettings>({
+                    userId: message.member.user.id,
+                    permission: RecordingPermissionState.NoConsent
+                });
                 success();
                 return;
             }
@@ -61,7 +61,7 @@ export class SetRecordingPermission extends BotCommand {
             );
         } else {
             const embed = this.maker.makeInfo();
-            const settings = await this.repo.get(message.member.user.id);
+            const settings = await this.repo.findOneOrDefaults(message.member.user.id);
             const perm = settings.permission === RecordingPermissionState.Consent ? 'accept' : 'deny';
             embed.description = `Your recording preference is currently set to \`${perm}\``;
             checkedSend(message.channel, embed);

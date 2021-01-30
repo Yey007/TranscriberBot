@@ -1,6 +1,8 @@
 import { Client, GuildMember, TextChannel, VoiceChannel } from 'discord.js';
 import dotenv from 'dotenv';
 import { bot, botInit } from '..';
+import { Logger } from '../services/logging/logger';
+import { clearDb } from './utils';
 
 export let selfClient: Client;
 export let botClient: Client;
@@ -12,19 +14,20 @@ export let botVoiceChannel: VoiceChannel;
 export let selfMember: GuildMember;
 export let botMember: GuildMember;
 
-export let prefix = process.env.PREFIX;
+export let prefix: string;
 
 export const mochaHooks = {
     beforeAll(done: () => unknown): void {
         this.timeout(30000);
         (async () => {
             if (process.env.CONTAINER !== 'true') {
-                dotenv.config({ path: '../test.env' });
+                dotenv.config({ path: 'test.env' });
             }
 
             await botInit();
 
-            prefix = process.env.PREFIX;
+            prefix = process.env.TESTING_PREFIX;
+            Logger.debug(process.env.TESTING_PREFIX);
 
             selfClient = new Client();
             await selfClient.login(process.env.DISCORD_TEST_TOKEN);
@@ -36,11 +39,8 @@ export const mochaHooks = {
 
             selfMember = selfVoiceChannel.guild.member(selfClient.user);
             botMember = selfVoiceChannel.guild.member(bot.client.user);
-        })().then(done);
-    },
 
-    afterAll(): void {
-        selfClient.destroy();
-        bot.stop();
+            await clearDb();
+        })().then(done);
     }
 };

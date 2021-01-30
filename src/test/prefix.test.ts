@@ -1,10 +1,10 @@
 import { MessageEmbed } from 'discord.js';
 import { channel, botClient, botMember, prefix, selfMember } from './setup';
-import { container } from '../inversify.config';
-import { GuildSettings } from '../services/repositories/repotypes';
-import { SettingsRepository } from '../services/repositories/settingsrepository';
-import { TYPES } from '../types';
 import { COLORS, expectMessage, sendCommand } from './utils';
+import Container from 'typedi';
+import { GuildSettingsRepository } from '../services/repositories/guildrepo';
+import { getCustomRepository } from 'typeorm';
+import { GuildSettings } from '../entity/guildsettings';
 
 describe('Prefix', function () {
     context('without arguments', function () {
@@ -80,7 +80,7 @@ describe('Prefix', function () {
 
     after(async function () {
         //reset prefix to default
-        const repo = container.get<SettingsRepository<GuildSettings>>(TYPES.GuildSettingsRepository);
-        await repo.set(botMember.guild.id, { prefix: prefix });
+        const repo = getCustomRepository(GuildSettingsRepository);
+        await repo.save<GuildSettings>({ guildId: botMember.guild.id, prefix: prefix });
     });
 });

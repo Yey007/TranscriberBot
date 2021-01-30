@@ -1,17 +1,12 @@
 import { GuildMember, MessageEmbed, PartialGuildMember, TextChannel } from 'discord.js';
-import { inject, injectable } from 'inversify';
-import { TYPES } from '../../types';
 import { Logger } from '../logging/logger';
 import { LogOrigin } from '../logging/logorigin';
-import { StandardEmbedMaker } from '../misc/standardembedmaker';
+import { StandardEmbedMaker } from '../interface/misc/standardembedmaker';
+import { Service } from 'typedi';
 
-@injectable()
+@Service()
 export class TranscriptionSender {
-    private maker: StandardEmbedMaker;
-
-    public constructor(@inject(TYPES.StandardEmbedMaker) maker: StandardEmbedMaker) {
-        this.maker = maker;
-    }
+    public constructor(private maker: StandardEmbedMaker) {}
 
     public async send(
         member: GuildMember | PartialGuildMember,

@@ -12,21 +12,17 @@ COPY ./package*.json ./
 
 RUN npm ci --production=true
 
-COPY ./tsconfig.prod.json ./
+COPY ./tsconfig.prod.json ./tsconfig.json
 
-RUN npm install -g typescript
+RUN npm install -g ts-node typescript
 
 COPY ./src ./src
 
 #TEMPORARY (docker-compose has an issue with .dockerignore files)
 RUN rm -rf ./src/test
 
-RUN tsc -p tsconfig.prod.json
-
-COPY ./database.json ./
+COPY ./ormconfig.js ./
 
 COPY ./resources ./resources
-
-COPY ./migrations ./migrations
 
 CMD [ "npm", "start" ]

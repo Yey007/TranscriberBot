@@ -1,17 +1,13 @@
-import { inject, injectable } from 'inversify';
 import { Readable } from 'stream';
-import { TYPES } from '../../types';
+import { Inject, Service } from 'typedi';
 import { Logger } from '../logging/logger';
 import { LogOrigin } from '../logging/logorigin';
+import SpeechToText from 'ibm-watson/speech-to-text/v1';
 
-@injectable()
+@Service()
 export class Transcriber {
-    private stt;
-
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    public constructor(@inject(TYPES.SpeechToText) stt) {
-        this.stt = stt;
-    }
+    public constructor(@Inject('speech-to-text') private stt: SpeechToText) {}
 
     public transcribe(stream: Readable, onTranscription: (words: string, err: unknown) => void): void {
         const params = {
