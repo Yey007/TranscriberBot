@@ -20,7 +20,7 @@ services:
       - DISCORD_TEST_TOKEN
       - TESTING_CHANNEL_ID
       - TESTING_VOICE_CHANNEL_ID
-      - PREFIX
+      - TESTING_PREFIX
       - NODE_ENV=testing
     depends_on:
       - db

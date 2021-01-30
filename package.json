@@ -19,7 +19,6 @@
         "ibm-watson": "^6.0.2",
         "mysql": "^2.18.1",
         "reflect-metadata": "^0.1.10",
-        "sql-template-strings": "^2.2.2",
         "ts-node": "^9.1.1",
         "typedi": "^0.10.0",
         "typeorm": "0.2.30",

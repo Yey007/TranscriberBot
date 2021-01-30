@@ -10,7 +10,6 @@ import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { TranscriptionPairRepository } from '../../repositories/transcriptionrepo';
 import { TranscriptionPair } from '../../../entity/transcriptionpair';
-import { from } from 'ibm-watson/lib/recognize-stream';
 
 @Service()
 export class TranscriptChannelCommand extends BotCommand {
