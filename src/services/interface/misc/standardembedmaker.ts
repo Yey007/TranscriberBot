@@ -1,7 +1,7 @@
 import { MessageEmbed } from 'discord.js';
-import { injectable } from 'inversify';
+import { Service } from 'typedi';
 
-@injectable()
+@Service()
 export class StandardEmbedMaker {
     //Embeds come with standard titles and colors, although titles are likely to be replaced.
 

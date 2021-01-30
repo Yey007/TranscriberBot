@@ -14,16 +14,12 @@ RUN npm ci --production=false
 
 COPY ./tsconfig.json ./
 
-RUN npm install -g typescript
+RUN npm install -g ts-node typescript
 
 COPY ./src ./src
 
-RUN tsc -p tsconfig.json
-
-COPY ./database.json ./
+COPY ./ormconfig.js ./
 
 COPY ./resources ./resources
-
-COPY ./migrations ./migrations
 
 CMD [ "npm", "test" ]

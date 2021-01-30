@@ -13,29 +13,29 @@ export class Logger {
         hour12: false
     });
 
-    public static debug(message: string, origin: LogOrigin): void {
+    public static debug(message: unknown, origin: LogOrigin = LogOrigin.Self): void {
         if (this.logLevel <= LogLevel.Debug) {
             console.log(
                 LogColor.magenta(`[DEBUG] [${origin}] ${message} at ${this.dateTimeFormat.format(Date.now())}`)
             );
         }
     }
-    public static verbose(message: string, origin: LogOrigin): void {
+    public static verbose(message: string, origin: LogOrigin = LogOrigin.Self): void {
         if (this.logLevel <= LogLevel.Verbose) {
             console.log(LogColor.blue(`[VERBOSE] [${origin}] ${message} at ${this.dateTimeFormat.format(Date.now())}`));
         }
     }
-    public static info(message: string, origin: LogOrigin): void {
+    public static info(message: unknown, origin: LogOrigin = LogOrigin.Self): void {
         if (this.logLevel <= LogLevel.Info) {
             console.log(LogColor.white(`[INFO] [${origin}] ${message} at ${this.dateTimeFormat.format(Date.now())}`));
         }
     }
-    public static warn(message: string, origin: LogOrigin): void {
+    public static warn(message: unknown, origin: LogOrigin = LogOrigin.Self): void {
         if (this.logLevel <= LogLevel.Warn) {
             console.log(LogColor.yellow(`[WARN] [${origin}] ${message} at ${this.dateTimeFormat.format(Date.now())}`));
         }
     }
-    public static error(message: string, origin: LogOrigin): void {
+    public static error(message: unknown, origin: LogOrigin = LogOrigin.Self): void {
         if (this.logLevel <= LogLevel.Error) {
             console.log(LogColor.red(`[ERROR] [${origin}] ${message} at ${this.dateTimeFormat.format(Date.now())}`));
         }

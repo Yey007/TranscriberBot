@@ -1,6 +1,7 @@
 import { Collection, Message, MessageEmbed } from 'discord.js';
 import { expect } from 'chai';
-import { botMember, channel, prefix, selfVoiceChannel } from './setup';
+import { botMember, channel, prefix, selfClient, selfVoiceChannel } from './setup';
+import { getConnection } from 'typeorm';
 
 export function expectMessage(expected: string | MessageEmbed): Promise<void | Collection<string, Message>> {
     return channel
@@ -45,4 +46,31 @@ export async function awaitChannelJoin(): Promise<void> {
 
 export function sleep(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export function cleanUpInit(): void {
+    //do something when app is closing
+    process.on('exit', exitHandler.bind(null, { cleanup: true }));
+
+    //catches ctrl+c event
+    process.on('SIGINT', exitHandler.bind(null, { exit: true }));
+
+    // catches "kill pid" (for example: nodemon restart)
+    process.on('SIGUSR1', exitHandler.bind(null, { exit: true }));
+    process.on('SIGUSR2', exitHandler.bind(null, { exit: true }));
+
+    //catches uncaught exceptions
+    process.on('uncaughtException', exitHandler.bind(null, { exit: true }));
+}
+
+function exitHandler(options: { cleanup?: boolean; exit?: boolean }) {
+    if (options.cleanup) {
+        selfClient.destroy();
+    }
+    if (options.exit) process.exit();
+}
+
+export async function clearDb(): Promise<void> {
+    const connection = getConnection();
+    await connection.synchronize(true);
 }

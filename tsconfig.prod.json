@@ -3,10 +3,13 @@
         "types": ["node"],
         "moduleResolution": "node",
         "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
         "target": "esnext",
         "module": "commonjs",
-        "outDir": "ts-built",
+        "outDir": "build",
         "rootDir": "./src",
-        "experimentalDecorators": true
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "sourceMap": true
     }
 }

@@ -1,12 +1,12 @@
 import { Message } from 'discord.js';
-import { injectable } from 'inversify';
+import { Service } from 'typedi';
 import { Logger } from '../../logging/logger';
 import { LogOrigin } from '../../logging/logorigin';
 import { BotCommand } from '../botcommand';
 import { CommandArgs } from '../commandargs';
 
-@injectable()
-export class ChannelLeaver extends BotCommand {
+@Service()
+export class ChannelLeaveCommand extends BotCommand {
     private _help = 'returns a list of commands';
     private _args: CommandArgs[] = [];
 

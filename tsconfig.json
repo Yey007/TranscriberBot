@@ -3,10 +3,13 @@
         "types": ["node", "mocha"],
         "moduleResolution": "node",
         "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
         "target": "esnext",
         "module": "commonjs",
-        "outDir": "ts-built",
+        "outDir": "build",
         "rootDir": "./src",
-        "experimentalDecorators": true
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "sourceMap": true
     }
 }

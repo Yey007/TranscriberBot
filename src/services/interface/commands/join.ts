@@ -1,22 +1,19 @@
 import { Message, VoiceConnection } from 'discord.js';
-import { inject, injectable } from 'inversify';
-import { TYPES } from '../../../types';
 import { Logger } from '../../logging/logger';
 import { LogOrigin } from '../../logging/logorigin';
-import { checkedSend } from '../../misc/checkedsend';
-import { StandardEmbedMaker } from '../../misc/standardembedmaker';
+import { checkedSend } from '../misc/checkedsend';
+import { StandardEmbedMaker } from '../misc/standardembedmaker';
 import { BotCommand } from '../botcommand';
 import { CommandArgs } from '../commandargs';
+import { Service } from 'typedi';
 
-@injectable()
-export class ChannelJoiner extends BotCommand {
-    private embedMaker: StandardEmbedMaker;
+@Service()
+export class ChannelJoinCommand extends BotCommand {
     private _help = 'joins a voice channel';
     private _args: CommandArgs[] = [];
 
-    public constructor(@inject(TYPES.StandardEmbedMaker) embedMaker: StandardEmbedMaker) {
+    public constructor(private embedMaker: StandardEmbedMaker) {
         super();
-        this.embedMaker = embedMaker;
     }
 
     public async execute(message: Message): Promise<void> {

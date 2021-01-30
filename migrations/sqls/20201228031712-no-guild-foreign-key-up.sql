@@ -1,1 +1,0 @@
-ALTER TABLE `transcription_channels` DROP FOREIGN KEY `transcription_channels_ibfk_1`;

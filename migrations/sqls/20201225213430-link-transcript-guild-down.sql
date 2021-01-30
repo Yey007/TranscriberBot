@@ -1,1 +1,0 @@
-ALTER TABLE `transcription_channels` DROP `guildId`;

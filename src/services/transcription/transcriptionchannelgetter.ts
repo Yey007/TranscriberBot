@@ -1,24 +1,18 @@
 import { Guild, TextChannel } from 'discord.js';
-import { inject, injectable } from 'inversify';
-import { TYPES } from '../../types';
+import { Service } from 'typedi';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 import { Logger } from '../logging/logger';
 import { LogOrigin } from '../logging/logorigin';
-import { TranscriptChanRepository } from '../repositories/transcriptchanrepository';
+import { TranscriptionPairRepository } from '../repositories/transcriptionrepo';
 
-@injectable()
+@Service()
 export class TranscriptionChannelGetter {
-    private transcriptionChannelRepo: TranscriptChanRepository;
-
-    public constructor(
-        @inject(TYPES.TranscriptionChannelRespository) transcriptionChannelRepo: TranscriptChanRepository
-    ) {
-        this.transcriptionChannelRepo = transcriptionChannelRepo;
-    }
+    public constructor(@InjectRepository() private transcriptionChannelRepo: TranscriptionPairRepository) {}
 
     public async get(guild: Guild, vcId: string): Promise<TextChannel> {
-        const textId = await this.transcriptionChannelRepo.get(vcId);
+        const pair = await this.transcriptionChannelRepo.findOne(vcId);
 
-        let chan = guild.channels.cache.get(textId);
+        let chan = guild.channels.cache.get(pair.textId);
         if (chan !== undefined) {
             Logger.verbose(`Found transcription channel for voice channel with id ${vcId}`, LogOrigin.Transcription);
             return chan as TextChannel;

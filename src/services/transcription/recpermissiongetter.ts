@@ -1,21 +1,18 @@
 import { Collection, DMChannel, Message, User } from 'discord.js';
-import { inject, injectable } from 'inversify';
-import { TYPES } from '../../types';
 import { Logger } from '../logging/logger';
 import { LogOrigin } from '../logging/logorigin';
-import { SettingsRepository } from '../repositories/settingsrepository';
-import { RecordingPermissionState, UserSettings } from '../repositories/repotypes';
+import { RecordingPermissionState } from '../interface/misc/misctypes';
+import { Service } from 'typedi';
+import { InjectRepository } from 'typeorm-typedi-extensions';
+import { UserSettingsRepository } from '../repositories/userrepo';
+import { UserSettings } from '../../entity/usersettings';
 
-@injectable()
+@Service()
 export class RecPermissionGetter {
-    private permissionRepo: SettingsRepository<UserSettings>;
-
-    public constructor(@inject(TYPES.UserSettingsRepository) userSettingsRepo: SettingsRepository<UserSettings>) {
-        this.permissionRepo = userSettingsRepo;
-    }
+    public constructor(@InjectRepository() private userSettingsRepo: UserSettingsRepository) {}
 
     public async getPermission(user: User): Promise<RecordingPermissionState> {
-        const settings = await this.permissionRepo.get(user.id);
+        const settings = await this.userSettingsRepo.findOneOrDefaults(user.id);
 
         switch (settings.permission) {
             case RecordingPermissionState.Consent:
@@ -32,18 +29,21 @@ export class RecPermissionGetter {
     }
 
     private async askUser(user: User): Promise<RecordingPermissionState> {
-        await this.permissionRepo.set(user.id, { permission: RecordingPermissionState.NoConsent });
+        await this.userSettingsRepo.save<UserSettings>({
+            userId: user.id,
+            permission: RecordingPermissionState.Unknown
+        });
 
         let dm: DMChannel;
         try {
             dm = await user.createDM();
-            dm.send(
+            await dm.send(
                 "Hey! I'm currently transcribing audio from the voice channel you're in, but before I can transcribe your voice," +
                     ' I need your permission. Type `!accept` to accept and `!deny` to deny.'
             );
             Logger.verbose(
                 `Asked for recording permission from user with id ${user.id}. Awaiting response...`,
-                LogOrigin.MySQL
+                LogOrigin.Transcription
             );
         } catch (err: unknown) {
             if (err instanceof Error) {
@@ -79,12 +79,18 @@ export class RecPermissionGetter {
 
         const preference = collected.first().content;
         if (preference === '!accept') {
-            this.permissionRepo.set(user.id, { permission: RecordingPermissionState.Consent });
+            await this.userSettingsRepo.save<UserSettings>({
+                userId: user.id,
+                permission: RecordingPermissionState.Consent
+            });
             dm.send(`Preference set to \`${preference.slice(1)}\``);
             Logger.verbose(`Recieved accept message from user with id ${user.id}`, LogOrigin.Transcription);
             return RecordingPermissionState.Consent;
         } else {
-            this.permissionRepo.set(user.id, { permission: RecordingPermissionState.NoConsent });
+            await this.userSettingsRepo.save<UserSettings>({
+                userId: user.id,
+                permission: RecordingPermissionState.NoConsent
+            });
             dm.send(`Preference set to \`${preference.slice(1)}\``);
             Logger.verbose(`Recieved deny message from user with id ${user.id}`, LogOrigin.Transcription);
             return RecordingPermissionState.NoConsent;

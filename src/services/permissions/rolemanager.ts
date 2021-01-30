@@ -1,9 +1,9 @@
 import { Guild, Role } from 'discord.js';
-import { injectable } from 'inversify';
+import { Service } from 'typedi';
 import { Logger } from '../logging/logger';
 import { LogOrigin } from '../logging/logorigin';
 
-@injectable()
+@Service()
 export class RoleManager {
     public readonly roleName = 'TranscriberBot Manager';
 
