@@ -3,6 +3,7 @@ import { Logger } from '../logging/logger';
 import { LogOrigin } from '../logging/logorigin';
 import { StandardEmbedMaker } from '../interface/misc/standardembedmaker';
 import { Service } from 'typedi';
+import { checkedSend } from '../interface/misc/checkedsend';
 
 @Service()
 export class TranscriptionSender {
@@ -14,7 +15,7 @@ export class TranscriptionSender {
         voiceChannelName: string,
         transcript: string
     ): Promise<void> {
-        transcriptChannel.send(this.format(member, voiceChannelName, transcript));
+        await checkedSend(transcriptChannel, this.format(member, voiceChannelName, transcript));
         Logger.verbose(
             `Sent transcription in transcription channel with id ${transcriptChannel.id}`,
             LogOrigin.Discord

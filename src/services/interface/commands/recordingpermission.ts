@@ -29,10 +29,10 @@ export class RecordingPermissionCommand extends BotCommand {
     public async execute(message: Message, args: string[]): Promise<void> {
         if (args[1]) {
             const maker = this.maker;
-            const success = function () {
+            const success = async function () {
                 const embed = maker.makeSuccess();
                 embed.description = `Recording permission set to \`${args[1]}\``;
-                checkedSend(message.channel, embed);
+                await checkedSend(message.channel, embed);
                 Logger.verbose(
                     `Sent recording permission set success message in channel with id ${message.channel.id}`,
                     LogOrigin.Discord
@@ -40,21 +40,23 @@ export class RecordingPermissionCommand extends BotCommand {
             };
 
             if (args[1] === 'accept') {
-                await this.repo.save<UserSettings>({
+                const repoSave = this.repo.save<UserSettings>({
                     userId: message.member.user.id,
                     permission: RecordingPermissionState.Consent
                 });
-                success();
+                const successSend = success();
+                await Promise.all([repoSave, successSend]);
                 return;
             } else if (args[1] === 'deny') {
-                await this.repo.save<UserSettings>({
+                const repoSave = this.repo.save<UserSettings>({
                     userId: message.member.user.id,
                     permission: RecordingPermissionState.NoConsent
                 });
-                success();
+                const successSend = success();
+                await Promise.all([repoSave, successSend]);
                 return;
             }
-            message.channel.send('Invalid setting. Acceptable arguments are `accept` and `deny`.');
+            await checkedSend(message.channel, 'Invalid setting. Acceptable arguments are `accept` and `deny`.');
             Logger.verbose(
                 `Sent recording permission set failure message in channel with id ${message.channel.id}`,
                 LogOrigin.Discord
@@ -64,7 +66,7 @@ export class RecordingPermissionCommand extends BotCommand {
             const settings = await this.repo.findOneOrDefaults(message.member.user.id);
             const perm = settings.permission === RecordingPermissionState.Consent ? 'accept' : 'deny';
             embed.description = `Your recording preference is currently set to \`${perm}\``;
-            checkedSend(message.channel, embed);
+            await checkedSend(message.channel, embed);
             Logger.verbose(
                 `Sent recording permission get message in channel with id ${message.channel.id}`,
                 LogOrigin.Discord

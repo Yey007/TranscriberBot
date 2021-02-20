@@ -17,13 +17,13 @@ export class HelpCommand extends BotCommand {
 
     public async execute(message: Message, args: string[]): Promise<void> {
         if (args[1]) {
-            this.specificHelp(message, args[1]);
+            await this.specificHelp(message, args[1]);
         } else {
-            this.genericHelp(message);
+            await this.genericHelp(message);
         }
     }
 
-    private genericHelp(message: Message) {
+    private async genericHelp(message: Message) {
         const e = this.maker.makeInfo();
         e.title = 'Help';
 
@@ -45,12 +45,12 @@ export class HelpCommand extends BotCommand {
             `You can address the bot in two ways\n\n1. Mention the bot at the start of your message, like this: **${message.guild.me.toString()} command**\n2. Use the prefix (! by default), like this: **!command**`
         );
 
-        checkedSend(message.channel, e);
+        await checkedSend(message.channel, e);
         Logger.verbose(`Generic help sent in channel with id ${message.channel.id}`, LogOrigin.Discord);
     }
 
     //Argument order, which arguments are required etc.
-    private specificHelp(message: Message, command: string) {
+    private async specificHelp(message: Message, command: string) {
         const cmd = this.mapper.map(command);
         if (cmd !== undefined) {
             const embed = this.maker.makeInfo();
@@ -71,13 +71,13 @@ export class HelpCommand extends BotCommand {
             if (argumentString !== '') {
                 embed.addField('Arguments', argumentString);
             }
-            checkedSend(message.channel, embed);
+            await checkedSend(message.channel, embed);
             Logger.verbose(`Specific help sent in channel ${message.channel.id}`, LogOrigin.Discord);
         } else {
             const embed = this.maker.makeWarning();
             embed.title = 'Command not found';
             embed.description = `The command "${command}" does not exist.`;
-            checkedSend(message.channel, embed);
+            await checkedSend(message.channel, embed);
             Logger.verbose(
                 `Command not found while trying to send specific help in channel with id ${message.channel.id}`,
                 LogOrigin.Discord
