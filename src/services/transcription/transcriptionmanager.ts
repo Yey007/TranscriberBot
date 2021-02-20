@@ -8,6 +8,7 @@ import { RecordingPermissionState } from '../interface/misc/misctypes';
 import { Logger } from '../logging/logger';
 import { LogOrigin } from '../logging/logorigin';
 import { Service } from 'typedi';
+import { checkedSend } from '../interface/misc/checkedsend';
 
 @Service()
 export class TranscriptionManager {
@@ -34,9 +35,9 @@ export class TranscriptionManager {
 
         const channel = await this.transcriptionChannelGetter.get(member.guild, vc.channel.id);
         if (channel !== undefined) {
-            this.transcriber.transcribe(stream, function (words: string, err: unknown) {
+            this.transcriber.transcribe(stream, async function (words: string, err: unknown) {
                 if (err === undefined) {
-                    s.send(member, channel, vc.channel.name, words);
+                    await s.send(member, channel, vc.channel.name, words);
                     Logger.verbose(
                         `Transcription succeeded for user with id ${member.user.id} in voice channel with id ${vc.channel.id}`,
                         LogOrigin.Transcription
@@ -45,7 +46,7 @@ export class TranscriptionManager {
                     const e = embed.makeWarning();
                     e.description =
                         "Problem transcribing audio. This usually doesn't happen, but it's nothing to worry about.";
-                    channel.send(e);
+                    await checkedSend(channel, e);
                     Logger.verbose(
                         `Transcription failed for user with id ${member.user.id} in voice channel with id ${vc.channel.id}`,
                         LogOrigin.Transcription

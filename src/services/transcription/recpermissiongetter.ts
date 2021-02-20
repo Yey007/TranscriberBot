@@ -29,7 +29,7 @@ export class RecPermissionGetter {
     }
 
     private async askUser(user: User): Promise<RecordingPermissionState> {
-        await this.userSettingsRepo.save<UserSettings>({
+        const save = this.userSettingsRepo.save<UserSettings>({
             userId: user.id,
             permission: RecordingPermissionState.Unknown
         });
@@ -37,10 +37,11 @@ export class RecPermissionGetter {
         let dm: DMChannel;
         try {
             dm = await user.createDM();
-            await dm.send(
+            const send = dm.send(
                 "Hey! I'm currently transcribing audio from the voice channel you're in, but before I can transcribe your voice," +
                     ' I need your permission. Type `!accept` to accept and `!deny` to deny.'
             );
+            await Promise.all([save, send]);
             Logger.verbose(
                 `Asked for recording permission from user with id ${user.id}. Awaiting response...`,
                 LogOrigin.Transcription
@@ -72,26 +73,28 @@ export class RecPermissionGetter {
                 }
             );
         } catch (error) {
-            dm.send('Assumed no permission after 30 seconds.');
+            await dm.send('Assumed no permission after 30 seconds.');
             Logger.verbose(`No accept or deny message recieved from user with id ${user.id}`, LogOrigin.Transcription);
             return RecordingPermissionState.NoConsent;
         }
 
         const preference = collected.first().content;
         if (preference === '!accept') {
-            await this.userSettingsRepo.save<UserSettings>({
+            const save = this.userSettingsRepo.save<UserSettings>({
                 userId: user.id,
                 permission: RecordingPermissionState.Consent
             });
-            dm.send(`Preference set to \`${preference.slice(1)}\``);
+            const send = dm.send(`Preference set to \`${preference.slice(1)}\``);
+            await Promise.all([save, send]);
             Logger.verbose(`Recieved accept message from user with id ${user.id}`, LogOrigin.Transcription);
             return RecordingPermissionState.Consent;
         } else {
-            await this.userSettingsRepo.save<UserSettings>({
+            const save = this.userSettingsRepo.save<UserSettings>({
                 userId: user.id,
                 permission: RecordingPermissionState.NoConsent
             });
-            dm.send(`Preference set to \`${preference.slice(1)}\``);
+            const send = dm.send(`Preference set to \`${preference.slice(1)}\``);
+            await Promise.all([save, send]);
             Logger.verbose(`Recieved deny message from user with id ${user.id}`, LogOrigin.Transcription);
             return RecordingPermissionState.NoConsent;
         }

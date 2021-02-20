@@ -68,7 +68,7 @@ export class CommandExecutor {
                 accepts at most ${allLength} ${allPlural} but you provided ${args.length - 1}.`;
 
                 embed.setFooter(`Use "help ${args[0]}" for more information.`);
-                checkedSend(message.channel, embed);
+                await checkedSend(message.channel, embed);
                 Logger.verbose(
                     `Execution of command "${trimmed}" aborted because number of arguments was wrong`,
                     LogOrigin.Discord
@@ -76,12 +76,12 @@ export class CommandExecutor {
                 return;
             }
             Logger.verbose(`Executing command "${trimmed}"`, LogOrigin.Discord);
-            cmd.execute(message, args);
+            await cmd.execute(message, args);
         } else {
             const embed = this.maker.makeWarning();
             embed.title = 'Command not found';
             embed.description = `The command "${args[0]}" does not exist.`;
-            checkedSend(message.channel, embed);
+            await checkedSend(message.channel, embed);
             Logger.verbose(
                 `Execution of command "${trimmed}" aborted because command was not found`,
                 LogOrigin.Discord

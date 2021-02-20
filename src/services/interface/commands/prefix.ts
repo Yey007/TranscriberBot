@@ -37,16 +37,17 @@ export class PrefixCommand extends BotCommand {
         if (prefix.length > 5) {
             const embed = this.maker.makeWarning();
             embed.description = 'Prefix cannot be more than 5 characters.';
-            checkedSend(message.channel, embed);
+            await checkedSend(message.channel, embed);
             return;
         }
-        await this.repo.save<GuildSettings>({
+        const repoSave = this.repo.save<GuildSettings>({
             guildId: message.guild.id,
             prefix: prefix
         });
         const embed = this.maker.makeSuccess();
         embed.description = `Prefix set to \`${prefix}\``;
-        checkedSend(message.channel, embed);
+        const send = checkedSend(message.channel, embed);
+        await Promise.all([repoSave, send]);
         Logger.verbose(`Sent prefix set success message in channel with id ${message.channel.id}`, LogOrigin.Discord);
     }
 
@@ -54,7 +55,7 @@ export class PrefixCommand extends BotCommand {
         const embed = this.maker.makeInfo();
         const settings = await this.repo.findOneOrDefaults(message.guild.id);
         embed.description = `The prefix is currently \`${settings.prefix}\``;
-        checkedSend(message.channel, embed);
+        await checkedSend(message.channel, embed);
         Logger.verbose(`Sent prefix get message in channel with id ${message.channel.id}`, LogOrigin.Discord);
     }
 

@@ -27,7 +27,7 @@ export class ChannelJoinCommand extends BotCommand {
                 const embed = this.embedMaker.makeWarning();
                 embed.title = 'Channel Unavailable';
                 embed.description = "I can't join that channel. Please make sure I have the correct permissions.";
-                checkedSend(message.channel, embed);
+                await checkedSend(message.channel, embed);
                 Logger.verbose(`Unable to join voice channel with id ${vc.channel.id}`, LogOrigin.Discord);
                 return;
             }
@@ -35,12 +35,12 @@ export class ChannelJoinCommand extends BotCommand {
             //Due to the wacky API on recieving audio, something must be sent before we can recieve anything
             const dispatcher = vc.play(process.cwd() + '/resources/dummy.mp3', { volume: 0 });
 
-            dispatcher.on('error', () => {
+            dispatcher.on('error', async () => {
                 const embed = this.embedMaker.makeError();
                 embed.title = 'Transcription Error';
                 embed.description =
                     'There was a problem recieving audio from this channel. If this keeps happening, please contact the author.';
-                checkedSend(message.channel, embed);
+                await checkedSend(message.channel, embed);
                 Logger.warn(`Unable to dispatch audio in voice channel with id ${vc.channel.id}`, LogOrigin.Discord);
             });
         }

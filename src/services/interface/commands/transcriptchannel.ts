@@ -46,7 +46,7 @@ export class TranscriptChannelCommand extends BotCommand {
         } else {
             const embed = this.maker.makeWarning();
             embed.description = 'Invalid operation. Valid operations are `create`, `remove`, and `all`';
-            checkedSend(message.channel, embed);
+            await checkedSend(message.channel, embed);
         }
     }
 
@@ -54,14 +54,15 @@ export class TranscriptChannelCommand extends BotCommand {
     public async setChannel(message: Message, args: string[]): Promise<void> {
         const vc = message.guild.channels.cache.find((x) => x.name === args[2] && x.type === 'voice');
         if (vc !== undefined) {
-            await this.repo.save<TranscriptionPair>({
+            const repoSave = this.repo.save<TranscriptionPair>({
                 voiceId: vc.id,
                 textId: message.channel.id,
                 guildId: message.guild.id
             });
             const embed = this.maker.makeSuccess();
             embed.description = `Set the transcription channel for \`${args[2]}\` to this channel`;
-            checkedSend(message.channel, embed);
+            const send = checkedSend(message.channel, embed);
+            await Promise.all([repoSave, send]);
             Logger.verbose(
                 `Sent transcription channel set success message in channel with id ${message.channel.id}`,
                 LogOrigin.Discord
@@ -69,7 +70,7 @@ export class TranscriptChannelCommand extends BotCommand {
         } else {
             const embed = this.maker.makeWarning();
             embed.description = `Voice channel \`${args[2]}\` not found`;
-            checkedSend(message.channel, embed);
+            await checkedSend(message.channel, embed);
             Logger.verbose(
                 `Sent transcription channel set failure message in channel with id ${message.channel.id}`,
                 LogOrigin.Discord
@@ -89,10 +90,11 @@ export class TranscriptChannelCommand extends BotCommand {
                 return;
             }
 
-            await this.repo.delete({ voiceId: vc.id });
+            const del = this.repo.delete({ voiceId: vc.id });
             const embed = this.maker.makeSuccess();
             embed.description = `Removed the transcription channel for \`${args[2]}\``;
-            checkedSend(message.channel, embed);
+            const send = checkedSend(message.channel, embed);
+            await Promise.all([del, send]);
             Logger.verbose(
                 `Sent transcription channel remove success message in channel with id ${message.channel.id}`,
                 LogOrigin.Discord
@@ -100,7 +102,7 @@ export class TranscriptChannelCommand extends BotCommand {
         } else {
             const embed = this.maker.makeWarning();
             embed.description = `Voice channel \`${args[2]}\` not found`;
-            checkedSend(message.channel, embed);
+            await checkedSend(message.channel, embed);
             Logger.verbose(
                 `Sent transcription channel remove failure message in channel with id ${message.channel.id}`,
                 LogOrigin.Discord
@@ -123,7 +125,7 @@ export class TranscriptChannelCommand extends BotCommand {
         for (const namePair of allNames) {
             embed.description += `${namePair.voice} :arrow_right: ${namePair.text}\n`;
         }
-        checkedSend(message.channel, embed);
+        await checkedSend(message.channel, embed);
     }
 
     public get help(): string {
