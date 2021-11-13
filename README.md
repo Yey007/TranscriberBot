@@ -4,9 +4,9 @@
 
 Should you allow it, TranscriberBot can transcribe all of your words with *reasonable* accuracy. It's useful for
 anything from allowing deaf friends to tune in to your conversations to writing down important conversations
-for future reference. You can add it to your server with the link below. 
+for future reference. 
 
-https://discord.com/api/oauth2/authorize?client_id=762374209867087882&permissions=36703232&scope=bot
+Unfortunately, the bot is no longer deployed, but feel free to run your own instance.
 
 # Getting Started #
 
